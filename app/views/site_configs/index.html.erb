@@ -1,0 +1,44 @@
+
+<%= render :partial => 'admin/navigation' %>
+<% @page_title = "Admin - Site Configuration" %>
+
+<table>
+  <tr>
+    <th>Site Name</th>
+    <th>Organisation Name</th>
+    <th>Site URL</th>
+    <th>Org URL</th>
+    <th>Mail Server</th>
+    <th>Port</th>
+    <th>Domain</th>
+    <th>Site Logo URL</th>
+    <th>Org Logo URL</th>
+    <th>RCC_PUB</th>
+    <th>RCC_PRIV</th>
+    <th></th>
+  </tr>
+
+<% @site_configs.each do |s_config| %>
+  <tr style="border-top:1px solid #eee;background: <%= cycle('#f3f3f3','#fff')%>;">
+    <td><%=h s_config.site_name %></td>
+    <td><%=h s_config.org_name %></td>
+    <td><%=h s_config.site_url %></td>
+    <td><%=h s_config.org_url %></td>
+    <td><%=h s_config.m_server_addr %></td>
+    <td><%=h s_config.m_server_port %></td>
+    <td><%=h s_config.m_server_domain %></td>
+    <td><%=h s_config.site_logo_url %></td>
+    <td><%=h s_config.org_logo_url %></td>
+    <td><%=h s_config.rcc_pub %></td>
+    <td><%=h s_config.rcc_priv %></td>
+    <td><%= link_to "edit", edit_site_config_path(s_config) %></td>
+  </tr>
+<% end %>
+
+</table>
+
+<%= link_to "New site config", new_site_config_path %> 
+<br />
+
+
+

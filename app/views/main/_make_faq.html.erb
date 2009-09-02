@@ -1,0 +1,5 @@
+<% if item.special_list.include? "faq" %>
+	<%= link_to_remote "<span class=\"button_standard\">Remove FAQ</span>", {:url => {:action => "make_faq", :id => item.id, :stylehash => stylehash }}, {:class => "button button_#{stylehash[:color]}_100"}%>
+<% else %>
+	<%= link_to_remote "<span class=\"button_standard\">Make FAQ</span>", {:url => {:action => "make_faq", :id => item.id, :stylehash => stylehash }}, {:class => "button button_#{stylehash[:color]}_100"}%>
+<% end %>

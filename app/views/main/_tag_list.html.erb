@@ -1,0 +1,9 @@
+	<% if @item.tags.any? %>
+		<span>
+			<%= image_tag 'tag_blue.png', :style => "padding:2px 4px 0px 0px;" %>
+			<% @item.tags.each_with_index do |tag,index| %>
+				<%= link_to( h(tag.name), {:controller => "main", :action => "conversations", :view => "tag", :tag => h(tag.name)}) + (index + 1 < @item.tags.length  ? ', ' : '')  -%>
+			<% end %>
+		</span>
+		<br />
+	<% end %>

@@ -1,0 +1,11 @@
+
+<%= stylesheet_link_tag "table.css" %>
+
+   <tr class="<%= cycle('odd', 'even') %>">
+     <td><%=h score.scoretype.name  unless score.scoretype.nil? %></td>
+     <td><%=h score.award %></td>
+     <td><%=h score.rawscore  %></td>
+     <td><%=h score.created_at.to_s(:format_datetime) %></td>
+     <td><%=h score.updated_at.to_s(:format_datetime) %></td>
+     <td><%=h score.scoretype.description  unless score.scoretype.nil? %></td>
+   </tr>

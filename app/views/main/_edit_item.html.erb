@@ -1,0 +1,13 @@
+<% form_remote_for @item, :url => {:action => "edit_item", :id => @item.id} do |f| %>
+
+<div id="itemtextarea" name="itemtextarea">
+  <%= f.text_area :itemtext, :cols => 80, :rows => 10 %>
+</div>
+
+<%= image_submit_tag "/images/icons/current/submit_orange.png" %>
+
+<%= link_to_function "<img src='/images/icons/current/cancel_orange.png' border='0' />" do |page|
+	page.replace_html("itemresponse-#{@item.id}","")
+end %>
+<% end %>
+<div id="statusmessage-<%= @item.id %>" name="statusmessage-<%= @item.id %>"></div>

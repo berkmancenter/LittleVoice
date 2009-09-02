@@ -1,0 +1,18 @@
+<h1>Items</h1>
+
+<table>
+  <tr>    
+    <th>Subject</th>
+    <th>User</th>
+  </tr>
+
+<% for item in @items %>
+  <tr class="<%= cycle('even','odd') %>" >
+    <td><%= link_to(h(item.item_title), :action => 'itemview', :id => item.id, :controller => "main") %></td>
+    <td><%= link_to h(item.user.login), item.user %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+

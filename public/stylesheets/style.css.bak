@@ -1,0 +1,60 @@
+body {
+font-family: arial,sans-serif; 
+background-color: #E8E8E3;
+}  
+
+div, p, th, td, input, textarea { 
+font-family: arial, sans-serif; 
+font-size: 13px;
+}
+
+#itemtext { 
+	border: 3px solid black;
+	padding: 5px;
+}
+
+div.summaryitem {
+	margin-bottom: 10px;
+}
+
+div.errormessage {
+	color: red;
+	font-weight: bold;
+}
+
+div.statusmessage {
+	color: black;
+	font-weight: bold;
+}
+
+#messageblock {
+	height: 50px;
+}
+
+.responseitem {
+	border: 1px solid;
+	background-color: #FFFFFF;
+	padding: 10px;
+	margin-bottom: 10px;
+	width: 400px;
+}
+
+.replybox {
+	margin-bottom: 20px;
+}
+
+.messageheader {
+	height: 50px;
+}
+
+.messageerror {
+	color: red;
+	font-weight: bold;
+}
+
+.messagesuccess {
+	font-weight: bold;
+}
+
+
+

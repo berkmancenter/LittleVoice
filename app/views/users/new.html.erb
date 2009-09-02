@@ -1,0 +1,39 @@
+<div class="section" style="margin-top:5px;margin-bottom:20px;">
+		<div class="rootcontentcontainer box grad lightblue" style="height:300px;">
+			<img src="/images/backgrounds/grad_white_bottom.png" class="gradimage" alt="gradient box" />
+			<div class="rootcontent" style="width:inherit;">
+
+			<div id="signup_form" style="float:right;padding:20px 30px;z-index:1000;">				
+			   <%= error_messages_for :user %>
+			   <% form_for :user, :url => users_path do |f| %>
+			   <table>
+			   	<!--<tr><td style="text-align:right;"><label for="invitation_code">Invitation Code</label></td><td><%= text_field_tag "invitation_code" %></td></tr>-->
+				<tr><td style="text-align:right;"><label for="login">Username</label></td><td><%= f.text_field :login %></td></tr>
+				<tr><td style="text-align:right;"><label for="email">Email</label></td><td><%= f.text_field :email %></td></tr>
+				<tr><td style="text-align:right;"><label for="password">Password</label></td><td><%= f.password_field :password %></td></tr>
+				<tr><td style="text-align:right;"><label for="password_confirmation">Confirm Password</label></td><td><%= f.password_field :password_confirmation %></td></tr>
+			   	<tr><td style="text-align:right;" /><td><%= check_box_tag "accept" %> <label for="accept_terms" id="accept_terms" style="vertical-align:middle;">I have read and accept the <%= link_to "Terms &amp; Conditions", {:controller => "main", :action => "terms"}, :style => "color:#2382A1;" %></label></td></tr>
+				<tr><td /><td><%= submit_tag 'Sign up' %></td></tr>
+			   </table>
+			   <% end %>			   
+			</div>
+			
+			<div id="signup_content" style="margin:20px;">
+				<h3>Become a <%= $SITE_URL %>'eR in three easy steps!</h3><br />
+			   	
+				   	<ol style="font-weight:bold;font-size:small;margin-bottom:20px;">
+				   		<li> Sign up on the right to create a username and password.</li>
+				   		<li> Check your e-mail and click the confirmation link that we sent you. This way, we know that it’s really your e-mail address.</li>
+				   		<li> Make sure you’re logged in (look for “Welcome, USER_NAME” in the top-right corner of the screen) and get started!</li>
+					</ol>
+				
+				<p>	By becoming a Badware Buster, you are joining a community of Internet users, from novices to experts, who are interested in limiting the harmful impact of badware. To keep this community positive and welcoming, we ask that you read and follow our <%= link_to "Community Behavior Guidelines", "/main/terms#community", :style => "font-weight:bold;color:#2382A1;" %>, which are part of our <%= link_to "Terms &amp; Conditions", "/main/terms", :style => "font-weight:bold;color:#2382A1;"%>.</p>
+				
+				<br /><br />
+
+				
+			</div>
+			
+		</div>
+	</div>
+</div><br />

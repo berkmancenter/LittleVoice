@@ -1,0 +1,28 @@
+<div class="conversation_item">
+	<div class="conversation_title">
+		<span class="posted_by">posted by <%= link_to h(item.user.login), dashboard_url(item.user.login) %>, <%= distance_of_time_in_words_to_now(item.created_at) %> ago</span>
+		<%= link_to h(item.item_title('...')), "/main/itemview/#{item.id == item.item_root_id ? item.id : (item.item_root_id.to_s + '#itemblock-' + item.id.to_s) }" %>
+	</div>
+	<div class="conversation_links">
+		<% if item.tags.any? %>
+			<span class="tags">
+				<%= image_tag 'tag_blue.png', :style => "float:left;padding:2px 4px 0px 0px;" %>
+				<% item.tags.each_with_index do |tag,index| %>
+					<%= link_to( h(tag.name), {:controller => "main", :action => "conversations", :view => "tag", :tag => h(tag.name)}, :class => "tag_link") + (index + 1 < item.tags.length  ? ', ' : '')  -%>
+				<% end %>
+			</span>
+		<% end %>
+		<span class="reply_count">
+			<% responses = item.all_children.reject{|i| i.item_active == false } %>
+			<%= image_tag 'comments.png', :style => "float:left;padding:0px 4px 0px 5px;" %><%= link_to pluralize(responses.length, 'reply', 'replies'), :controller => "main", :action => "itemview", :id => item.id %> 
+			<% if item.id == item.item_root_id %>	
+				<%= responses.length > 0 ? "<span class=\"most_recent\"> - most recent: #{distance_of_time_in_words_to_now(responses.sort_by(&:created_at).last.created_at)} ago</span>"  : ""  %>
+			<% end %>
+		</span>
+		<% unless item.id == item.item_root_id %>
+			<% root = Item.find(item.item_root_id)%>
+			<span class="most_recent" style="font-size:.9em;">&nbsp;- response to: <%= link_to h(root.item_title('...')), :controller => "main", :action => "itemview", :id => root.id %></span>
+		<% end %>			
+		<br />
+	</div>
+</div>

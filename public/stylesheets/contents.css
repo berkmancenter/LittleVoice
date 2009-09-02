@@ -1,0 +1,73 @@
+body {
+	background:#eee;
+}
+
+th {
+	text-align:left;
+}
+
+
+#location {
+	background:#eee;
+	padding:20px;
+	width:300px;
+	float:left;
+	clear:left;
+}
+
+#location_preview {
+	background:#fff;
+	width:90%;
+	padding:10px;
+	font-size:small;
+	font-family:consolas;
+}
+
+#editor {
+	float:right;
+}
+
+#content {
+	width:960px;
+	margin: 0 auto;
+	background:#fff;
+	margin-top:10px;
+	padding:20px;
+	overflow:auto;
+}
+
+section td {
+	font-size:x-small;
+}
+
+#controls {
+	float:left;
+	clear:left;
+	width:300px;
+}
+
+#preview {
+	display:block;
+	width:inherit;
+	margin-top:20px;
+	border-top:1px dashed #ddd;
+	float:left;
+	padding-top:5px;
+	clear:both;
+}
+
+#versions {
+	background:#eee;
+	padding:20px;
+	width:250px;
+	float:left;
+	clear:left;
+}
+
+#view_content {
+	float:right;
+	clear:none;
+	width:630px;
+	min-height:20px;
+	padding:10px;
+}

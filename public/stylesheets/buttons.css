@@ -1,0 +1,259 @@
+
+
+
+a.button_grey_75{
+	background:url(/images/buttons/button_75_lightgrey.gif);
+	background-repeat: no-repeat;
+	color: #7C7C7C;	
+	width:75px;
+}
+
+a:hover.button_grey_75{
+	background:url(/images/buttons/button_75_darkgrey.gif);	
+	background-repeat: no-repeat;
+	color: #DBDBDB;
+}
+
+
+
+a.button_grey_100{
+	background:url(/images/buttons/button_100_lightgrey.gif);
+	background-repeat: no-repeat;
+	color: #7C7C7C;	
+	width:100px;
+}
+
+a:hover.button_grey_100{
+	background:url(/images/buttons/button_100_darkgrey.gif);	
+	background-repeat: no-repeat;
+	color: #DBDBDB;
+}
+
+
+
+a.button_grey_125{
+	background:url(/images/buttons/button_125_lightgrey.gif);
+	background-repeat: no-repeat;
+	color: #7C7C7C;	
+	width:125px;
+}
+
+a:hover.button_grey_125{
+	background:url(/images/buttons/button_125_darkgrey.gif);	
+	background-repeat: no-repeat;
+	color: #DBDBDB;
+}
+
+
+
+a.button_grey_150{
+	background:url(/images/buttons/button_150_lightgrey.gif);
+	background-repeat: no-repeat;
+	color: #7C7C7C;	
+	width:150px;
+}
+
+a:hover.button_grey_150{
+	background:url(/images/buttons/button_150_darkgrey.gif);	
+	background-repeat: no-repeat;
+	color: #DBDBDB;
+}
+
+
+
+a.button_grey_200{
+	background:url(/images/buttons/button_200_lightgrey.gif);
+	background-repeat: no-repeat;
+	color: #7C7C7C;	
+	width:200px;
+}
+
+a:hover.button_grey_200{
+	background:url(/images/buttons/button_200_darkgrey.gif);	
+	background-repeat: no-repeat;
+	color: #DBDBDB;
+}
+
+
+
+
+
+a.button_blue_75{
+	background:url(/images/buttons/button_75_lightblue.gif);
+	background-repeat: no-repeat;
+	color: #2382a1;	
+	width:75px;
+}
+
+a:hover.button_blue_75{
+	background:url(/images/buttons/button_75_darkblue.gif);	
+	background-repeat: no-repeat;
+	color: #D3E6EA;
+}
+
+
+
+a.button_blue_100{
+	background:url(/images/buttons/button_100_lightblue.gif);
+	background-repeat: no-repeat;
+	color: #2382a1;	
+	width:100px;
+}
+
+a:hover.button_blue_100{
+	background:url(/images/buttons/button_100_darkblue.gif);	
+	background-repeat: no-repeat;
+	color: #D3E6EA;
+}
+
+
+
+a.button_blue_125{
+	background:url(/images/buttons/button_125_lightblue.gif);
+	background-repeat: no-repeat;
+	color: #2382a1;	
+	width:125px;
+}
+
+a:hover.button_blue_125{
+	background:url(/images/buttons/button_125_darkblue.gif);	
+	background-repeat: no-repeat;
+	color: #D3E6EA;
+}
+
+
+
+a.button_blue_150{
+	background:url(/images/buttons/button_150_lightblue.gif);
+	background-repeat: no-repeat;
+	color: #2382a1;	
+	width:150px;
+}
+
+a:hover.button_blue_150{
+	background:url(/images/buttons/button_150_darkblue.gif);	
+	background-repeat: no-repeat;
+	color: #D3E6EA;
+}
+
+
+
+a.button_blue_200{
+	background:url(/images/buttons/button_200_lightblue.gif);
+	background-repeat: no-repeat;
+	color: #2382a1;	
+	width:200px;
+}
+
+a:hover.button_blue_200{
+	background:url(/images/buttons/button_200_darkblue.gif);	
+	background-repeat: no-repeat;
+	color: #D3E6EA;
+}
+
+
+
+
+
+a.button_orange_75{
+	background:url(/images/buttons/button_75_lightorange.gif);
+	background-repeat: no-repeat;
+	color: #DC5E1B;	
+	width:75px;
+}
+
+a:hover.button_orange_75{
+	background:url(/images/buttons/button_75_darkorange.gif);	
+	background-repeat: no-repeat;
+	color: #FFE6D5;
+}
+
+
+
+a.button_orange_100{
+	background:url(/images/buttons/button_100_lightorange.gif);
+	background-repeat: no-repeat;
+	color: #DC5E1B;	
+	width:100px;
+}
+
+a:hover.button_orange_100{
+	background:url(/images/buttons/button_100_darkorange.gif);	
+	background-repeat: no-repeat;
+	color: #FFE6D5;
+}
+
+
+
+a.button_orange_125{
+	background:url(/images/buttons/button_125_lightorange.gif);
+	background-repeat: no-repeat;
+	color: #DC5E1B;	
+	width:125px;
+}
+
+a:hover.button_orange_125{
+	background:url(/images/buttons/button_125_darkorange.gif);	
+	background-repeat: no-repeat;
+	color: #FFE6D5;
+}
+
+
+
+a.button_orange_150{
+	background:url(/images/buttons/button_150_lightorange.gif);
+	background-repeat: no-repeat;
+	color: #DC5E1B;	
+	width:150px;
+}
+
+a:hover.button_orange_150{
+	background:url(/images/buttons/button_150_darkorange.gif);	
+	background-repeat: no-repeat;
+	color: #FFE6D5;
+}
+
+
+
+a.button_orange_200{
+	background:url(/images/buttons/button_200_lightorange.gif);
+	background-repeat: no-repeat;
+	color: #DC5E1B;	
+	width:200px;
+}
+
+a:hover.button_orange_200{
+	background:url(/images/buttons/button_200_darkorange.gif);	
+	background-repeat: no-repeat;
+	color: #FFE6D5;
+}
+
+
+
+
+
+
+/* New button styles */
+
+a.button{
+	font-size: .9em;
+	display:block;
+	font-weight:bold;
+	height:20px;
+	line-height:20px;
+	margin-bottom:14px;
+	text-decoration:none;
+}
+
+.button_reply, .button_edit, .button_standard {
+	/* background:url(img/add.gif) no-repeat 10px 8px; */
+	text-align: center;
+	display: block;
+}
+
+.vote_image {
+	margin-bottom:14px;
+}
+
+
+/* END New button styles */

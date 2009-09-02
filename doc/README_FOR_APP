@@ -1,0 +1,35 @@
+To get started:
+Ensure that you have the following gems installed - 
+1. rexml-expansion-fix
+2. ferret (v0.11.5 seems to be the one working fine)
+3. addressable
+4. RMgick
+5. will_paginate
+6. ruby_recaptcha
+
+Once all the gems are present, Download LittleVoice from XXXX -
+
+Then Run the following command in your console - 
+cd LittleVoice 
+rake db:create db:schema:load
+ruby script\server
+
+
+In the schema we have created the following set of default Login::Password pairs - 
+  admin::admin12
+  mod::mod12
+  reguser::reguser12
+  
+The site requires recaptcha Public and private keys. they are stored in the site database as a part of site configurations.
+To add the keys or update the site configurations like Site Name, URL etc., perform the following steps - 
+  1. Login using the "admin" login
+  2. Go to Admin Dashboard > Site Configuration
+  3. Edit existing or Add New site configuration
+Always, the latest site configuration saved is the one that is used.
+
+For the Cookies, the :session_key and :secret variables are stored in config/environments/*.rb
+One should change it to appropriate values. eg:-
+config.action_controller.session = { :session_key => "_littlevoice_dev_session", :secret => "" }
+where :secret can be generated using - 
+alphanumerics = [('0'..'9'),('A'..'Z'),('a'..'z')].map {|range| range.to_a}.flatten (0...25).map { alphanumerics[Kernel.rand(alphanumerics.size)] }.join
+

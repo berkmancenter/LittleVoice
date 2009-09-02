@@ -1,0 +1,15 @@
+## Update question display
+if @additemstatus
+  #page.replace_html("response_summary", display_responses(@item_root_id, @itemset, 0, @minscore, @maxscore))
+  #page.replace_html("response_summary", display_children(@item_root_id, @minscore, @maxscore))
+  #page[:itemtext].value = ""
+end 
+
+if @additemstatus
+  #page.replace_html("itemresponse-#{@item_root_id}","")
+  
+  #The 't' parameter ensures that the page is refreshed, and the new item appears.
+  page.redirect_to :action => "itemview", :id => @item_root_id, :t => rand(10000), :anchor => "itemblock-#{@newitem.id}"
+else
+  page.get_item_error(@additemstatus, @additemdupe, @additemempty, @itemid)
+end

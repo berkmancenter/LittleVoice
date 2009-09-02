@@ -1,0 +1,27 @@
+<%= render :partial => 'navigation' %>
+<% @page_title = "Admin - Messages : Spam" %>
+<table id="users">
+	<tr class="user labels">
+		<td class="posted"><%= link_to "Created", :action => "messages", :sort => "items.created_at", :asc => !params[:asc], :view => "spam", :conditions => "items.item_active = true" %></td>
+		<td class="login">User</td>
+		<td class="rating">Rating</td>
+		<td class="spam_count"><%= link_to "Spammed", :action => :messages, :desc => !params[:desc], :conditions => "items.item_active = true", :view => "spam" %></td>
+		<td class="teaser">Message</td>
+		<td class="vote">Vote</td>
+		<td class="nuke">Nuke</td>
+	</tr>
+	<% for message in @messages %>
+		<tr class="user" id="message_<%= message.id %>" style="background:<%= cycle('#f3f3f3','#fff') %>;">
+			<td class="posted"><%= message.created_at.strftime("%d %b, %Y") %></td>
+			<td class="login"><%= link_to h(message.user.login), dashboard_url(message.user.login) %></td>
+			<td class="rating"><%= message.rating_total || "&nbsp;" %></td>
+			<td class="spam_count"><%= message.spam_count %></td>
+			<td class="teaser"><%= link_to h(truncate(message.item_title, :length => 63, :omission => "...")), "/main/itemview/#{message.item_root_id}#itemblock-#{message.id}" %></td>
+			<td class="vote" id="vote_<%= message.id %>"><%= link_to_remote "up", {:url => {:action => "vote", :id => message.id, :type => 1}}, :style => "#{rating_style(message,1)}" %> / <%= link_to_remote "down", {:url => {:action => "vote", :id => message.id, :type => 2}}, :style => "#{rating_style(message,2)}" %></td>
+			<td class="nuke"><%= message.item_active == false ? link_to("De-Nukify", :action => "denuke", :id => message.id ) : link_to("Nuke!", :action => "nuke", :id => message.id ) %></td>
+		</tr>
+	<% end %>
+
+</table>
+<br />
+<%= will_paginate @messages %>

@@ -1,0 +1,6 @@
+if (params[:item][:tag_list] rescue false)
+  page.replace_html "edit_tags_#{@item.id}", (link_to_remote "<div class=\"button_reply\">Edit Tags</div>", {:url => {:controller => "main", :action => "edit_tags", :id => @item.id }}, {:class => "button button_#{(@item.id == @item.item_root_id ? "blue" : "orange" )}_75"} )
+  page.replace_html "tags_#{@item.id}", :partial => "tag_list", :locals => {:item => @item}
+else
+  page.insert_html "top", "edit_tags_#{@item.id}", :partial => "edit_tags", :locals => {:item => @item}
+end

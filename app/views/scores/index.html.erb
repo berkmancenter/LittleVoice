@@ -1,0 +1,25 @@
+<h2>Edit Scores</h2>
+
+<table>
+  <tr>   
+    <th>Name</th>
+    <th>Score</th>
+    <th>Description</th>
+    <th>Version</th>
+    <th>Modify</th>
+  </tr>
+
+<% for score in @scores %>
+  <tr>
+    <td><%= score.name %></td>
+    <td width=35><%= score.score %></td>
+    <td><%= score.description %></td>
+    <td><%= score.version %></td>
+    <td><%= link_to 'Edit', edit_score_path(score) %> <%= link_to 'Destroy', score, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New score', new_score_path %>

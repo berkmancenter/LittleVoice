@@ -1,0 +1,27 @@
+<%= render :partial => 'navigation' %>
+<% @page_title = "Admin - Messages : Nuked" %>
+<table id="users">
+	<tr class="user labels">
+		<td class="posted"><%= link_to "Created", :action => "messages", :asc => !params[:asc], :view => "nuked", :conditions => {:item_active => false} %></td>
+		<td class="login"><%= link_to "User", :action => "messages", :sort => "login", :desc => !params[:desc], :conditions => {:item_active => false}, :view => "nuked" %></td>
+		<td class="rating"><%= link_to "Rating", :action => :messages, :sort => "rating", :asc => !params[:asc], :conditions => {:item_active => false}, :view => "nuked"%></td>
+		<td class="spam_count"><%= link_to "Spammed", :action => :messages, :sort => "spammed", :desc => !params[:desc], :conditions => {:item_active => false}, :view => "nuked" %></td>
+		<td class="teaser"><%= link_to "Message", :action => :messages, :asc => !params[:asc], :sort => "itemtext", :conditions => {:item_active => false}, :view => "nuked" %></td>
+		<td class="login">Nuked By</td>
+		<td class="nuke">Nuke</td>
+	</tr>
+	<% for message in @messages %>
+		<tr class="user" id="message_<%= message.id %>" style="background:<%= cycle('#f3f3f3','#fff') %>;">
+			<td class="posted"><%= message.created_at.strftime("%d %b, %Y") %></td>
+			<td class="login"><%= link_to h(message.user.login), dashboard_url(message.user.login) %></td>
+			<td class="rating"><%= message.rating_total || "&nbsp;" %></td>
+			<td class="spam_count"><%= message.spam_count %></td>
+			<td class="teaser"><%= link_to h(truncate(message.item_title, :length => 63, :omission => "...")), "/main/itemview/#{message.item_root_id}#itemblock-#{message.id}" %></td>
+			<td class="login"><%= message.nuked_by || "&nbsp" %></td>
+			<td class="nuke"><%= message.item_active == false ? link_to("De-Nukify", :action => "denuke", :id => message.id ) : link_to("Nuke!", :action => "nuke", :id => message.id ) %></td>
+		</tr>
+	<% end %>
+
+</table>
+<br />
+<%= will_paginate @messages %>

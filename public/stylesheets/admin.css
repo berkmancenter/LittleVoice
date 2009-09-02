@@ -1,0 +1,217 @@
+
+
+#wrapper {
+	width:980px;
+	background:#fff;
+	margin: 0 auto;
+	padding:20px;
+	overflow:auto;
+}
+
+#users, #messages {
+	margin:0 auto;
+	display:block;
+	float:left;
+	width:100%;
+}
+.user {
+	padding:2px 4px;
+	border-bottom:1px solid #ddd;
+	float:left;
+	clear:both;
+	width:99.5%;
+}
+
+.message {
+	padding:2px 4px;
+	border-bottom:1px solid #ddd;
+	float:left;
+	clear:both;
+	width:99.5%;
+}
+.labels {
+	font-weight:bold;
+}
+
+.labels a {
+	border-bottom:none;
+}
+.user span{
+	display:block;
+	float:left;
+}
+
+.user .login, .posted{
+	width:118px;
+
+}
+
+.user .reputation, .level, .ban, .vote, .nuke, .spam_count {
+	width:80px;
+}
+
+.ban, .nuke {
+	text-align:right;
+}
+
+.level, .rating {
+	width:50px;
+
+}
+
+.seen {
+	width:150px;
+
+}
+
+.user .message {
+	width:470px;
+}
+
+.user_message {
+	width:470px;
+}
+
+.teaser, .messages {
+	width:390px;
+}
+
+.pagination {
+	padding:10px;
+	float:right;
+}
+
+.pagination > a {
+	border-bottom:none;
+}
+
+.disabled, .current {
+	color:#aaa;
+}
+
+#navigation {
+	margin-top:0px;
+}
+
+#navigation a {
+	color:#fff;
+	font-size:60%;
+	text-decoration:none !important;
+	margin-right:10px;
+	border-bottom:none;
+}
+
+#navigation .active a {
+	font-size:medium;
+}
+
+.search {
+	float:right;
+	clear:none;
+}
+#search {
+	font-size:small;
+	margin-top:0px;
+}
+
+th {
+	text-align:left;
+	font-size:small;
+}
+
+td {
+	font-size:small;
+}
+
+#location {
+	background:#eee;
+	padding:0 20px 20px;
+	width:300px;
+	float:left;
+	clear:left;
+}
+
+#location_preview {
+	background:#fff;
+	width:90%;
+	padding:10px;
+	font-size:small;
+	font-family:consolas;
+}
+
+#editor {
+	float:right;
+}
+
+
+#controls {
+	float:left;
+	clear:left;
+	width:300px;
+}
+
+#preview {
+	display:block;
+	width:100%;
+	border-top:1px dashed #ddd;
+	float:left;
+	padding-top:5px;
+	clear:both;
+}
+
+#versions {
+	background:#eee;
+	padding:20px;
+	width:250px;
+	float:left;
+	clear:left;
+}
+
+#view_content {
+	float:right;
+	clear:none;
+	width:630px;
+	min-height:20px;
+	padding:10px;
+}
+
+#invites {
+	width:100%;
+	clear:both;
+	padding:10px;
+}
+
+.invitation {
+	width:100%;
+	clear:both;
+	padding:3px;
+	border-bottom:1px solid #eee;
+	overflow:auto;
+}
+
+.invite_email {
+	width:400px;
+	float:left;
+	clear:none;
+}
+
+.invite_code {
+	float:left;
+	width:200px;
+	clear:none;
+}
+
+.invite_used {
+	float:right;
+	width:200px;
+	clear:none;
+}
+
+.question {
+	margin-top:20px;
+	font-weight:bold;
+}
+
+.responses li {
+	list-style:none;
+}

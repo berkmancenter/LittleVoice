@@ -1,0 +1,19 @@
+xml.instruct! :xml, :version=>"1.0" 
+xml.rss(:version=>"2.0"){
+  xml.channel{
+    xml.title("#{$SITE_NAME} - Replies to: #{@root_item.item_title}")
+    xml.link("http://#{$SITE_URL}/main/itemview/#{@root_item.id}")
+    xml.description(@root_item.item_title('...').capitalize)
+    xml.language('en-us')
+      for conversation in @conversations
+        xml.item do
+          xml.title(h(conversation.item_title('...').capitalize))
+          xml.description(white_list(RedCloth.new(conversation.itemtext).to_html))      
+          xml.author("contact@#{$SITE_URL} (#{conversation.user.login})")               
+          xml.pubDate(valid_timestamp(conversation.created_at))
+          xml.link("http://#{$SITE_URL}/main/itemview/#{@root_item.id}#itemblock-#{conversation.id}")
+          xml.guid("http://#{$SITE_URL}/main/itemview/#{@root_item.id}#itemblock-#{conversation.id}")
+        end
+      end
+  }
+}

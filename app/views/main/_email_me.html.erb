@@ -1,0 +1,7 @@
+<% checked = item_email_exists?(item_id) %>
+
+<% if checked %>
+	<%= link_to_remote "<span class=\"button_standard\">Unsubscribe</span>", {:url => {:action => :item_email_me, :item_id => item_id, :stylehash => stylehash, :user_id => user_id }}, {:class => "button button_#{stylehash[:color]}_100"}%>
+<% else %>
+	<%= link_to_remote "<span class=\"button_standard\">Subscribe</span>", {:url => {:action => :item_email_me, :item_id=> item_id, :stylehash => stylehash, :user_id => user_id }}, {:class => "button button_#{stylehash[:color]}_100"}%>
+<% end %>

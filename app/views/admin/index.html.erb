@@ -1,0 +1,39 @@
+<h3>Top 10 Lowest Rated Items</h3>
+<table>
+  <tr>    
+    <th>Subject</th>
+    <th>Score</th>
+    <th>User</th>
+    <th>Hide/Ban</th>
+  </tr>
+
+<% for item in @lowrateditems %>
+  <tr class="<%= cycle('even','odd') %>" >
+  	<% next if item.nil? %>
+    <td><%= link_to(h(item.itemtext), {:action => 'show', :id => item.id, :controller => "items"}, { :popup => ['new_window','height=450,width=450,scrollbars=yes'] }) %></td>
+    <td><%= item.ratingitemtotal.rating_total %></td>
+    <td><%= link_to(h(item.user.login), item.user, { :popup => ['new_window','height=450,width=450,scrollbars=yes'] }) %></td>
+    <td><%= link_to("nuke", { :action => "nuke", :id => @item })  %> <%= link_to cycle('ban','unban'), :controller => "admin", :action => "index"  %></td>
+  </tr>
+<% end %>
+</table>
+
+<table>
+  <tr>    
+    <th>Subject</th>
+    <th>User</th>
+    <th>Hide/Ban</th>
+  </tr>
+
+<h3>Items Marked as Spam</h3>
+<% for item in @spamitems %>
+  <tr class="<%= cycle('even','odd') %>" >
+  	<% next if item.nil? %>
+    <td><%= link_to(h(item.itemtext), {:action => 'itemview', :id => item.id, :controller => "main"}, { :popup => ['new_window','height=6450,width=450,scrollbars=yes'] }) %></td>
+    <td><%= link_to(h(item.user.login), item.user, { :popup => ['new_window','height=450,width=450,scrollbars=yes'] }) %></td>
+    <td><%= link_to("nuke", { :action => "nuke", :id => @item }) %> <%= link_to cycle('ban','unban'), :controller => "admin", :action => "index"  %></td>
+  </tr>
+<% end %>
+</table>
+<br />
+

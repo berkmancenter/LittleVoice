@@ -1,0 +1,47 @@
+	<div class="tabs">
+		<%= tab_for "Recent Topics", {:action => "conversations", :view => "all_conversations"}, :id => "recent" %>
+		<%= tab_for "Top Rated", {:action => "conversations", :view => "popular"}, :id => "popular" %>
+		<%= tab_for "FAQ", {:action => "conversations", :view => "faq"}, :id => "faq" %>
+		<%= tab_for "Tags", {:action => "tags"}, :id => "tags" %>
+		<%= tab_for "All Messages", {:action => "conversations", :view => "all_items"}, :id => "all_messages" %>
+		<!--<%= tab_for "Active", :action => "conversations", :view => "active" %>-->
+	</div>
+	
+	<script type="text/javascript">
+		//<![CDATA[
+		new Tip('recent', 'Recent conversation topics', {
+			hook: {
+				target: 'bottomLeft',
+				tip: 'topLeft'
+			}
+		});
+		
+		new Tip('popular', 'Conversations that are rated the highest by BadwareBusters users', {
+			hook: {
+				target: 'bottomMiddle',
+				tip: 'topMiddle'
+			}
+		});	
+		
+		new Tip('faq', 'Frequently Asked Questions', {
+			hook: {
+				target: 'bottomMiddle',
+				tip: 'topMiddle'
+			}
+		});
+		
+		new Tip('tags', 'Common keywords or categories', {
+			hook: {
+				target: 'bottomMiddle',
+				tip: 'topMiddle'
+			}
+		});	
+		
+		new Tip('all_messages', 'All topics and responses in chronological order', {
+			hook: {
+				target: 'bottomMiddle',
+				tip: 'topMiddle'
+			}
+		});		
+		//]]>
+	</script>

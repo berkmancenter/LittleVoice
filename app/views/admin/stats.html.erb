@@ -1,0 +1,33 @@
+<%= render :partial => 'navigation' %>
+
+<h2>Signup Survey Stats</h2>
+<p class="question">Question 1: On a scale of 1 (beginner) to 5 (expert), how would you describe your knowledge of personal computers?</p>
+<ul class="responses">
+	<% for response in @signup_1 %>
+		<li><span class="response"><%= response[0] %>:</span> <%= response[1] %> <i>(<%= ((response[1].to_f * 100)/ @total_responses.to_f).round_to(1) %>%)</i></li>
+	<% end %>
+</ul>
+<p class="question">Question 2: How did you learn about <%= $SITE_NAME %>? (<%= $SITE_NAME %>, <%= $ORG_NAME %>, News/media story, Blog/other website, Friend or relative, Other)</p>
+<ul class="responses">
+	<% for response in @signup_2 %>
+		<li><span class="response"><%= response[0] %>:</span> <%= response[1] %> <i>(<%= ((response[1].to_f * 100)/ @total_responses.to_f).round_to(1) %>%)</i></li>
+	<% end %>
+</ul>
+<p class="question">Question 3: Have you, to your knowledge, ever been a victim of a computer virus, spyware, or other badware?</p>
+<ul class="responses">
+	<% for response in @signup_3 %>
+		<li><span class="response"><%= response[0] %>:</span> <%= response[1] %> <i>(<%= ((response[1].to_f * 100)/ @total_responses.to_f).round_to(1) %>%)</i></li>
+	<% end %>
+</ul>
+<p class="question">Question 4: Do you believe that you have the knowledge you need to protect yourself, your computer, and your website (if applicable) from online threats? (Yes, No, Not sure)</p>
+<ul class="responses">
+	<% for response in @signup_4 %>
+		<li><span class="response"><%= response[0] %>:</span> <%= response[1] %> <i>(<%= ((response[1].to_f * 100)/ @total_responses.to_f).round_to(1) %>%)</i></li>
+	<% end %>
+</ul>
+<p class="question">Question 5: Do you currently own or operate a website or blog? (Yes, No)</p>
+<ul class="responses">
+	<% for response in @signup_5 %>
+		<li><span class="response"><%= response[0] %>:</span> <%= response[1] %> <i>(<%= ((response[1].to_f * 100)/ @total_responses.to_f).round_to(1) %>%)</i></li>
+	<% end %>
+</ul>

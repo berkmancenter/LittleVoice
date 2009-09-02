@@ -1,0 +1,24 @@
+<% @page_title = "Password Reset" %>
+<div class="section" style="margin-top:5px;margin-bottom:20px;">
+		<div class="rootcontentcontainer box grad lightblue" style="height:220px;">
+			<img src="/images/backgrounds/grad_white_bottom.png" class="gradimage" alt="gradient box" />
+			<div class="rootcontent" style="width:inherit;">
+<center>
+<div id="login_form" style="padding:1px;">
+   <% form_tag url_for(:action => "update", :id => params[:id]) do %>
+	   <table>
+	   	<tr><td style="text-align:right;"><label for="password">New Password</label></td><td><%= password_field_tag :password %></td></tr>
+		<tr><td style="text-align:right;"><label for="password_confirmation">Confirm New Password</label></td><td><%= password_field_tag :password_confirmation %></td></tr>
+		<tr><td style="text-align:right;"></td><td><%= submit_tag 'Reset Password' %></td></tr>
+	   </table>
+   <% end %>
+   			<div id="statusmessage" name="statusmessage" >
+				<p style="color: green"><%= flash[:notice] -%></p>
+				<p style="color: red"><%= flash[:error] -%></p>
+			</div>
+</div>  
+</center>
+	   </div>
+   </div>
+</div>
+

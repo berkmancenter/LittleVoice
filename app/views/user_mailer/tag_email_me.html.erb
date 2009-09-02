@@ -1,0 +1,16 @@
+<span style="font-size:0.8em;color:#666;">A new message has been posted on <%= $SITE_NAME%> with the tag "<%= @tag_name %>":<br /><br />
+<span style="font-weight:bold;font-size:1em;color:#000;">In <%= @item.id == @item.item_root_id ? "response to " : '' %>the topic "<%=h Item.find(@item.item_root_id).item_title('...') %>," <%= @user.login %> writes:</span>
+</span>
+
+<div style="margin-left:10px;">
+	<%= white_list(RedCloth.new(@item.item_text).to_html) %>
+</div>
+
+<br />
+<span style="font-size:0.8em;color:#666;">
+DO NOT REPLY BY E-MAIL<br />
+To view or respond to this message, please visit <%= link_to @url, @url %>.<br /><br />
+
+If you no longer wish to receive e-mails about this topic, please modify the subscription settings in your user dashboard at <%= link_to 'http://#{$SITE_URL}/dashboard?view=subscriptions', 'http://#{$SITE_URL}/dashboard?view=subscriptions' %>.<br />
+You will have to be logged in to the site to make this change.
+</span>

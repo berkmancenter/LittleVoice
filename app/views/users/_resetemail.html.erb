@@ -1,0 +1,7 @@
+    <% @user.email %><br />
+	   <% form_tag ('/users/', :id => params[:id]) do %>
+        Enter your new email address:<br />
+        <%= text_field_tag :email, "", :size => 50 %><br />
+        <%= submit_tag 'Reset Your Email', :class => "formbutton" %>
+    <% end %>
+

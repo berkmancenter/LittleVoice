@@ -1,0 +1,15 @@
+<%
+session[:expandhash][item_root_id][item_id] = false
+
+childhash = {
+	:action => "display_children",
+	:item_id => item_id,
+	:minscore => minscore,
+	:maxscore => maxscore,
+	:level => level
+}
+
+child_expand_link = link_to_remote('+', :update => "childblock-#{item_id}", :url => childhash)
+-%>
+
+<div class='basicbox'><%= child_expand_link%> Replies: <%= childrencount%> All Replies <%= allchildrencount%></div>

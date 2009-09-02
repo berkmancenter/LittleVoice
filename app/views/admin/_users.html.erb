@@ -1,0 +1,25 @@
+<%= render :partial => 'navigation' -%>
+<% @page_title = "Admin - Users" %>
+<table id="users">
+	<tr class="user labels">
+		<td class="login"><%= link_to "Login", :action => :users, :desc => !params[:desc] %></td>
+		<td class="reputation"><%= link_to "Reputation", :action => :users, :sort => "reputation", :desc => !params[:desc] %></td>
+		<td class="level">Level</td>
+		<td class="seen">Last Login</td>
+		<td class="user_message">Last Message</td>
+		<td class="ban" />
+	</tr>
+	<% for user in @users %>
+		<tr class="user" style="background:<%= cycle('#f3f3f3','#fff') %>;">
+			<td class="login"><%= link_to h(user.login), dashboard_url(user.login) %></td>
+			<td class="reputation"><%= user.rawscore ? user.rawscore.floor : "&nbsp;"  %></td>
+			<td class="level"><%= user.stars  || "&nbsp;" %></td>
+			<td class="seen"><%= user.last_login ? distance_of_time_in_words_to_now(user.last_login) + " ago" : "&nbsp;"  %></td>
+			<% latest_item = user.items.sort_by(&:created_at).reverse.first %>
+			<td class="user_message"><%= link_to h(truncate(latest_item.item_title, :length => 63, :omission => "...")) || "&nbsp;", "/main/itemview/#{latest_item.item_root_id}#itemblock-#{latest_item.id}" rescue "&nbsp;" %></td>
+			<td class="ban"><%= user.enabled == false ? link_to("Un-Ban", :action => "unban", :id => user.id ) : link_to("Ban", :action => "ban", :id => user.id ) %></td>
+		</tr>
+	<% end %>
+</table>
+
+<%= will_paginate ((params[:sort] == "reputation" and params[:conditions] == nil) ? @scores : @users) %>

@@ -1,0 +1,119 @@
+.box {
+  height:2.5em;
+  
+}
+
+.responseitem {
+	height: 100%;
+}
+
+.root_content {
+	width:960px;
+}
+
+.section_title  {
+	font-size:1.3em;
+	overflow:visible;
+}
+
+.tabs {
+	overflow:visible;
+	display:inline;
+	float:left;
+}
+.sub_tabs {
+	display:inline;
+	top:-20px;
+	padding:0px;
+	width:960px;
+}
+
+.main_teaser {
+	font-size:1.3em;
+}
+
+#main_form_submit {
+	padding:1px 0px;
+	font-size:1.2em;
+}
+
+#users td, #messages td{
+	font-size:0.9em;
+}
+
+
+.box * {
+
+}
+
+.itemcontent * {
+	color:#000;
+	z-index:20;
+	
+}
+
+.item_left_top a {
+	color:white;
+}
+
+.item_left_top a:hover {
+	color:#D3E6EA;
+}
+
+#main_container {
+	position:relative;
+	top:120px;
+}
+
+#main_intro_text {
+	font-weight:normal;
+}
+
+#footer {
+	float:right;
+	clear:both;
+}
+
+#main_blue_box {
+	height:350px;
+}
+
+#signup_content {
+	width:445px;
+}
+
+#signup_content ol {
+	list-style:decimal;
+	font-size:0.9em;
+	list-style-type:decimal;
+}
+
+#signup_div {
+	margin-bottom:50px;
+}
+
+#admin_nav {
+	position:relative;
+	top:-20px;
+	float:left;
+	display:inline;
+}
+
+#remember_me {
+	text-align:left;
+	float:left;
+}
+
+.post_buttons {
+	margin:8px 5px;
+	float:none;
+}
+
+/* OpenID logo */
+input#openid_url {
+   background: url(http://openid.net/login-bg.gif) no-repeat;
+   background-color: #fff;
+   background-position: 0 50%;
+   color: #000;
+   padding-left: 18px;
+}

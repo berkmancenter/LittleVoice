@@ -1,0 +1,22 @@
+<h1>Listing reputations</h1>
+
+<table>
+  <tr>
+    <th>User</th>
+    <th>Score</th>
+  </tr>
+
+<% for reputation in @reputations %>
+  <tr>
+    <td><%=h reputation.user_id %></td>
+    <td><%=h reputation.score_id %></td>
+    <td><%= link_to 'Show', reputation %></td>
+    <td><%= link_to 'Edit', edit_reputation_path(reputation) %></td>
+    <td><%= link_to 'Destroy', reputation, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New reputation', new_reputation_path %>

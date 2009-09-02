@@ -1,0 +1,23 @@
+<%= render :partial => 'admin/navigation' %>
+<% @page_title = "Admin - Contents : Show" %>
+<div id="versions">
+<p>
+  <b>Versions:</b>
+	<p>
+		<span style="float:right;clear:none;"><%= link_to 'Edit', edit_content_path(@content) %> | <%= link_to 'Publish', {:action => "publish", :id => @content.id}, :confirm => "Are you sure?  This will push the working copy to the live website" %></span>
+		<%= link_to_remote "Working Copy", :url => {:action => 'show_update', :id => @content.id } -%>
+	</p>
+	<% for version in @content.versions do%>
+	<p>
+		<span style="float:right;clear:none;"><%= link_to 'Revert', {:action => :revert, :id => @content.id, :version => version.version}, :confirm => "Warning! Any changes that have been made to the working copy will be lost." %></span>
+		<%= link_to_remote version.updated_at.strftime("%c"), :url => {:action => 'show_update', :id => @content.id, :version => version.version } -%>
+	</p>
+	<% end %>
+</p>
+
+</div>
+
+<div id="view_content">
+	<%= @content.parse_body %>
+</div>	
+

@@ -1,0 +1,66 @@
+<% load_content %>
+
+	<div class="section" style="margin-top:5px;margin-bottom:20px;">
+		<div id="main_blue_box" class="rootcontentcontainer box grad lightblue" >
+			<img src="/images/backgrounds/grad_white_bottom.png" class="gradimage" alt="gradient box" />
+			<div class="rootcontent">
+				<div id="big_buttons">
+					<div class="big_button">
+						<%= link_to image_tag('interact.png', :style => "margin-bottom:10px;"), '/main/conversations?get_started=true' %><br />
+						<span class="big_button_text"><%= link_to "Get Started", '/main/conversations?get_started=true' %></span>
+					</div>
+				</div>
+				<span id="main_teaser">
+					
+					<span id="main_intro_text">
+						<%= $ORG_NAME %> is a community of people blah blah blah...
+						<br /><br />
+						Whether you're seeking assistance, offering your expertise, or simply trying to learn more about .... , it's easy to <%= link_to "get started", '/main/conversations?get_started=true' %>.
+					</span>
+					
+				</span>				
+			</div>
+		</div>
+				
+	</div>
+	
+	<div class="section" style="margin-bottom:20px;float:left;clear:both;">
+		<div id="logos">
+			<div style="padding-bottom:10px;font-weight:bold;color:#DC5E1B;"><%= $SITE_NAME %> is brought to you by:</div>
+			<%= image_tag "#{$ORG_LOGO_URL}" , :onclick => "document.location = #{$ORG_URL}", :style => "cursor:pointer;" %>
+		</div>
+		
+		<div id="quotation" onmouseover="hovering = true;" onmouseout="hovering = false;">
+			<%= image_tag "close_quote.png", :style => "position:absolute;bottom:0px;right:0px;" %>
+			<div id="left_quote"><%= image_tag "open_quote.png" %></div>
+			<div id="quotation_body">
+					<span id="fading_conversations" style="display:visible;"><a id="fade_link"></a></span>
+					<script type="text/javascript">
+						//<![CDATA[
+						var hovering = false
+						var conversations = '<%= custom_escape_javascript(conversation_faders(@conversations)) -%>'.evalJSON(true);
+						var i = 0;
+						var fadeLink = $('fading_conversations');
+						fadeLink.innerHTML = '<a href="/main/itemview/' + conversations[i].id + '" style="">' + conversations[i].item_text + '</a><br /><span class=\"fader_by\">posted by <a style=\"color: #2382A1;\" href=\"/dashboard/' + conversations[i].user + '\">' + conversations[i].user + '</a>, ' + conversations[i].ago + ' in the topic <a style=\"color: #2382A1;\" href=\"/main/itemview/' + conversations[i].root_id + '\">' + conversations[i].root_title + '</a></span>'; 
+						
+						function fader(){
+							if (hovering == false) {
+								if ((i + 1) < conversations.size()) {i++;}
+								else {i = 0;};
+								fadeLink.fade({duration: 0.5});
+								setTimeout("fadeLink.innerHTML = '<a href=\"/main/itemview/' + conversations[i].id + '\" style=\"\">' + conversations[i].item_text + '</a><br /><span class=\"fader_by\">posted by <a style=\"color: #2382A1;\" href=\"/dashboard/' + conversations[i].user + '\">' + conversations[i].user + '</a>, ' + conversations[i].ago + ' in the topic <a style=\"color: #2382A1;\" href=\"/main/itemview/' + conversations[i].root_id + '\">' + conversations[i].root_title + '</a></span>';fadeLink.appear({duration:0.5});", 500);
+							}
+						}
+						setInterval("fader();", 5000);
+						//]]>
+					</script>
+			</div>
+		</div>
+		
+		<div id="main_container">
+			
+		</div>
+				<div style="display:block;clear:both;float:left;width:100%;height:1px;"><br /></div>
+	</div>
+
+

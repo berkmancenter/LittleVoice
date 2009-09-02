@@ -1,0 +1,35 @@
+<div class="section" style="margin-top:25px;">
+		<!--<div class="section_title rootcontent " style="height:28px;">
+			<%#= render :partial => 'conversations_tabs' %>
+
+		</div>
+		
+				<div class="sub_tabs" >	
+				
+				</div>
+		-->
+	<center>
+		<div id="tag_cloud">
+		<% for tag in @all_tags.sort_by(&:name) %>
+			<span style="font-size:<%= (2.75 * (tag.count/@max_count)**0.5).round_to(2).to_s + 'em' %>; margin-right:5px;">
+				<%= link_to h(tag.name), {:action => "conversations", :view => "tag", :tag => h(tag.name)}, :class => "tag_cloud_link" %>
+			</span>
+		<% end %>
+		</div>
+	</center>
+
+	<div id="tag_list">
+		<% for tag in @tags %>
+			<% topics = Item.conversations.tagged_with(tag.name, :on => :tags) %>
+			<% responses = Item.responses.tagged_with(tag.name, :on => :tags) %>
+			<div class="tag_list_item">
+			<span class="tag_list_name"><%= link_to h(tag.name), :action => "conversations", :view => "tag", :tag => h(tag.name) %></span>
+			<span class="tag_list_counts">(<%= link_to pluralize(topics.length, "topic"), :action => "conversations", :view => "tag", :kind => "topics", :tag => h(tag.name) %>, 
+			<%= link_to pluralize(responses.length, "response"), :action => "conversations", :view => "tag", :tag => h(tag.name), :kind => "responses" %>)</span>
+			</div>
+		<% end %>
+		<%= will_paginate @tags %>
+	</div>
+
+		
+	</div>

@@ -1,0 +1,63 @@
+<%
+childhash = Hash.new()
+childhash = {
+	:action => "display_children",
+	:item_id => item_id,
+	:item_root_id => item_root_id,
+	:minscore => minscore,
+	:maxscore => maxscore,
+	:level => level,
+	:childrencount => childrencount,
+	:allchildrencount => allchildrencount
+}
+
+itemrecord = Item.find(item_id)
+
+# opacityvalue = (scorerating.to_f * 2)/10
+# opacityvalue = opacity_scale(itemrecord.rating_total)
+
+stylehash = Hash.new()
+
+if !parent_id.nil?
+	stylehash = {
+		:opacityclass =>  "opacity-state-#{scorerating.to_s}",
+		:mainclass => "itemblock",
+		:containerclass => "",
+		:contentclass => "",
+		:titleclass => "itemtitle",
+		:itemcolor => "lightorange",
+		:color => "orange",
+		:itemcontentclass => "itemcontent",
+		:itemmetaclass => "item_meta_info"
+	}
+else
+	stylehash = {
+		:opacityclass =>  "",
+		:mainclass => "rootcontentcontainer",
+		:containerclass => "rootbox",
+		:contentclass => "",
+		:titleclass => "roottitle",
+		:itemcolor => "lightblue",
+		:color => "blue",
+		:itemcontentclass => "itemcontent",
+		:itemmetaclass => "root_meta_info"
+	}
+end
+
+### inresponsetorecord = Item.find(parent_id)
+childrencount ||= 0
+
+-%>
+
+
+<% if !itemrecord.parent_id.nil? %>
+	<% if childrencount > 0 %>
+		<div id='childblock-<%= item_id%>' class='childblock'>
+			<% if true #if session[:expandhash][item_root_id][item_id] %>
+				<%= display_children(item_id, minscore, maxscore) %>
+			<% else %>
+				<%= render(:partial => "collapseblock", :locals => childhash) %>
+			<% end %>
+		</div>          
+	<% end %>
+<% end %>

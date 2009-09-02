@@ -1,0 +1,31 @@
+<% checked = item_email_exists?(item_id) %>
+<% rss_url = {:controller => "rss"} 
+   rss_url.merge!(:action => "full") if item_id == "all_items"
+   rss_url.merge!(:action => "tag", :id => params[:tag]) if item_id == "tag"
+%>
+
+<div id="checkbox">
+	<span class="rss_link">
+		<%= link_to_remote image_tag(checked ? "email_delete.png" : "email.png"),
+					{:url => {:action => :item_email_me, :item_id => item_id, :user_id => user_id, :tag => params[:tag]}},
+					:onmouseover => "toggleTooltip(event, $('tooltip'));",
+					:onmouseout => "toggleTooltip(event, $('tooltip'));",
+					:id => "email_me_image"
+		%>
+		<%= link_to image_tag('feed.png'), rss_url %>
+	</span>
+</div>
+	 
+	 <script type="text/javascript">
+	 	//<![CDATA[
+	 	new Tip('email_me_image', '<% if item_id == "all_conversations" %> \
+			Click to <%= checked ? "stop receiving" : "receive" %> e-mail notifications when new topics are posted. \
+		<% elsif item_id == "all_items" %> \
+			Click to <%= checked ? "stop receiving" : "receive" %> e-mail notifications when new messages are posted. \
+		<% elsif item_id == "tag" %> \
+			Click to <%= checked ? "stop receiving" : "receive" %> e-mail notifications when new messages are tagged with \'<%=h params[:tag] %>.\' \
+		<% end %>', {
+			hook: { target: 'bottomLeft', tip: 'topRight' }
+		});
+		//]]>
+	</script>

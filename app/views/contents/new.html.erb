@@ -1,0 +1,68 @@
+<% load_content %>
+<% @page_title = "Admin - Contents : New" %>
+<%= render :partial => 'admin/navigation' %>
+
+
+<%= error_messages_for :content %>
+
+<p>
+	<%= yield :instructions %>
+</p>
+
+<% form_for(@content) do |f| %>
+
+<div id="location">
+  <p>
+    <b>Controller:</b> e.g. "main"<br />
+    <%= f.text_field :controller, {:onchange => "getLocationPreview();" }%>
+  </p>
+
+  <p>
+    <b>Action:</b> e.g. "itemview"<br />
+    <%= f.text_field :action, {:onchange => "getLocationPreview();" }%>
+  </p>
+
+  <p>
+	<b>Name:</b> e.g. "Header"<br />
+	<%= f.text_field :name, {:onchange => "getLocationPreview();" }%>
+  </p>
+  
+  <p>
+  	<b>Pseudonym:</b>Optional e.g. "unicorn"<br />
+	<%= f.text_field :pseudonym %>
+  </p>
+  
+  <div id="location_preview"><%= @content.location %></div>
+  <div id="controls">
+	<p><b>Textile:</b> <%= f.select :textile, [["On",true],["Off",false]], {}, {:style => "float:left;clear:none;"} -%>
+	<%= f.submit "Save", :style => "float:right;clear:none;" %>
+	</p>
+</div>
+</div>
+<div id="editor">
+    <%= f.text_area :body, :cols => 90, :rows => 17 %>
+</div>
+
+<% end %>
+
+<div id="preview">
+	<%= @content.parse_body %>
+</div>	
+
+<script>
+
+	function getLocationPreview(){
+		var authToken = document.getElementsByName('authenticity_token')[0].value;
+		var controller = $('content_controller').value;
+		var action = $('content_action').value;
+		var name = $('content_name').value;
+		new Ajax.Updater('location_preview', '<%= url_for :action => :location_preview %>?location[controller]=' + controller + '&location[action]=' + action + '&location[name]=' + name + '&authenticity_token=' + authToken )
+	}
+	
+	var contentForm = $('new_content');
+	var bodyInput = contentForm['content_body'];
+	new Form.Observer(contentForm, 2, function updatePreview(el, value){
+			new Ajax.Updater('preview','<%= url_for :action => :update_preview %>?'+ value);
+		}
+	);
+</script>

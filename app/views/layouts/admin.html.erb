@@ -1,0 +1,17 @@
+<html>
+	<head>
+	  <title>Admin | <%= $SITE_NAME %></title>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"> 
+		<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+		<%= stylesheet_link_tag "admin" %>
+		<%= javascript_include_tag :defaults %>
+</head>
+<body>
+	<div id="wrapper">
+		<div class="messageheader">	
+			<div id="statusmessage"></div>
+		</div>
+		<%= @content_for_layout %>
+	</div>
+</body>
+</html>

@@ -1,0 +1,175 @@
+	<div class="section">
+		
+	<% if @user %>
+
+
+		<div class="head_title rootcontent">Dashboard for <%=h @user.login %>&nbsp;&nbsp;<%= display_stars(@user.stars, :include_empty => false) %><%= display_badges(@user) %></div> 
+		<div class="section_title rootcontent " style="height:28px;">
+			<div class="tabs">
+				<%= tab_for "Recent Messages", :controller => "dashboard", :action => @user.login, :view => "recent" %>
+
+				<% if @account %>
+				<%= tab_for "Subscriptions", :controller => "dashboard", :action => h(@user.login), :view => "subscriptions" %>
+				<%= tab_for "Change Password", :controller => "dashboard", :action => h(@user.login), :view => "password" %>
+				<%= tab_for "Change Email", :controller => "dashboard", :action => h(@user.login), :view => "email" %>
+
+				<% if @admin %>
+				<%= tab_for "User Management", :controller => "dashboard", :action => h(@user.login), :view => "user" %>
+				<%= tab_for "Reputation Report", :controller => "dashboard", :action => h(@user.login), :view => "scores" %>
+				<% end %>	
+				
+				<% end %>
+			</div>
+			
+		</div>	  
+	    <div class="sub_tabs"></div>
+		
+	    <!--
+		<ul class="rootcontent"><%=h @user.login %> joined on <%= @user.created_at.to_s(:short) %><br />
+		  last login <%=h @user.last_login.to_s(:short) %></ul>			    		
+	  	-->
+	<% end %>	
+			
+	<% if @tabview == "email" %>				
+		<% if @current_user != false && (@current_user.has_role?("administrator") || @current_user == @user) %>
+			<div class="">
+				<div class="headtext">Change email</div>
+				<div class="conversations_list">
+				<p>	
+			       Current email: <b><%= @user.email.to_s %></b><br />
+				</p>
+				
+				   <% form_tag url_for(:controller => :emails, :action => "update", :id => params[:id]) do %>
+				       New Email:<br />
+				       <%= text_field_tag :email %><br />
+				       Confirm Email:<br />
+				       <%= text_field_tag :email_confirmation %><br /><br />
+				       <%= submit_tag "Change Your Email", :class => "formbutton" %><br />
+				   <% end %>
+				</div>
+				<br />
+			</div>	  
+		 <% end %>
+	<% end %> 
+		
+	<% if @tabview == "password" %>		
+		<div class="">
+			<div class="headtext">Change Password</div>
+			<div class="conversations_list">
+			   <% form_tag url_for(:controller => :accounts, :action => "update", :id => params[:id]) do %>
+			      <br />
+				  <div>
+			       Current Password:<br />
+			       <%= password_field_tag :old_password %>
+				  </div>
+			      <div style="float:left">
+			       New Password:<br />
+			       <%= password_field_tag :password %>			   
+			      </div>
+			      <div style="float:left">&nbsp;&nbsp;</div>
+			      <div style="float:left">
+			       Confirm New Password:<br />
+			       <%= password_field_tag :password_confirmation %><br /><br />
+				  </div>				  
+			      <div style="clear:both"></div>				  
+			       <%= submit_tag "Change Your Password", :class => "formbutton" %><br />
+			   <% end %>
+		  </div>
+		</div>	
+	<% end %>	
+	
+		 
+	<% if @tabview  == "recent" %>	
+		<% if @user %>
+			
+		<% @items.each_with_index do |item,index| %>
+		<% if item.item_active or check_role(['administrator','moderator']) or (item.user_id == @current_user.id rescue false) %>
+			<%= render :partial => "main/conversation_item", :locals => {:item => item} %>
+		<% end %>	
+		<% end %>
+		<div style="text-align:center;">
+			<%= will_paginate @items %>
+		</div>
+
+
+		<% end %>
+	<% end %>
+
+	<% if @tabview == "subscriptions" %>				
+		<% if @current_user != false && (@current_user.has_role?("administrator") || @current_user == @user) %>
+			<div>
+				<div class="headtext">E-mail Subscriptions</div>
+				<div id="subscriptions">
+					<%= render :partial => "subscriptions", :locals => {:user => @user} %>
+				</div>
+			</div>
+		<% end %>
+	<% end %>
+
+    <% if @tabview == "scores" %>
+      <% if @current_user != false && @current_user.has_role?("administrator")%>
+		<div class="">
+			<div class="headtext">Reputation Report</div>
+            <div class="">Current Reputation:<%=h @user.rawscore  %></div>
+			<br />
+			<table>
+                <thead>
+                  <th>score type</th>
+                  <th>award</th>
+                  <th>reputation</th>
+                  <th>created</th>
+                  <th>updated</th>
+                  <th>description</th>
+                </thead>
+            	<%= render :partial => '/scores/score', :collection => @user.scores.sort {|x,y| y<=>x} %>
+			</table>
+			<br />
+		</div>
+		<% end %>
+	<% end %>
+    
+	<% if @tabview == "user" %>			
+	<% if @current_user != false && @current_user.has_role?("administrator")%>
+		<div class="">
+			<div class="headtext">User management</div>
+			<div class="">
+			User is currently <b><%= @user.enabled ? "enabled" : "banned" %></b> 
+			<%= link_to (@user.enabled ? "ban user" : "un-ban user"), :action => "ban_toggle", :id => @user.id %>			
+			<br />
+			
+			
+				Reputation: <%= @user.rawscore %><br />
+				<%= form_tag :action => "adjust_score", :id => @user.id %>
+					Adjust Score: <%= text_field_tag "adjustment", nil, :size => 7 %><br /><br />
+					<%= submit_tag "Save", :class => "formbutton" %>
+				</form>		
+				
+			</div>	
+			<br />
+		</div>	
+   
+   	<p>
+	<% if @user %>	
+		<div class="">
+			<div class="headtext">User roles</div>
+				
+				<div class="">
+			    <%= render :partial => '/roles/role', :collection => @user.roles %>
+			    <%= render :partial => '/roles/role', :collection => (@all_roles - @user.roles) %>	
+				</div>
+				
+			<br />
+		</div>	   
+	<% end %>
+	</p>
+
+<% end %>
+
+<% end %>
+
+
+  <div style="width:100%;float:left;height:10px;"></div>
+<!--
+  <div class="section_title rootcontent "><%= submit_tag "Start a new conversation", :class => "formbutton", :onclick => "document.location = '/main/ask';" %></div>
+-->
+</div>

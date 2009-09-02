@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" /> 
+<meta http-equiv="X-UA-Compatible" content="IE=8;FF=3;OtherUA=4" />
+<meta name="keywords" content="" />
+<meta name="description" content="<%= @page_description %>" />
+<title><%= @page_title ? $ORG_NAME +' - '+ @page_title : $ORG_NAME %></title>
+<%= auto_discovery_link_tag(:rss, :controller => "rss", :action => "index") %>
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.6.0/build/fonts/fonts-min.css" />
+
+<%= stylesheet_link_tag "style" %>
+<%= stylesheet_link_tag "/stylesheets/buttons" %>
+<%= stylesheet_link_tag "prototip" %>
+
+<!--[if lt IE 7]>
+	<script src="http://ie7-js.googlecode.com/svn/version/2.0(beta3)/IE7.js" type="text/javascript"></script>
+	<%= javascript_include_tag 'pngfix.js' %>
+<![endif]-->
+<!--[if lte IE 7]><%= stylesheet_link_tag "style_ie7" %><![endif]-->
+<% if current_user != false && check_role(['administrator','moderator']) && ["admin","contents"].include?(@current_controller) %><%= stylesheet_link_tag "admin" %><% end %>
+<%= javascript_include_tag :defaults %>
+<%= javascript_include_tag 'prototip' %>
+</head>
+
+<body>
+	<div id="bodywrapper">
+		
+		<div id="header">
+					<div id="small_search" style="display:none;" >
+						<% form_tag({:controller => "main", :action => "search"}, :method => 'get') do |f| -%>
+							<%= text_field :search, :q, :size => 30, :id => "search_field", :onblur => "setTimeout(\"$('small_search').fade({duration:0.3});\", 1000);" -%> 
+							<%= submit_tag "Search", :style => "padding:1px;" -%>
+						<% end -%>
+					</div>
+			<div id="login_text">
+				<% if current_user != false %>
+					<% if check_role(['administrator','moderator']) %><span style="float:right;"><%= link_to "Admin Dashboard", '/admin/messages' %></span><br /><% end %>
+					<span style="float:right;">Welcome, <%=h @current_user.login.upcase %>  ( <%= link_to "Log out", logout_url -%> )</span>
+				<% else %>
+					<span style="float:right;"><%= link_to "Log in", login_url(:return_to => CGI::escape(request.request_uri)) -%> or <%= link_to "Sign up", signup_url -%></span>
+				<% end %>
+			</div><span id="by_line">by <%= link_to $ORG_NAME, "http://#{$ORG_URL}" %></span>
+			<div id="header_links">
+				<span class="header_link"><%= link_to "Browse", :controller => "main", :action => "conversations", :view => "all_conversations" %></span>
+				<span class="header_link"><%= link_to "Search", :controller => "main", :action => "search" %></span>
+<!--				<span class="header_link"><%= link_to "Search", '#', :onclick => "$('small_search').appear({duration:0.3, afterFinish:function(){$('search_field').value='';}});" %></span>-->
+				<span class="header_link"><%= link_to "Post", '/main/ask' %></span>
+				<span class="header_link"><%= link_to "FAQ", :controller => "main", :action => "howto" %></span>
+				<% if @current_user && @current_user != false %>
+					<span class="header_link">
+						<% login = @current_user && @current_user != false ? @current_user.login : @current_user %>
+						<%= link_to "My Dashboard", dashboard_url(login) %>
+					</span>
+				<% end %>		
+			</div>
+			<a style="position:relative;top:-8px;left:3px;" href="/"><img src=<%= $SITE_LOGO_URL %> alt=<%="http://#{$SITE_URL}" %> /></a>
+		</div>	
+			
+		<div id="content">
+			<% if flash[:notice] %>
+				<div id="notice" style="display:none;"><%= flash[:notice] %></div>
+				<script type="text/javascript">
+					//<![CDATA[
+						$('notice').blindDown({duration: 0.5});
+					//]]>
+				</script>
+			<% end %>
+			<%= yield :layout -%>	
+		</div>
+		<div id="footer">
+			<div id="footer_links">
+				<span class="footer_link"><%= link_to "About #{$ORG_NAME}" , :controller => "main", :action => "about" %></span>
+				<span class="footer_link"><%= link_to "How to Use", :controller => "main", :action => "howto" %></span>
+				<span class="footer_link"><%= link_to "Contact Us", :controller => "main", :action => "contact" %></span>
+				<span class="footer_link"><%= link_to "Terms &amp; Conditions", :controller => "main", :action => "terms" %></span>
+				<span class="footer_link"><%= link_to "Privacy Policy", :controller => "main", :action => "privacy" %></span>
+				<span class="footer_link"><%= link_to "Copyright", :controller => "main", :action => "copyright" %></span>
+			</div>
+		</div>
+		
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-223559-8");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+</html>

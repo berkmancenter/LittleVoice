@@ -1,0 +1,37 @@
+<h4 class="less_margin_bottom">Site-wide subscriptions:</h4>
+	<div class="subscription_description">
+		<span class="subscription_link">
+			<%= link_to_remote(((@user.subscriptions.include? Subscription.all_conversations) ? "Unsubscribe" : "Subscribe" ), :url => {:action => "toggle_subscription", :id => Subscription.all_conversations.id, :user => @user.id })%>
+		</span> 
+		<%= link_to "New topics", :controller => "main", :action => "conversations", :view => "all_conversations" %> 
+	</div>
+	<div class="subscription_description">
+		<span class="subscription_link">
+			<%= link_to_remote(((@user.subscriptions.include? Subscription.all_items) ? "Unsubscribe" : "Subscribe" ), :url => {:action => "toggle_subscription", :id => Subscription.all_items.id, :user => @user.id } )%>
+		</span> 
+		<%= link_to "All new posts", :controller => "main", :action => "conversations", :view => "all_items" %> 
+	</div>
+
+<% if @user.subscriptions.tags.any? %>
+	<h4 class="less_margin_bottom">Posts tagged with:</h4>
+	<% for subscription in @user.subscriptions.tags %>
+		<div class="subscription_description">
+			<span class="subscription_link">
+				 <%= link_to_remote "Unsubscribe", :url => {:action => "toggle_subscription", :id => subscription.id, :user => @user.id }%>
+			</span> 
+			<%= h(subscription.sub_name) %>
+		</div>
+	<% end %>
+<% end %>
+
+<% if @user.subscriptions.items.any? %>
+	<h4 class="less_margin_bottom">Individual topic subscriptions: </h4>
+	<% for subscription in @user.subscriptions.items %>
+		<div class="subscription_description">
+			<span class="subscription_link">
+				 <%= link_to_remote "Unsubscribe", :url => {:action => "toggle_subscription", :id => subscription.id, :user => @user.id } %>
+			</span> 
+			<%= link_to(h(Item.find(subscription.sub_type_id).item_title('...')), :controller => "main", :action => "itemview", :id => subscription.sub_type_id) %>
+		</div>
+	<% end %>
+<% end %>

@@ -1,0 +1,139 @@
+<% load_content %>
+
+<div class="section" style="margin-top:5px;margin-bottom:20px;">
+		<div class="rootcontentcontainer box grad lightblue" style="min-height:500px;">
+			<img src="/images/backgrounds/grad_white_bottom.png" class="gradimage" alt="gradient box" />
+			<div class="rootcontent">
+				<div id="main_ask_form" style="padding-top:50px;">
+					<% form_remote_tag :url => {:controller => "main", :action => :additem}, :before => "$('statusmessage').update(\"#{get_message(0)}\")" do  %>
+						<table>
+							<tbody>
+								<tr>
+									<td class="label"><label>Subject</label></td>
+									<td>
+										<% if params[:title] %>
+											<%= hidden_field(:item, :item_title, :value => @item.item_title )%>
+											<span style="font-size:1.2em;padding:5px;float:left;font-weight:bold;color:#333;"><%= @item.item_title %></span>
+										<% else %>
+											<%= text_field(:item, :item_title, :class => "itemtext", :size => 92, :id => "main_ask_subject") %>
+										<% end %>
+									</td>
+								</tr>
+								<tr>
+									<td class="label"><label>Body</label></td>
+									<td><%= text_area :item, "itemtext", :class => "itemtext", :cols => 92, :rows => 5, :id => "main_ask_text" %></td>
+								</tr>
+								<tr>
+									<td class="label"><label>Tags <span style="font-size:0.7em;color:gray;">(optional)</span></label></td>
+									<td style="position:absolute;left:72px;">
+										<%= text_field :item, :tag_list, :class => "itemtext", :size => 66, :id => "main_ask_tags", :style => "float:left;clear:none;" %>
+										<div id="tag_auto_complete" class="auto_complete"></div>
+										<% if logged_in? %>
+											<div style="margin:0px 5px;float:right;">
+												<%= submit_tag "Post Topic", :class => "formbutton main_form_submit"%>
+											</div>
+										<% else %>
+										<div class="post_buttons">
+											<%= link_to "Log in", "#", :class => "formbutton", :onclick => "$('signup_div').hide();$('login_div').blindDown({duration:0.3});" %> or <%= link_to "Sign up", "#", :class => "formbutton", :onclick => "$('login_div').hide();$('signup_div').blindDown({duration:0.3});" %>
+										</div>
+										<% end %>
+										
+									</td>
+								</tr>
+								<tr style="z-index:3;"><td /><td style="padding-top:10px;position:relative;z-index:1;"><%= check_box_tag("itememailcheckbox", 1, true) %>  E-mail me when someone posts a response</td></tr>
+							</tbody>
+						</table>
+						
+							<div id="errormessage" class="errormessage" style="float:left;clear:none;"></div>
+							<div id="statusmessage" class="statusmessage" style="float:left;clear:none;"></div>
+						
+						<% unless logged_in? %>
+						
+							<div id="login_div" style="display:none;float:right;margin-top:30px;">
+								<table>
+									<tbody>
+									<tr>
+										<td><label for="login">Username</label></td><td><%= text_field_tag 'login' %></td>
+										<td style="padding-left:20px;"><label for="password">Password</label></td><td><%= password_field_tag 'password' %></td>
+									</tr>
+									<tr>
+										<td /><td /><td /><td><%= submit_tag 'Post Topic', :class => "formbutton main_form_submit" %></td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+							
+							<div id="signup_div" style="display:none;float:right;margin-top:30px;">
+								<%= error_messages_for :user %>
+								<table>
+									<tr style="vertical-align:top;">
+										<td><table><tbody>
+											<tr style="padding:1px;"><td style="text-align:right;"><label for="user_login">Username</label></td><td><%= text_field :user, :login %></td></tr>
+											<tr style="padding:1px;"><td style="text-align:right;"><label for="user_email">Email</label></td><td><%= text_field :user, :email %></td></tr>
+											<tr style="padding:1px;"><td style="text-align:right;"><label for="user_password">Password</label></td><td><%= password_field :user, :password %></td></tr>
+											<tr style="padding:1px;"><td style="text-align:right;"><label for="user_password_confirmation">Confirm Password</label></td><td><%= password_field :user, :password_confirmation %></td></tr>
+											<tr style="padding:1px;"><td style="text-align:right;"><%= check_box_tag("accept") %></td><td style="font-size:x-small;"><label for="accept" style="font-size:small;font-weight:normal;">I have read and accept the <%= link_to "Terms &amp; Conditions", {:controller => "main", :action => "terms"}, :style => "font-size:small; font-weight:normal; border:none; padding:0px;"%></label></td></tr>
+										</tbody></table></td>
+										<td><table><tbody>
+											<tr><td><%= get_captcha() %></td></tr>
+											<tr><td><%= submit_tag 'Post Topic', :id => "main_form_submit", :class => "formbutton" %></td></tr>
+										</tbody></table></td>
+									</tr>
+									
+								</table>
+							</div>
+							
+						<% end %>
+					<% end %>
+				</div>
+			</div>
+		</div>
+</div>
+<br />
+<script type="text/javascript">
+	//<![CDATA[
+		var tags = new Array();
+		
+		function updateTags(){
+			tags = new Array();
+			names = $('main_ask_tags').value.split(',');
+			names.each(function(n){tags.push(n.strip());});
+		}
+		
+		function addTag(name){
+			names = name.split(',');
+			names.each(function(n){
+				if (!tags.include(n) && !(n == '' || n == ' ')) {
+					tags.push(n);
+					// $('tags').insert('<span class="tag" id="tag_' + n + '">' + n + '<a class="remove_tag" onclick="removeTag(\'' + n + '\');"> [x] </a></span>')
+				}
+			});
+			tags = tags.uniq();
+			$('main_ask_tags').value = tags.join(', ') + ', ';
+			$('main_ask_tags').focus();
+		}
+		
+		function autoAddTag(element){
+			updateTags();
+			tags.pop();
+			addTag(element.innerHTML);
+		}
+		
+		function removeTag(name){
+			tags = tags.findAll(function(n){return n != name;});
+			$('main_ask_tags').value = tags.join(', ');
+			$('tag_' + name).remove();
+		}
+		
+		new Ajax.Autocompleter('main_ask_tags', 'tag_auto_complete', '<%= url_for :action => "auto_complete_for_tag_name", request_forgery_protection_token => form_authenticity_token %>', {
+			updateElement: autoAddTag,
+			frequency: 0.1
+		});
+	//]]>
+</script>
+							
+
+
+
+
+

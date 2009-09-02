@@ -1,0 +1,45 @@
+<% @color_array.each do |color_value| %>
+<% @button_size_array.each do |size_value| %>
+
+a.button_<%= color_value %>_<%= size_value %>{
+	background:url(/images/buttons/button_<%= size_value %>_light<%= color_value %>.gif);
+	background-repeat: no-repeat;
+	color: <%= @color_hash["dark_#{color_value}"] %>;	
+	width:<%= size_value %>px;
+}
+
+a:hover.button_<%= color_value %>_<%= size_value %>{
+	background:url(/images/buttons/button_<%= size_value %>_dark<%= color_value %>.gif);	
+	background-repeat: no-repeat;
+	color: <%= @color_hash["light_#{color_value}"] %>;
+}
+
+<% end %>
+<% end %>
+
+
+
+/* New button styles */
+
+a.button{
+	font-size: .9em;
+	display:block;
+	font-weight:bold;
+	height:20px;
+	line-height:20px;
+	margin-bottom:14px;
+	text-decoration:none;
+}
+
+.button_reply, .button_edit, .button_standard {
+	/* background:url(img/add.gif) no-repeat 10px 8px; */
+	text-align: center;
+	display: block;
+}
+
+.vote_image {
+	margin-bottom:14px;
+}
+
+
+/* END New button styles */

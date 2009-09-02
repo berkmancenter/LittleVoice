@@ -1,0 +1,8 @@
+## Update question display
+if @additemstatus
+   page << 'document.location = \'' + url_for(:controller => "main", :action => 'itemview', :id => @item.id) + '\';'
+   #  page.replace_html("questionsummary", getitemsummary(current_user.id))
+   #  page[:itemtext].value = ""
+else
+   page.get_item_error(@additemstatus, @additemdupe, @additemempty)
+end

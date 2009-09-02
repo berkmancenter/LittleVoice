@@ -1,0 +1,8 @@
+<% if flash[:signed_up] %><div class="statusmessage" style="font-size:1.4em;color:green;text-align:center;margin:10px;"><%= flash[:notice] %></div><% end %>
+<%= render(:partial => "itemblock", :locals => @roothash) -%>
+
+<div id="response_summary" class="responsesummary">
+	<%= display_children(@item.id, @minscore, @maxscore) %>
+</div>
+
+

@@ -1,0 +1,22 @@
+<% @page_title = "Log in" %>
+<div class="section" style="margin-top:5px;margin-bottom:20px;">
+		<div class="rootcontentcontainer box grad lightblue" style="height:220px;">
+			<img src="/images/backgrounds/grad_white_bottom.png" class="gradimage" alt="gradient box" />
+			<div class="rootcontent" style="width:inherit;">
+<center>
+<div id="login_form" style="padding:1px;">
+   <% form_tag session_path do %>
+	   <table>
+	   	<tr><td style="text-align:right;"><label for="login">Username</label></td><td><%= text_field_tag 'login' %></td></tr>
+		<tr><td style="text-align:right;"><label for="password">Password</label></td><td><%= password_field_tag 'password' %></td></tr>
+		<tr><td style="text-align:right;"><label for="remember_me">Remember me</label></td><td><%= check_box_tag 'remember_me' %> </td></tr>
+		<tr><td style="text-align:right;"></td><td><%= submit_tag 'Log in' %> or <%= link_to "Sign up", new_user_path, :style => "color:#2382a1;" %></td></tr>
+	   <tr><td /><td><%= link_to "Forgotten Password?", forgot_password_url, :style => "float:left;font-size:x-small;color:#2382a1;"%></td></tr>
+	   </table>
+   <% end %>
+</div>  
+</center>
+	   </div>
+   </div>
+</div>
+

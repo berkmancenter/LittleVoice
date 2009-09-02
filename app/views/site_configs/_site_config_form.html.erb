@@ -1,0 +1,49 @@
+
+
+
+<% form_for @site_config, :url => url do |f|%>
+<table>
+  <tr>
+    <td> Site Name </td>
+    <td> <%= f.text_field :site_name %>   </td>
+  </tr>
+  <tr>
+    <td> Organisation Name </td>
+    <td>  <%= f.text_field :org_name %> </td>
+  </tr>
+  <tr>
+    <td> Site URL </td>
+    <td>  <%= f.text_field :site_url %> </td>
+  </tr>
+  <tr>
+    <td> Org URL </td>
+    <td>  <%= f.text_field :org_url %> </td>
+  </tr>
+  <tr>
+    <td> Mail Server Address </td>
+    <td>  <%= f.text_field :m_server_addr %> </td>
+  </tr>
+  <tr>
+    <td> Port </td>
+    <td>  <%= f.text_field :m_server_port %> </td>
+  </tr>
+  <tr>
+    <td> Site Logo URL  </td>
+    <td>  <%= f.text_field :site_logo_url %> </td>
+  </tr>
+  <tr>
+    <td> Org Logo URL  </td>
+    <td>  <%= f.text_field :org_logo_url %> </td>
+  </tr>
+  <tr>
+    <td> Recaptcha  Public Key (RCC_PUB) </td>
+    <td>  <%= f.text_field :rcc_pub %> </td>
+  </tr>
+  <tr>
+    <td> Recaptcha Private Key (RCC_PRIV) </td>
+    <td>  <%= f.text_field :rcc_priv %> </td>
+  </tr>
+</table>
+
+<%= f.submit "Save" %>
+<% end %>

@@ -1,0 +1,27 @@
+<%= render :partial => 'navigation' %>
+<% @page_title = "Admin - Invitations" %>
+<div style="float:right;clear:nonel">
+	<% form_for :invitation, :url => {:action => "send_invitation"} do |f| %>
+		Send invitation to (email) <%= f.text_field :email %>
+	<% end %>
+</div>
+
+<div id="invites">
+	<div class="invitation">
+		<div class="invite_used" style="font-weight:bold">Username (if accepted)</div>
+		<div class="invite_email" style="font-weight:bold">E-mail</div>
+		<div class="invite_code" style="font-weight:bold">Invite Code</div>
+		
+	</div>
+	<% for invitation in @invites %>
+		<div class="invitation" style="background:<%= cycle('#f3f3f3','#fff') %>;">
+			<div class="invite_used"><%= invitation.used ? invitation.user.login : link_to ((invitation.code ? "Re-send" : "Send"), :action => "send_invitation", :id => invitation.id) %></div>
+			<div class="invite_email"><%=h invitation.email %>&nbsp;</div>
+			<div class="invite_code"><%= invitation.code %></div>
+		</div>
+	<% end %>
+	
+<br />
+<%= will_paginate @invites %>
+	
+</div>

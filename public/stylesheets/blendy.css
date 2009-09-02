@@ -1,0 +1,37 @@
+.grad img.gradimage {
+  height: 100%;
+  left: 0px;
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  z-index: -1;
+
+}
+
+.box {
+  margin: 0px;
+  position: relative;
+
+}
+
+.box * {
+  margin: 0px;
+  z-index: 10;
+  position:relative;
+}
+
+
+* html .grad {
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/backgrounds/grad_white_bottom.png', sizingMethod='scale');
+}
+
+
+* html .grad img.gradimage {
+  display: none;
+  
+}
+
+* html .box {
+    position: static;
+	
+}

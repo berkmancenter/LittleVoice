@@ -1,0 +1,29 @@
+<%
+itemid = 1
+outputstring = ""
+
+
+		
+%>
+
+<table border="1">
+<tr>
+	<td>UP</td> 
+	<td>DOWN</td> 
+	<td>BAD</td> 		
+</tr>
+<tr>	
+	<td id="up-1"><%= get_rating_display(itemid, 1, @rating_current) %></td> 
+	<td id="down-1"><%= get_rating_display(itemid, 2, @rating_current) %></td> 
+	<td id="bad-1"><%= get_rating_display(itemid, 3, @rating_current) %></td> 		
+</tr>
+<tr>
+	<td><%= link_to_remote("UP", :url => {:action => :processrating, :item_id => itemid, :rating_type_id => 1})%></td> 
+	<td><%= link_to_remote("DOWN", :url => {:action => :processrating, :item_id => itemid, :rating_type_id => 2})%></td> 
+	<td><%= link_to_remote("BAD", :url => {:action => :processrating, :item_id => itemid, :rating_type_id => 3})%></td> 		
+</tr>
+	
+</table>
+
+<%= outputstring %>
+

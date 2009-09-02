@@ -1,0 +1,4 @@
+## Update question display
+page.replace_html("questionsummary", :partial => "itemsummary", :locals => {:testvalue => @testvalue})
+
+

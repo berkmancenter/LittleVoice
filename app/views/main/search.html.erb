@@ -1,0 +1,21 @@
+<div class="section" style="margin-top:5px;margin-bottom:20px;text-align:center;">
+		<div class="rootcontentcontainer box grad lightblue" style="height:400px;">
+			<img src="/images/backgrounds/grad_white_bottom.png" class="gradimage" alt="gradient box" />
+			<div class="rootcontent">
+				<div id="search">
+					<% form_for :search, :url => {:action => "search"} do |f| %>
+					<%= f.text_field :q, :size => 56 %>
+					<%= submit_tag "Search" %>
+					<% end %>
+				</div>
+				<br />
+				<div style="font-style:italic;clear:both;margin-top:10px;">Hint - Try searching for the name of your software, eg: Wordpress, Firefox, or Apache</div>
+			</div>
+		</div>
+</div>
+
+<script type="text/javascript">
+	//<![CDATA[
+		$('search_q').focus();
+	//]]>
+</script>

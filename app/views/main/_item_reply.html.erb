@@ -1,0 +1,63 @@
+<% remote_form_for :item, :url => {:action => :addresponse, :item_id => item_id, :item_root_id => item_root_id} do |f| %>
+
+
+	<div id="itemtextarea">
+	<%= f.text_area :item_text, :cols => 80, :rows => 10 %>
+	</div>
+	<div id="response_tags">Tags: (optional, comma separated)<br />
+		<%= f.text_field :tag_list, :class => "itemtext", :size => 66, :id => "response_ask_tags" %>
+		<div id="tag_auto_complete" class="auto_complete"></div>
+		<script type="text/javascript">
+			//<![CDATA[
+			var tags = new Array();
+			
+			function updateTags(){
+				tags = new Array();
+				names = $('response_ask_tags').value.split(',');
+				names.each(function(n){tags.push(n.strip());});
+			}
+			
+			function addTag(name){
+				names = name.split(',');
+				names.each(function(n){
+					if (!tags.include(n) && !(n == '' || n == ' ')) {
+						tags.push(n);
+						// $('tags').insert('<span class="tag" id="tag_' + n + '">' + n + '<a class="remove_tag" onclick="removeTag(\'' + n + '\');"> [x] </a></span>')
+					}
+				});
+				tags = tags.uniq();
+				$('response_ask_tags').value = tags.join(', ') + ', ';
+				$('response_ask_tags').focus();
+			}
+			
+			function autoAddTag(element){
+				updateTags();
+				tags.pop();
+				addTag(element.innerHTML);
+			}
+			
+			function removeTag(name){
+				tags = tags.findAll(function(n){return n != name;});
+				$('response_ask_tags').value = tags.join(', ');
+				$('tag_' + name).remove();
+			}
+			
+			new Ajax.Autocompleter('response_ask_tags', 'tag_auto_complete', '<%= url_for :action => "auto_complete_for_tag_name", request_forgery_protection_token => form_authenticity_token %>', {
+				updateElement: autoAddTag,
+				frequency: 0.1
+			});
+			//]]>
+		</script>
+	</div><br />
+
+<%= image_submit_tag "/images/icons/current/submit_orange.png" %>
+
+<%= link_to_function "<img src='/images/icons/current/cancel_orange.png' alt='' border='0' />" do |page|
+	page.replace_html("itemresponse-#{item_id}","")
+end %>
+
+<div id="statusmessage-<%= item_id %>"></div>
+
+
+
+<% end %>

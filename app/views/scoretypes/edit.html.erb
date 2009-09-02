@@ -1,0 +1,15 @@
+<h2>Editing scoretype</h2>
+
+<% form_for (@scoretype, :html => {:method => :put})  do |f| %>
+  <%= f.error_messages %>
+
+  <p><%= f.label :name %><%= f.text_field :name %></p>
+  <p><%= f.label :award %><%= f.text_field :award %></p>
+  <p><%= f.label :description %><%= f.text_field :description, :size => 65 %></p>
+  <p><%= f.label :version %><%= f.text_field :version %></p>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', scoretypes_path %>

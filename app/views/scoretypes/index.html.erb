@@ -1,0 +1,25 @@
+<h2>Edit Scoretypes</h2>
+
+<table>
+  <tr>   
+    <th>Name</th>
+    <th>Score</th>
+    <th>Description</th>
+    <th>Version</th>
+    <th>Modify</th>
+  </tr>
+
+<% for scoretype in @scoretypes %>
+  <tr>
+    <td><%= scoretype.name %></td>
+    <td><%= scoretype.score %></td>
+    <td><%= scoretype.description %></td>
+    <td><%= scoretype.version %></td>
+    <td><%= link_to 'Edit', edit_scoretype_path(scoretype) %> <%= link_to 'Destroy', scoretype, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New scoretype', new_scoretype_path %>

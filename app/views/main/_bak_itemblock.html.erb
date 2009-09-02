@@ -1,0 +1,142 @@
+<%
+childhash = Hash.new()
+childhash = {
+	:action => "display_children",
+	:item_id => item_id,
+	:item_root_id => item_root_id,
+	:minscore => minscore,
+	:maxscore => maxscore,
+	:level => level,
+	:childrencount => childrencount,
+	:allchildrencount => allchildrencount
+}
+
+itemrecord = Item.find(item_id)
+
+# opacityvalue = (scorerating.to_f * 2)/10
+opacityvalue = opacity_scale(itemrecord.rating_total)
+
+stylehash = Hash.new()
+
+if !parent_id.nil?
+	stylehash = {
+		:opacityclass =>  "opacity-state-#{opacityvalue}",
+		:mainclass => "itemblock",
+		:containerclass => "",
+		:contentclass => "",
+		:titleclass => "itemtitle",
+		:itemcolor => "lightorange",
+		:color => "orange",
+		:itemcontentclass => "itemcontent",
+		:itemmetaclass => "item_meta_info"
+	}
+else
+	stylehash = {
+		:opacityclass =>  "",
+		:mainclass => "rootcontentcontainer",
+		:containerclass => "rootbox",
+		:contentclass => "",
+		:titleclass => "roottitle",
+		:itemcolor => "lightblue",
+		:color => "blue",
+		:itemcontentclass => "itemcontent",
+		:itemmetaclass => "root_meta_info"
+	}
+end
+
+### inresponsetorecord = Item.find(parent_id)
+childrencount ||= 0
+
+-%>
+
+
+<a name='itemblock-<%= item_id%>' ></a>
+	<div id='itemblock-<%= item_id%>' class="<%= stylehash[:containerclass] %> <%= stylehash[:mainclass] %> <%= stylehash[:opacityclass] %> <%= stylehash[:itemcolor] %>" onmouseover="this.className='<%= stylehash[:containerclass] %> <%= stylehash[:mainclass] %> opacityfull <%= stylehash[:itemcolor] %>';" onmouseout="this.className='<%= stylehash[:containerclass] %> <%= stylehash[:mainclass] %> <%= stylehash[:opacityclass] %> <%= stylehash[:itemcolor] %>';" style='margin-left: <%= level %>px;'>
+
+		<div class="<%= stylehash[:titleclass] %>" >
+		<% if stylehash[:titleclass] == "roottitle" %>
+			<div class="subject_div">
+				<%= h(truncate(itemrecord.item_title.capitalize, :length => 95, :omission => "...")) %>
+			</div>
+		<% end %>
+
+			<div class="item_left_top">
+				<%= link_to h(itemrecord.user.login), {:controller => "users", :action => "show", :id => h(itemrecord.user.login) } %>
+				<%= display_stars(itemrecord.user.stars, :include_empty => false )%>
+			</div>
+			
+			<div class="item_right_top">
+				<%= display_badges(itemrecord.user) %>
+			</div>
+		</div>
+		<div class="responseitem box grad">
+		<img src="/images/backgrounds/grad_white_bottom.png" class="gradimage" alt="gradient box" style=""/>	
+
+		<div class="iteminfo" >
+
+			<div class="ratingbox <%= stylehash[:color] %>text">
+			<% if (current_user != false)  %>	
+				<%= get_rating_box(item_id, minscore, maxscore) %>
+				<% if parent_id.nil? && check_role(['administrator','moderator'])%>
+					<span id="make_faq" style="float:right;"><%= render :partial => "make_faq", :locals => {:item => itemrecord} %></span>
+				<% end %>
+			<% end %>
+			</div>
+
+		</div>
+
+		<div class="<%= stylehash[:itemcontentclass] %>  " style="position:relative;" >
+			<% if itemrecord.item_active or check_role(['administrator','moderator']) or (itemrecord.user_id == @current_user.id rescue false) %>
+				<%= white_list(RedCloth.new(itemtext).to_html) %>
+			<% else %>
+				Message removed due to a violation of the BadwareBusters.org terms of use.
+			<% end %>
+		</div>
+		
+	
+		<div id="itemfooter" name="itemfooter">
+		<% if current_user != false %>
+			
+			<div id="replybutton" class="footercell">
+				<%= link_to_remote("<img src='/images/icons/current/reply_#{stylehash[:color]}.png' border='0' />", :update => "itemresponse-#{item_id}", :url => {:action => 'get_reply_box', :item_id => item_id, :item_root_id => item_root_id}) %>
+			</div>
+
+			<div id="editbutton" class="footercell">
+				<% if @current_user.id == itemrecord.user.id && itemrecord.created_at > 10.minutes.ago %>
+					<%= link_to_remote "<img src='/images/edit_#{stylehash[:color]}.png' border='0' />", :url => {:action => "get_edit_box", :id => item_id } %>
+				<% end %>	
+			</div>	
+			
+			<div id="emailme" class="footercell">
+				<% if parent_id.nil? && current_user != false %>
+					<%= render :partial => "email_me", :locals => {:item_id => item_id, :user_id => current_user.id }%>
+				<% end %>
+			</div>		
+			
+		<% end %>	
+			
+			<div id="timestring" class="<%= stylehash[:itemmetaclass] %> footercell">
+				<%= time_ago_in_words(itemrecord.created_at) %> ago
+			</div>		
+			
+			<div id="rsslink" class="footercell">
+				<% if parent_id.nil? && current_user != false %>
+					<%= link_to image_tag('feed.png'), {:controller => "rss", :action => "item", :id => item_id }%>
+				<% end %>	
+			</div>			
+
+
+		</div>		
+
+		</div>
+		
+
+
+	</div>
+
+
+<div id='itemresponse-<%= item_id%>' class='replybox' ></div>  
+
+
+
+

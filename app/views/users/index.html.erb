@@ -1,0 +1,14 @@
+   <h2>All Users</h2>
+
+ <table>
+   <tr>
+     <th>User</th>
+     <th>Email</th>
+     <th>Enabled?</th>
+     <th>Roles</th>
+     <th>Created</th>
+     <th>Updated</th>
+   </tr>
+     <%= render :partial => 'user', :collection => @users %>
+ </table>
+

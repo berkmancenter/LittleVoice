@@ -1,0 +1,9 @@
+<% message = Item.find(params[:id]) %>
+
+			<td class="posted"><%= message.created_at.strftime("%d %b, %Y") %></td>
+			<td class="login"><%= link_to h(message.user.login), user_url(message.user) %></td>
+			<td class="rating"><%= message.rating_total || "&nbsp;" %></td>
+			<td class="spam_count"><%= message.spam_count %></td>
+			<td class="teaser"><%= link_to h(message.item_title), "/main/itemview/#{message.item_root_id}#itemblock-#{message.id}" %></td>
+			<td class="vote" id="vote_<%= message.id %>"><%= link_to_remote "up", {:url => {:action => "vote", :id => message.id, :type => 1}}, :style => "#{rating_style(message,1)}" %> / <%= link_to_remote "down", {:url => {:action => "vote", :id => message.id, :type => 2}}, :style => "#{rating_style(message,2)}" %></td>
+			<td class="nuke"><%= message.item_active == false ? link_to("De-Nukify", :action => "denuke", :id => message.id ) : link_to("Nuke!", :action => "nuke", :id => message.id ) %></td>
