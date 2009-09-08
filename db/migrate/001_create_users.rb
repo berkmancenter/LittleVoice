@@ -15,9 +15,6 @@
        t.column :enabled, :boolean, :default => true      
      end
      
-     #password: "mypass"
-     User.create :login => 'anonymous', :crypted_password => "96996855a9d278d0bed0a7509c7f0b1d282943a0", :salt =>"22d879bd5a41dac8d5a9295816c469872728cdbf", :created_at => Time.new, :updated_at => Time.new, :activated_at => Time.new, :enabled => 1
-
    end
   
    def self.down

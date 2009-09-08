@@ -17,8 +17,10 @@ class CreateSubscriptions < ActiveRecord::Migration
     end
     
     #Convert itememails to subscriptions
-    Itememail.find(:all).each do |itememail|
-      Subscription.items.by_id(itememail.item_id).add_subscriber(User.find(itememail.user_id))
+    if defined?(class << Itememail; end)
+      Itememail.find(:all).each do |itememail|
+        Subscription.items.by_id(itememail.item_id).add_subscriber(User.find(itememail.user_id))
+      end
     end
     
   end

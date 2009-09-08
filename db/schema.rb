@@ -9,17 +9,16 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090728132505) do
+ActiveRecord::Schema.define(:version => 20090903145259) do
 
-  
   create_table "content_versions", :force => true do |t|
-    t.integer  "content_id", :limit => 4
+    t.integer  "content_id"
     t.text     "body"
     t.string   "controller"
     t.string   "action"
     t.string   "name"
     t.string   "location"
-    t.integer  "version",    :limit => 4
+    t.integer  "version"
     t.boolean  "textile"
     t.boolean  "live"
     t.datetime "created_at"
@@ -33,7 +32,7 @@ ActiveRecord::Schema.define(:version => 20090728132505) do
     t.string   "action"
     t.string   "name"
     t.string   "location"
-    t.integer  "version",    :limit => 4
+    t.integer  "version"
     t.boolean  "textile"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -50,31 +49,45 @@ ActiveRecord::Schema.define(:version => 20090728132505) do
   end
 
   create_table "itememails", :force => true do |t|
-    t.integer  "item_id",    :limit => 4
-    t.integer  "user_id",    :limit => 4
+    t.integer  "item_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "items", :force => true do |t|
-    t.integer  "user_id",      :limit => 4
-    t.integer  "itemtype_id",  :limit => 4
-    t.integer  "item_root_id", :limit => 4
-    t.integer  "parent_id",    :limit => 4
-    t.integer  "subcategory_item_id",    :limit => 4
+    t.integer  "user_id"
+    t.integer  "itemtype_id"
+    t.integer  "item_root_id"
+    t.integer  "parent_id"
     t.string   "item_title"
     t.text     "itemtext"
     t.boolean  "item_active"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "lft",          :limit => 4
-    t.integer  "rgt",          :limit => 4
+    t.integer  "lft"
+    t.integer  "rgt"
   end
 
   create_table "itemtypes", :force => true do |t|
     t.string   "item_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "open_id_authentication_associations", :force => true do |t|
+    t.integer "issued"
+    t.integer "lifetime"
+    t.string  "handle"
+    t.string  "assoc_type"
+    t.binary  "server_url"
+    t.binary  "secret"
+  end
+
+  create_table "open_id_authentication_nonces", :force => true do |t|
+    t.integer "timestamp",  :null => false
+    t.string  "server_url"
+    t.string  "salt",       :null => false
   end
 
   create_table "pages", :force => true do |t|
@@ -85,40 +98,40 @@ ActiveRecord::Schema.define(:version => 20090728132505) do
   end
 
   create_table "permissions", :force => true do |t|
-    t.integer  "role_id",    :limit => 4, :null => false
-    t.integer  "user_id",    :limit => 4, :null => false
+    t.integer  "role_id",    :null => false
+    t.integer  "user_id",    :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "ratingactions", :force => true do |t|
-    t.integer  "item_id",       :limit => 4
-    t.boolean  "rating",                     :default => false
-    t.integer  "ratingtype_id", :limit => 4, :default => 0,     :null => false
-    t.integer  "user_id",       :limit => 4, :default => 0,     :null => false
-    t.datetime "created_at",                                    :null => false
-    t.datetime "updated_at",                                    :null => false
-    t.integer  "user_level",    :limit => 4
+    t.integer  "item_id"
+    t.boolean  "rating",        :default => false
+    t.integer  "ratingtype_id", :default => 0,     :null => false
+    t.integer  "user_id",       :default => 0,     :null => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
+    t.integer  "user_level"
   end
 
   create_table "ratingitemtotals", :force => true do |t|
-    t.integer  "item_id",      :limit => 4, :default => 0, :null => false
-    t.integer  "rating_total", :limit => 4, :default => 0, :null => false
-    t.datetime "created_at",                               :null => false
-    t.datetime "updated_at",                               :null => false
-    t.integer  "parent_id",    :limit => 4
+    t.integer  "item_id",      :default => 0, :null => false
+    t.integer  "rating_total", :default => 0, :null => false
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
+    t.integer  "parent_id"
   end
 
   create_table "ratingtypes", :force => true do |t|
-    t.string   "rating_type",                              :null => false
-    t.integer  "rating_value", :limit => 4, :default => 0, :null => false
-    t.datetime "created_at",                               :null => false
-    t.datetime "updated_at",                               :null => false
+    t.string   "rating_type",                 :null => false
+    t.integer  "rating_value", :default => 0, :null => false
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
   end
 
   create_table "reputations", :force => true do |t|
-    t.integer  "user_id",    :limit => 4
-    t.integer  "rawscore",   :limit => 4
+    t.integer  "user_id"
+    t.integer  "rawscore"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -128,41 +141,51 @@ ActiveRecord::Schema.define(:version => 20090728132505) do
     t.string   "functionality"
     t.datetime "created_at"
     t.datetime "updated_at"
-   
   end
 
   create_table "scores", :force => true do |t|
-    t.integer  "user_id",      :limit => 4
-    t.integer  "item_id",      :limit => 4
-    t.integer  "scoretype_id", :limit => 4
-    t.integer  "rawscore",     :limit => 4
+    t.integer  "user_id"
+    t.integer  "item_id"
+    t.integer  "scoretype_id"
+    t.integer  "rawscore"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "award",        :limit => 4
+    t.integer  "award"
   end
 
   create_table "scoretypes", :force => true do |t|
     t.string   "name",        :limit => 20
-    t.integer  "award",       :limit => 4
-    t.integer  "version",     :limit => 4
+    t.integer  "award"
+    t.integer  "version"
     t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  create_table "settings", :force => true do |t|
+    t.string   "namespace",  :default => "LV", :null => false
+    t.string   "key",                          :null => false
+    t.text     "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "settings", ["key", "namespace"], :name => "index_settings_on_key_and_namespace", :unique => true
+  add_index "settings", ["namespace", "key"], :name => "index_settings_on_namespace_and_key", :unique => true
+
   create_table "site_configs", :force => true do |t|
-    t.string "site_name",  :default => "Site Name", :null => false
-    t.string "org_name",  :default => "Organisation Name", :null => false
-    t.string "site_url",  :default => "127.0.0.1", :null => false
-    t.string "org_url",  :default => "example.org", :null => false
-    t.string "rcc_pub" 
-    t.string "rcc_priv" 
-    t.string "site_logo_url", :default => "/images/site-logo.png", :null => false
-    t.string "org_logo_url",  :default => "/images/org-logo.png", :null => false
-    t.string "m_server_addr"
-    t.integer "m_server_port"
-    t.string "m_server_domain"
-    t.integer "deleted", :default => 0, :null => false
+    t.string   "site_name",       :default => "Discussion Site",      :null => false
+    t.string   "org_name",        :default => "Discussion Site",      :null => false
+    t.string   "site_url",        :default => "127.0.0.1",            :null => false
+    t.string   "org_url",         :default => "example.org",          :null => false
+    t.string   "rcc_pub"
+    t.string   "rcc_priv"
+    t.string   "site_logo_url",   :default => "/images/lv-logo.png",  :null => false
+    t.string   "org_logo_url",    :default => "/images/org-logo.png", :null => false
+    t.string   "m_server_addr"
+    t.integer  "m_server_port"
+    t.string   "m_server_domain"
+    t.integer  "deleted",         :default => 0,                      :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -170,12 +193,12 @@ ActiveRecord::Schema.define(:version => 20090728132505) do
   create_table "subscriptions", :force => true do |t|
     t.string  "sub_type"
     t.string  "sub_name"
-    t.integer "sub_type_id", :limit => 4
+    t.integer "sub_type_id"
   end
 
   create_table "subscriptions_users", :id => false, :force => true do |t|
-    t.integer "subscription_id", :limit => 4
-    t.integer "user_id",         :limit => 4
+    t.integer "subscription_id"
+    t.integer "user_id"
   end
 
   create_table "survey_responses", :force => true do |t|
@@ -184,9 +207,9 @@ ActiveRecord::Schema.define(:version => 20090728132505) do
   end
 
   create_table "taggings", :force => true do |t|
-    t.integer  "tag_id",        :limit => 4
-    t.integer  "taggable_id",   :limit => 4
-    t.integer  "tagger_id",     :limit => 4
+    t.integer  "tag_id"
+    t.integer  "taggable_id"
+    t.integer  "tagger_id"
     t.string   "tagger_type"
     t.string   "taggable_type"
     t.string   "context"
@@ -213,64 +236,9 @@ ActiveRecord::Schema.define(:version => 20090728132505) do
     t.datetime "activated_at"
     t.string   "password_reset_code",       :limit => 40
     t.boolean  "enabled",                                 :default => true
-    
+    t.string   "identity_url"
+    t.integer  "fb_user_id",                :limit => 8
+    t.string   "email_hash"
   end
-  
-  #creatgin default site Config
-  config = SiteConfig.new
-  config.save
-
-    #creating the roles
-    Role.create :rolename => "administrator", :functionality => "Administrator with all permissions "
-    Role.create :rolename => "moderator", :functionality => "A user with selected permissions involved in maintaining the tone of the community"
-    Role.create :rolename => "registered user", :functionality => "Has created and activated (via e-mail confirmation) a user account"
-    Role.create :rolename => "banned user", :functionality => "Not able to post on the site or to re-register for the site from the email address used to register for the banned username"
-    Role.create :rolename => "restricted posting", :functionality => "Member’s posts are held in queue to be moderated"
-
-    
-    # Creating Default Users
-    # *User* :: _password_
-    # admin  :: admin12
-    # mod  :: mod12
-    # reguser  :: reguser12
-    User.create :login => 'admin', :email => 'admin@abcxyz.com', :password => 'admin12', :password_confirmation =>'admin12'
-    Permission.create :role_id => 1, :user_id => 1, :created_at => Time.new, :updated_at => Time.new
-    User.create :login => 'mod', :email => 'mod@abcxyz.com', :password => 'mod12', :password_confirmation =>'mod12'
-    Permission.create :role_id => 2, :user_id => 2, :created_at => Time.new, :updated_at => Time.new
-    User.create :login => 'reguser', :email => 'reguser@abcxyz.com', :password => 'reguser12', :password_confirmation =>'reguser12'
-    Permission.create :role_id => 3, :user_id => 3, :created_at => Time.new, :updated_at => Time.new
-
-    #activatiing all the users
-    User.find(:all).each { |user|   
-      user.activated_at = Time.new
-      user.activation_code = nil
-      user.save
-    }
-    
-    #Creating Scoretypes
-    Scoretype.create :name => "pos_score", :award => 1000, :description => "every message with a net positive community rating!", :version => 1
-    Scoretype.create :name => "login_score", :award => 100, :description => "every week (or 7-day period) in which a user logs in", :version => 1
-    Scoretype.create :name => "vote_score", :award => 200, :description => "every week (or 7-day period) in which a user votes on a message", :version => 1
-    Scoretype.create :name => "neg_score", :award => -2000, :description => "every message with a net negative community rating", :version => 1
-    Scoretype.create :name => "nuke_score", :award => -500, :description => "every message that was actively nuked by a moderator (passive nukage is a metaphysical impossibility)", :version => 1
-    Scoretype.create :name => "unnuke_score", :award => 500, :description => "every message that was actively de-nukified by a moderator", :version => 1
-    Scoretype.create :name => "adjust_score", :award => 0, :description => "adjustments made by the administrator", :version => 1
-    
-    
-    #Creating Ratingtypes
-    Ratingtype.create :rating_type => "up", :rating_value => 1
-    Ratingtype.create :rating_type => "down", :rating_value => -1
-    Ratingtype.create :rating_type => "bad (spam/abuse)", :rating_value => -1
-    Ratingtype.create :rating_type => "nuke", :rating_value => -1
-                          
-
-    #Create default subscription types for all conversations or items
-    Subscription.create(:sub_type => "item", :sub_name => "all_conversations")
-    Subscription.create(:sub_type => "item", :sub_name => "all")
-    
-    #Generate subscriptions for any pre-existing items
-    Item.find(:all).each {|item| item.update_subscriptions }
-
-    
 
 end

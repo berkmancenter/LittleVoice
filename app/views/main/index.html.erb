@@ -25,11 +25,12 @@
 	</div>
 	
 	<div class="section" style="margin-bottom:20px;float:left;clear:both;">
+		<% if $ORG_LOGO_URL %>
 		<div id="logos">
 			<div style="padding-bottom:10px;font-weight:bold;color:#DC5E1B;"><%= $SITE_NAME %> is brought to you by:</div>
 			<%= image_tag "#{$ORG_LOGO_URL}" , :onclick => "document.location = #{$ORG_URL}", :style => "cursor:pointer;" %>
 		</div>
-		
+		<% end %>
 		<div id="quotation" onmouseover="hovering = true;" onmouseout="hovering = false;">
 			<%= image_tag "close_quote.png", :style => "position:absolute;bottom:0px;right:0px;" %>
 			<div id="left_quote"><%= image_tag "open_quote.png" %></div>

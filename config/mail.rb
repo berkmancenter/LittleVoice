@@ -4,8 +4,7 @@ ActionMailer::Base.raise_delivery_errors = true
 ActionMailer::Base.delivery_method = :smtp
 
 ActionMailer::Base.smtp_settings = {
-:address => "localhost",
-#:address  => "oz.law.harvard.edu",
-:port => 25,
-:domain => "law.harvard.edu"
+  :address => $LV_MAIL_SERVER_ADDR,
+  :port => $LV_MAIL_SERVER_PORT,
+  :domain => $LV_MAIL_SERVER_DOMAIN
 }

@@ -10,7 +10,7 @@ config.cache_classes = true
 # Full error reports are disabled and caching is turned on
 config.action_controller.consider_all_requests_local = false
 config.action_controller.perform_caching             = true
-config.action_controller.session = { :session_key => "_littlevoice_session", :secret => "1dd92b498206f8af69050eafe304dcc1peTkZ8qKHxF0yP3a3tFrFk3Ls5LZz2/0fAkuOfeyCPPHIiwT5u9VY8+vXNzX74PgJ" }
+config.action_controller.session = { :session_key => "_littlevoice_session", :secret => "1dd92b498206f8af69050eafe304dcc1peTkZ8qKHxF0yP3a3tFrFk3Ls5LZz2/0fAkuOfeyCPPHIiwT5u9VY8+vXNzX74PgJ2" }
 # Enable serving of images, stylesheets, and javascripts from an asset server
 # config.action_controller.asset_host                  = "http://assets.example.com"
 

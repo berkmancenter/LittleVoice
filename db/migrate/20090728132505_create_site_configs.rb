@@ -7,7 +7,7 @@ class CreateSiteConfigs < ActiveRecord::Migration
       t.column :org_url, :string, :default => "example.org", :null => false
       t.column :rcc_pub, :string
       t.column :rcc_priv, :string
-      t.column :site_logo_url, :string, :default => "/images/site-logo.png", :null => false
+      t.column :site_logo_url, :string, :default => "/images/lv-logo.png", :null => false
       t.column :org_logo_url, :string, :default => "/images/org-logo.png", :null => false
       t.column :m_server_addr, :string
       t.column :m_server_port, :integer

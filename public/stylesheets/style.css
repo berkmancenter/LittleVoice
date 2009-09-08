@@ -699,9 +699,9 @@ div.statusmessage {
 	color:#2382A1;
 	display:inline;
 	font-size:85%;
-	left:358px;
-	position:absolute;
-	top:48px;
+	left:5px;
+	position:relative;
+	top:-28px;
 }
 
 .content {
