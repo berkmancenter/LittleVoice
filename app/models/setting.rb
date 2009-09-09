@@ -19,7 +19,8 @@ class Setting < ActiveRecord::Base
   serialize :value
   before_save :normalize
   after_save :restart_if_necessary
-  @@restart_namespaces = %w( SMTP ).map(&:upcase)
+  @@restart_namespaces = %w( SMTP RECAPTCHA ).map(&:upcase)
+  validates_format_of :namespace, :with => /^[A-Za-z0-9]+$/
   
   def load
     eval("$#{self.name} = self.value || nil")

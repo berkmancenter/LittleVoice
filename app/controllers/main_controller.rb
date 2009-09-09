@@ -594,23 +594,7 @@ class MainController < ApplicationController
   end
   
   def survey
-    if flash[:signed_up] == true or session[:signed_up] == true
-      if request.post? && params[:survey_response]
-        @survey_response = SurveyResponse.new(:survey_name => "signup_survey")
-        params[:survey_response].each_pair do |key,value|
-          @survey_response.responses[key.delete("question_")] = value
-        end
-        @survey_response.save
-        flash[:notice] = "Thanks for signing up! Please check your email to activate your account before logging in."
-        redirect_to :action => "conversations", :view => "popular"
-        session[:signed_up] = nil
-      else
-        session[:signed_up] = true
-        flash[:notice] = "Thanks for signing up! Please check your email to activate your account before logging in."
-      end
-    else
       redirect_to "/"
-    end
   end
   
   def search

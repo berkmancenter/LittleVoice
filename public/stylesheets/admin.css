@@ -215,3 +215,24 @@ td {
 .responses li {
 	list-style:none;
 }
+
+#settings fieldset {
+	background-color:#f3f3f3;
+	border:1px solid #ddd;
+	margin-bottom:10px;
+	padding:10px;
+}
+
+#settings legend {
+	padding:0px 10px;
+	border:1px solid #ccc;
+}
+
+#settings td {
+	padding-right:10px;
+}
+
+#settings input[type="text"] {
+	border:1px solid #ccc;
+	padding:2px;
+}

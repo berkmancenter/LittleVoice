@@ -1,7 +1,7 @@
 
 <div id="navigation" class="section">
     <div class="section_title rootcontent" style="height:25px">
-        <div class="search" style="display:inline;">
+        <div class="search" style="display:inline;float:right;">
         <%= form_tag :action => @current_action, :view => params[:view], :conditions => params[:conditions], :sort => "search" %>
         <%= text_field_tag :search, '', {:size => 30} %>
         </form>
@@ -14,10 +14,9 @@
 	        <span><%= link_to "Banned", :controller => "admin", :action => "users", :view => "banned", :sort => "updated_at", :desc => true, :conditions => {:enabled => false} %></span>
 	        <span><%= link_to "Activity", :controller => "admin", :action => "users", :view => "activity" %></span>
 	        <% if check_role('administrator') %>
-	        <span class="active"><%= link_to "Content", :controller => "contents", :action => "index" %></span>
-	        <span><%= link_to 'New', new_content_path %></span>
-	        <span class="active"><%= link_to "Stats", :controller => "admin", :action => "stats" %></span>
-	        <span class="active"><%= link_to "Settings", :controller => "settings", :action => "index" %></span>
+		        <span class="active"><%= link_to "Content", :controller => "contents", :action => "index" %></span>
+		        <span><%= link_to 'New', new_content_path %></span>
+		        <span class="active"><%= link_to "Settings", :controller => "settings", :action => "index" %></span>
 	        <% end %>
 	    </div>
 	</div>

@@ -109,15 +109,6 @@ class AdminController < ApplicationController
     end
   end
 
-  def stats
-    @signup_1 = stats_for(response_group("signup_survey", "1"))
-    @signup_2 = stats_for(response_group("signup_survey", "2"))
-    @signup_3 = stats_for(response_group("signup_survey", "3"))
-    @signup_4 = stats_for(response_group("signup_survey", "4"))
-    @signup_5 = stats_for(response_group("signup_survey", "5"))
-    @total_responses = survey_responses("signup_survey").length
-  end
-
 protected
 
   ###

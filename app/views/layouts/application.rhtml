@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=8;FF=3;OtherUA=4" />
 <meta name="keywords" content="" />
 <meta name="description" content="<%= @page_description %>" />
-<title><%= @page_title ? @page_title + ' - ' + $SITE_NAME : $SITE_NAME %></title>
+<title><%= @page_title ? @page_title + ' - ' + $LV_SITE_NAME : $LV_SITE_NAME %></title>
 <%= auto_discovery_link_tag(:rss, :controller => "rss", :action => "index") %>
 <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.6.0/build/fonts/fonts-min.css" />
 
@@ -18,7 +18,7 @@
 	<%= javascript_include_tag 'pngfix.js' %>
 <![endif]-->
 <!--[if lte IE 7]><%= stylesheet_link_tag "style_ie7" %><![endif]-->
-<% if current_user != false && check_role(['administrator','moderator']) && ["admin","contents"].include?(@current_controller) %><%= stylesheet_link_tag "admin" %><% end %>
+<% if current_user != false && check_role(['administrator','moderator']) && ["admin","contents","settings"].include?(@current_controller) %><%= stylesheet_link_tag "admin" %><% end %>
 <%= javascript_include_tag :defaults %>
 <%= javascript_include_tag 'prototip' %>
 </head>
@@ -54,8 +54,8 @@
 				<% end %>		
 			</div>
 			<div style="position:relative;top:-8px;left:3px;">
-				<a href="/"><%= image_tag $SITE_LOGO_URL, :alt => "http://#{$SITE_URL}" %></a>
-				<span id="by_line"><% if $ORG_NAME %> by <%= link_to $ORG_NAME, "http://#{$ORG_URL}" %><% end %></span>
+				<a href="/"><%= image_tag $LV_SITE_LOGO_URL, :alt => "http://#{$LV_SITE_URL}" %></a>
+				<span id="by_line"><% if $LV_ORG_NAME %> by <%= link_to $LV_ORG_NAME, "http://#{$LV_ORG_URL}" %><% end %></span>
 			</div>
 			
 		</div>	
