@@ -54,7 +54,7 @@ class UsersController < ApplicationController
            #self.current_user = @user
             flash[:notice] = "Thanks for signing up! Please check your email to activate your account before logging in."
             flash[:signed_up] = true
-           redirect_to :controller => "main", :action => "survey"
+           redirect_to :controller => "main", :action => "index"
          else
           flash[:notice] = "You must accept the Terms & Conditions to register"
           render :action => "new"

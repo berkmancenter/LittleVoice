@@ -13,7 +13,7 @@
 				<span id="main_teaser">
 					
 					<span id="main_intro_text">
-						<%= $ORG_NAME %> is a community of people blah blah blah...
+						<%= $LV_ORG_NAME %> is a community of people blah blah blah...
 						<br /><br />
 						Whether you're seeking assistance, offering your expertise, or simply trying to learn more about .... , it's easy to <%= link_to "get started", '/main/conversations?get_started=true' %>.
 					</span>
@@ -25,10 +25,10 @@
 	</div>
 	
 	<div class="section" style="margin-bottom:20px;float:left;clear:both;">
-		<% if $ORG_LOGO_URL %>
+		<% if $LV_ORG_LOGO_URL %>
 		<div id="logos">
-			<div style="padding-bottom:10px;font-weight:bold;color:#DC5E1B;"><%= $SITE_NAME %> is brought to you by:</div>
-			<%= image_tag "#{$ORG_LOGO_URL}" , :onclick => "document.location = #{$ORG_URL}", :style => "cursor:pointer;" %>
+			<div style="padding-bottom:10px;font-weight:bold;color:#DC5E1B;"><%= $LV_SITE_NAME %> is brought to you by:</div>
+			<%= image_tag "#{$LV_ORG_LOGO_URL}" , :onclick => "document.location = #{$LV_ORG_URL}", :style => "cursor:pointer;" %>
 		</div>
 		<% end %>
 		<div id="quotation" onmouseover="hovering = true;" onmouseout="hovering = false;">

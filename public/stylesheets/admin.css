@@ -226,6 +226,7 @@ td {
 #settings legend {
 	padding:0px 10px;
 	border:1px solid #ccc;
+	background-color:#fff;
 }
 
 #settings td {
