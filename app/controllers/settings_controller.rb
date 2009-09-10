@@ -20,7 +20,7 @@ class SettingsController < ApplicationController
       new_value = params[key]
       key = key.gsub(/^setting\_/, '')
       setting = Setting.find(:first, :conditions => {:namespace => key.match(/^[a-zA-Z0-9]+\_/).to_s.gsub(/\_$/, ''), :key => key.gsub(/^[a-zA-Z0-9]+\_/, '')})
-      setting.value = new_value
+      setting.value = new_value == '' ? nil : new_value
       (setting.save && setting.load) if setting.changed?
     end
     redirect_to :action => :index

@@ -1,35 +1,27 @@
 To get started:
+
 Ensure that you have the following gems installed - 
 1. rexml-expansion-fix
-2. ferret (v0.11.5 seems to be the one working fine)
-3. addressable
-4. RMgick
-5. will_paginate
-6. ruby_recaptcha
+2. ferret
+3. acts_as_ferret
+4. addressable
+5. RMagick
+6. will_paginate
+7. ruby-recaptcha
 
-Once all the gems are present, Download LittleVoice from XXXX -
+Once all the gems are present, Download and extract the LittleVoice source files to a
+directory of your choice.  Only the public directory of the LittleVoice application needs to be
+accessible via your web server.
 
-Then Run the following command in your console - 
-cd LittleVoice 
-rake db:create db:schema:load
-ruby script\server
+Edit your config/database.yml file to specify an existing, empty database,
+and then Run the following command in your console to set up the database and initial settings -
 
+rake lv:install
 
-In the schema we have created the following set of default Login::Password pairs - 
-  admin::admin12
-  mod::mod12
-  reguser::reguser12
-  
-The site requires recaptcha Public and private keys. they are stored in the site database as a part of site configurations.
+You will be prompted to enter credentials for an initial administrator account.
+
+LittleVoice requires recaptcha public and private keys. they are stored in the site database as a part of site configurations.
 To add the keys or update the site configurations like Site Name, URL etc., perform the following steps - 
   1. Login using the "admin" login
-  2. Go to Admin Dashboard > Site Configuration
-  3. Edit existing or Add New site configuration
-Always, the latest site configuration saved is the one that is used.
-
-For the Cookies, the :session_key and :secret variables are stored in config/environments/*.rb
-One should change it to appropriate values. eg:-
-config.action_controller.session = { :session_key => "_littlevoice_dev_session", :secret => "" }
-where :secret can be generated using - 
-alphanumerics = [('0'..'9'),('A'..'Z'),('a'..'z')].map {|range| range.to_a}.flatten (0...25).map { alphanumerics[Kernel.rand(alphanumerics.size)] }.join
-
+  2. Go to Admin Dashboard > Settings
+  3. Edit existing or add new keys under the 'RECAPTCHA' heading

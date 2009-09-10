@@ -12,7 +12,6 @@ config.whiny_nils = true
 config.action_controller.consider_all_requests_local = true
 config.action_controller.perform_caching             = false                                 
 config.action_view.debug_rjs                         = true
-config.action_controller.session = { :session_key => "_littlevoice_dev_session", :secret => "1dd92b498206f8af69050eafe304dcc1peTkZ8qKHxF0yP3a3tFrFk3Ls5LZz2/0fAkuOfeyCPPHIiwT5u9VY8+vXNzX74PgJ" }
 
 # Don't care if the mailer can't send
 config.action_mailer.raise_delivery_errors = false

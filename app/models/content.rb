@@ -13,6 +13,7 @@ class Content < ActiveRecord::Base
   attr_accessor :content_id
   attr_accessor :live
   validates_uniqueness_of :location
+  validates_uniqueness_of :pseudonym
   
   class Version < ActiveRecord::Base
     def parse_body

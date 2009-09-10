@@ -1,0 +1,1 @@
+ActionController::Base.session = {:session_key => '_lv_session', :secret => 'Lmnl4Rf0oD3GNDz1C5PepfZruYWsIFLsvzFU7vFWlJ9zlM1536Jzl7oh0tuwDuBXkUQVmd5qMz4kxjWofTKQsYQr4YtGpBs0ZPSCQWtxS0hQOxY3kIpaiWE13cdxqSTx'}
