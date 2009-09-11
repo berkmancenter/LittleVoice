@@ -1,16 +1,17 @@
 GETTING STARTED
 ------------------------------
 Ensure that all required gems are present (ferret, addressable, RedCloth, 
-json, mislav-will_paginate, ruby-recaptcha):
+json, mislav-will_paginate, ruby-recaptcha, ruby-openid):
 
 >> rake gems:install
 
 
 Edit your config/database.yml file to specify an existing, empty database. 
-Then Run the following command in your console to set up the database and 
+Then run the following command in your console to set up the database and 
 initial settings:
 
 >> rake lv:install
+
 
 You will be prompted to enter credentials for an initial administrator account.
 

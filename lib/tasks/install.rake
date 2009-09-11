@@ -24,6 +24,7 @@ namespace :lv do
     Setting.create(:key => "ORG_URL", :value => nil)
     Setting.create(:key => "SITE_LOGO_URL", :value => "lv-logo.png")
     Setting.create(:key => "ORG_LOGO_URL", :value => nil)
+    Setting.create(:namespace => "GOOGLE", :key => "ANALYTICS_ID", :value => nil)
     Setting.create(:namespace => "SMTP", :key => "MAIL_SERVER_ADDR", :value => "localhost")
     Setting.create(:namespace => "SMTP", :key => "MAIL_SERVER_PORT", :value => 25)
     Setting.create(:namespace => "SMTP", :key => "MAIL_SERVER_DOMAIN", :value => nil)
