@@ -1,27 +1,23 @@
-To get started:
+GETTING STARTED
+------------------------------
+Ensure that all required gems are present (ferret, addressable, RedCloth, 
+json, mislav-will_paginate, ruby-recaptcha):
 
-Ensure that you have the following gems installed - 
-1. rexml-expansion-fix
-2. ferret
-3. acts_as_ferret
-4. addressable
-5. RMagick
-6. will_paginate
-7. ruby-recaptcha
+>> rake gems:install
 
-Once all the gems are present, Download and extract the LittleVoice source files to a
-directory of your choice.  Only the public directory of the LittleVoice application needs to be
-accessible via your web server.
 
-Edit your config/database.yml file to specify an existing, empty database,
-and then Run the following command in your console to set up the database and initial settings -
+Edit your config/database.yml file to specify an existing, empty database. 
+Then Run the following command in your console to set up the database and 
+initial settings:
 
-rake lv:install
+>> rake lv:install
 
 You will be prompted to enter credentials for an initial administrator account.
 
-LittleVoice requires recaptcha public and private keys. they are stored in the site database as a part of site configurations.
-To add the keys or update the site configurations like Site Name, URL etc., perform the following steps - 
+
+LittleVoice requires recaptcha public and private keys.  To add the keys or update 
+the site configurations like Site Name, URL etc., perform the following steps:
+
   1. Login using the "admin" login
   2. Go to Admin Dashboard > Settings
   3. Edit existing or add new keys under the 'RECAPTCHA' heading

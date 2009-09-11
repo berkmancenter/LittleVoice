@@ -12,15 +12,14 @@ RAILS_GEM_VERSION = '2.3.4' unless defined? RAILS_GEM_VERSION
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 
-require 'rexml-expansion-fix'
-
 Rails::Initializer.run do |config|
   config.gem "RedCloth"
   config.gem "ferret"
   config.gem "json"
-
-#  config.gem "acts_as_ferret"
-#  config.gem "recaptcha"
+  config.gem "addressable", :lib => "addressable/uri"
+  config.gem "ruby-recaptcha"
+  config.gem "mislav-will_paginate", :lib => "will_paginate", :source => "http://gems.github.com"
+  
   config.active_record.observers = :user_observer
   
   # Settings in config/environments/* take precedence over those specified here
@@ -79,9 +78,8 @@ class ActiveRecord::Base
 end
 require 'acts_as_ferret'
 require 'acts_as_ferret_fix'
-require 'will_paginate'
 require 'monkey_patches'
-require 'recaptcha'
+
 
 ActiveSupport::CoreExtensions::Time::Conversions::DATE_FORMATS.merge!(
     :date => "%Y-%m-%d",
