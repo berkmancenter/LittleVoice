@@ -1,13 +1,5 @@
-
-# The file specifies the Invitation Class
-#
-#
-# Author::    
-# Copyright:: Copyright (c) 2008 BadwareBusters.org
-# License::   Distributes under the same terms as Ruby
-
-# This class specifies the invitation 
-
+###
+# DEPRECATED
 class Invitation < ActiveRecord::Base
 belongs_to :user
 

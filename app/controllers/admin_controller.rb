@@ -62,10 +62,14 @@ class AdminController < ApplicationController
     end
   end
 
+  ###
+  # DEPRECATED
   def invites
     @invites = Invitation.paginate :per_page => 20, :page => params[:page]
   end
 
+  ###
+  # DEPRECATED
   def send_invitation
     if request.post?
       @invite = Invitation.new(params[:invitation])

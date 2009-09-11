@@ -15,7 +15,7 @@ namespace :lv do
     session_initializer.close
     
     # Set up the database
-    Rake::Task["db:migrate"].invoke
+    Rake::Task["db:schema:load"].invoke
 
     # Create initial settings
     Setting.create(:key => "SITE_NAME", :value => "LittleVoice")
@@ -67,5 +67,6 @@ namespace :lv do
     Content.create(:controller => "main", :action => "privacy", :name => "privacy", :pseudonym => "Privacy Policy", :location => "/main/privacy#privacy")
     Content.create(:controller => "main", :action => "copyright", :name => "copyright", :pseudonym => "Copyright", :location => "/main/copyright#copyright")
     
+    puts "\n-- Installation Complete \n-- Try running the application with 'ruby script/server'\n"
   end
 end

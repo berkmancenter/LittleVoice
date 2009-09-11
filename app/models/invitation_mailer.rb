@@ -1,14 +1,5 @@
-
-# The file specifies the InvitationMailer Class
-#
-#
-# Author::    
-# Copyright:: Copyright (c) 2008 BadwareBusters.org
-# License::   Distributes under the same terms as Ruby
-
-# This class specifies the Invitation Mail, which wraps the invitation code
-# and sends to specified recipients
-
+###
+# DEPRECATED
 class InvitationMailer < ActionMailer::Base
 
    def invitation_email(invitation)
