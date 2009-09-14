@@ -125,7 +125,12 @@ class MainController < ApplicationController
           flash[:item] = params[:item]
           flash[:email_me] = params[:itememailcheckbox]
           @current_user = User.authenticate(params[:login], params[:password])
-          session[:user_id] = @current_user.id if @current_user
+          if @current_user and @current_user.enabled
+            session[:user_id] = @current_user.id
+          else
+            session[:user_id] = false
+            @current_user = false
+          end
         end
         unless @current_user
           if params[:accept].to_i == 1 
@@ -135,7 +140,7 @@ class MainController < ApplicationController
             flash[:signed_up] = true
           end
         end
-        if @current_user
+        if @current_user and @current_user.enabled
           itemrecord = Item.create()
           itemrecord.tag_list = params[:item][:tag_list]
           itemrecord.user_id = @current_user.id
