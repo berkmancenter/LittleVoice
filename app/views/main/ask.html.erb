@@ -75,7 +75,7 @@
 											<tr style="padding:1px;"><td style="text-align:right;"><%= check_box_tag("accept") %></td><td style="font-size:x-small;"><label for="accept" style="font-size:small;font-weight:normal;">I have read and accept the <%= link_to "Terms &amp; Conditions", {:controller => "main", :action => "terms"}, :style => "font-size:small; font-weight:normal; border:none; padding:0px;"%></label></td></tr>
 										</tbody></table></td>
 										<td><table><tbody>
-											<tr><td><%= get_captcha() %></td></tr>
+											<tr><td><%= get_captcha(:rcc_pub => $RECAPTCHA_RCC_PUB, :rcc_priv => $RECAPTCHA_RCC_PRIV) %></td></tr>
 											<tr><td><%= submit_tag 'Post Topic', :id => "main_form_submit", :class => "formbutton" %></td></tr>
 										</tbody></table></td>
 									</tr>
