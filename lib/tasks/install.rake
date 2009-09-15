@@ -28,8 +28,8 @@ namespace :lv do
     Setting.create(:namespace => "SMTP", :key => "MAIL_SERVER_ADDR", :value => "localhost")
     Setting.create(:namespace => "SMTP", :key => "MAIL_SERVER_PORT", :value => 25)
     Setting.create(:namespace => "SMTP", :key => "MAIL_SERVER_DOMAIN", :value => nil)
-    Setting.create(:namespace => "recaptcha", :key => "RCC_PUB", :value => "")
-    Setting.create(:namespace => "recaptcha", :key => "RCC_PRIV", :value => "")
+    Setting.create(:namespace => "RECAPTCHA", :key => "RCC_PUB", :value => "")
+    Setting.create(:namespace => "RECAPTCHA", :key => "RCC_PRIV", :value => "")
 
     # Create initial role types
     Role.create :rolename => "administrator", :functionality => "Administrator with all permissions "
@@ -58,6 +58,10 @@ namespace :lv do
       rescue 
       end
     end
+
+    # Create site subscriptions
+    Subscription.create(:sub_type => "item", :sub_name => "all_conversations")
+    Subscription.create(:sub_type => "item", :sub_name => "all")
 
     # Create initial content
     Content.create(:controller => "main", :action => "index", :name => "welcome", :pseudonym => "Welcome", :location => "/main/index#welcome", :body => "Welcome to LittleVoice!").save_new_version
