@@ -35,7 +35,7 @@ class User < ActiveRecord::Base
   has_many :items, :dependent => :nullify  # updates the associated records foreign key value to NULL rather than destroying it
   has_many :ratingactions, :dependent => :destroy  # destroys the associated ratingactions
   has_many :itememails, :dependent => :destroy  # destroys the associated itememails
-  has_and_belongs_to_many :subscriptions, :join_table => "subscriptions_users"
+  has_and_belongs_to_many :subscriptions, :join_table => "#{Subscription.connection.instance_eval{@config[:database]}}.subscriptions_users"
   has_many :scores do
     def current
       find :last, :order => "created_at"

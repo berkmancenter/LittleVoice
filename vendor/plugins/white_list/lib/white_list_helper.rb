@@ -122,7 +122,7 @@ module WhiteListHelper
     end
 end
 
-WhiteListHelper.interstitial_attributes = %w(href src)
+WhiteListHelper.interstitial_attributes = %w()
 WhiteListHelper.bad_tags   = %w(script iframe) 
 WhiteListHelper.tags       = %w(a b i p em strong code pre sub sup acronym cite br div span h1 h2 h3 h4 h5 h6 ul ol li blockquote)
 WhiteListHelper.attributes = %w(href cite datetime title src type width height)

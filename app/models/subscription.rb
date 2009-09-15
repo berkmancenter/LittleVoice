@@ -8,7 +8,7 @@
 
 # This class specifies Subscription and its associations
 class Subscription < ActiveRecord::Base
-  has_and_belongs_to_many :users, :join_table => "subscriptions_users"
+  has_and_belongs_to_many :users, :join_table => "#{Subscription.connection.instance_eval{@config[:database]}}.subscriptions_users"
 
   named_scope :tags, :conditions => {:sub_type => "tag"} do
     def by_name(name)
