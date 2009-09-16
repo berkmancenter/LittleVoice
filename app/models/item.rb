@@ -14,7 +14,7 @@ class Item < ActiveRecord::Base
   named_scope :active, :conditions => {:item_active => true }
   
   named_scope :spammed, :joins => "RIGHT JOIN (SELECT * FROM ratingactions where ratingactions.ratingtype_id = 3) r on r.item_id = items.id", :group => "items.id" do
-  
+    
     #Searching on text using Ferret
     #
     #Apparently, ActsAsFerret::SearchResults objects can generate inaccurate attributes 
@@ -118,7 +118,7 @@ class Item < ActiveRecord::Base
     self.ratingactions.spam.length
   end
   
-
+  
   #Nuking an item, ie giving Item an unfavourable rating 
   def nuke(current_user = nil) 
     self.item_active = false
@@ -149,22 +149,22 @@ class Item < ActiveRecord::Base
     return ratingtotal
   end  
   
-###Deprecated in favor of :rank
-#  def rating_place
-#    ratingplaceset = Ratingitemtotal.find_by_sql(["SELECT ratingitemtotals.item_id, items.item_root_id, ratingitemtotals.rating_total FROM ratingitemtotals LEFT JOIN (items) ON (items.id=ratingitemtotals.item_id) where items.item_root_id = ? order by ratingitemtotals.rating_total DESC", self.item_root_id])
-#    iterator = 0 
-#    matchtest = false
-#    ratingplaceset.each do |ratingrecord|
-#      iterator += 1
-#      
-#      if ratingrecord.item_id == self.id
-#        matchtest = true
-#      end
-#      
-#      break unless ratingrecord.item_id != self.id
-#    end
-#    if matchtest then return iterator else return 0 end
-#  end  
+  ###Deprecated in favor of :rank
+  #  def rating_place
+  #    ratingplaceset = Ratingitemtotal.find_by_sql(["SELECT ratingitemtotals.item_id, items.item_root_id, ratingitemtotals.rating_total FROM ratingitemtotals LEFT JOIN (items) ON (items.id=ratingitemtotals.item_id) where items.item_root_id = ? order by ratingitemtotals.rating_total DESC", self.item_root_id])
+  #    iterator = 0 
+  #    matchtest = false
+  #    ratingplaceset.each do |ratingrecord|
+  #      iterator += 1
+  #      
+  #      if ratingrecord.item_id == self.id
+  #        matchtest = true
+  #      end
+  #      
+  #      break unless ratingrecord.item_id != self.id
+  #    end
+  #    if matchtest then return iterator else return 0 end
+  #  end  
   
   def rating_id(current_user)
     
@@ -230,7 +230,7 @@ class Item < ActiveRecord::Base
     end
   end
   
-
+  
   def update_subscriptions
     Subscription.find_or_create_by_sub_type_and_sub_type_id(:sub_type => "item", :sub_type_id => self.id) if self.id
     if self.tag_list.any?

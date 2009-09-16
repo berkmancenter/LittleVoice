@@ -51,7 +51,7 @@
 # - Introduces params :sort_key and :sort_order.
 #
 module SortHelper
-
+  
   # Initializes the default sort column (default_key) and sort order
   # (default_order).
   #
@@ -64,7 +64,7 @@ module SortHelper
     @sort_name = name || @params[:controller] + @params[:action] + '_sort'
     @sort_default = {:key => default_key, :order => default_order}
   end
-
+  
   # Updates the sort state. Call this in the controller prior to calling
   # sort_clause.
   #
@@ -78,14 +78,14 @@ module SortHelper
     end
     @session[@sort_name] = sort
   end
-
+  
   # Returns an SQL sort clause corresponding to the current sort state.
   # Use this to sort the controller's table items collection.
   #
   def sort_clause()
     @session[@sort_name][:key] + ' ' + @session[@sort_name][:order]
   end
-
+  
   # Returns a link which sorts by the named column.
   #
   # - column is the name of an attribute in the sorted record collection.
@@ -110,7 +110,7 @@ module SortHelper
     params = {:params => {:sort_key => column, :sort_order => order, :status_id => @params[:status_id], :search => @params[:search]}}
     link_to(caption, params) + (icon ? nbsp(2) + image_tag(icon) : '')
   end
-
+  
   # Returns a table header <th> tag with a sort link for the named column
   # attribute.
   #
@@ -141,19 +141,19 @@ module SortHelper
     options[:title]= "Sort by #{caption}" unless options[:title]
     content_tag('th', sort_link(column, caption), options)
   end
-
+  
   private
-
-    # Return n non-breaking spaces.
-    def nbsp(n)
+  
+  # Return n non-breaking spaces.
+  def nbsp(n)
       '&nbsp;' * n
-    end
-
-    # Return capitalized title.
-    def titleize(title)
-      title.split.map {|w| w.capitalize }.join(' ')
-    end
-
+  end
+  
+  # Return capitalized title.
+  def titleize(title)
+    title.split.map {|w| w.capitalize }.join(' ')
+  end
+  
 end
 
 

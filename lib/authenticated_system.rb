@@ -19,14 +19,14 @@ module AuthenticatedSystem
     end
 
     # Returns true or false if the user is anonymous.
-    def anonymous?
-      current_user == anonymous_user
-    end
+#    def anonymous?
+#      current_user == anonymous_user
+#    end
 
     # Returns the anonymous user
-    def anonymous_user
-      User.find_by_login("anonymous")
-    end
+#    def anonymous_user
+#      User.find_by_login("anonymous")
+#    end
 
 
     # Check if the user is authorized
@@ -108,7 +108,7 @@ module AuthenticatedSystem
        respond_to do |format|
          format.html do
            #Put your domain name here ex. http://www.example.com
-           domain_name = (RAILS_ENV == "production" ? "http://#{$SITE_URL}" : "http://#{$ORG_URL}")
+           domain_name = (RAILS_ENV == "production" ? "http://#{$LV_SITE_URL}" : "http://#{$LV_ORG_URL}")
            http_referer = session[:refer_to]
            if http_referer.nil?
              store_referer
@@ -183,7 +183,7 @@ module AuthenticatedSystem
     end
 
     # Login as anonymous_user
-    def login_as_anonymous
-      self.current_user = anonymous_user
-    end
+#    def login_as_anonymous
+#      self.current_user = anonymous_user
+#    end
 end

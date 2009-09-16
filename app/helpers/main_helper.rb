@@ -2,15 +2,15 @@ module MainHelper
   
   def conversation_faders(conversations)
     conversations.collect{|c| 
-        root = Item.find(c.item_root_id)
-        {:id => c.id, 
+      root = Item.find(c.item_root_id)
+      {:id => c.id, 
         :ago => distance_of_time_in_words_to_now(c.created_at) + ' ago',
         :user => escape_javascript(c.user.login), 
         :user_id => c.user.id, 
         :item_text => h(truncate(c.item_text, :length => 250, :omission => '...')).to_xs,
         :root_title => h(root.item_title('...', 35)).to_xs,
         :root_id => root.id
-        } }.to_json
+      } }.to_json
   end
   
   #Same as escape_javascript except that it doesn't escape newline chars.

@@ -13,5 +13,5 @@ class SurveyResponse < ActiveRecord::Base
   def after_initialize
     self.responses ||= {}
   end
-
+  
 end

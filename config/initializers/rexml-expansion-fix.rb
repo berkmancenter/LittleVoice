@@ -40,4 +40,3 @@ module REXML
     end
   end
 end
-

@@ -14,7 +14,7 @@ class StylesheetsController < ApplicationController
     "light_blue" => "#D3E6EA",
     "dark_blue" => "#2382a1"
     }
-
+    
     @button_size_array = [75, 100, 125, 150, 200]
     
     respond_to do |format|
@@ -26,4 +26,3 @@ class StylesheetsController < ApplicationController
   
   
 end
-

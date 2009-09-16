@@ -19,4 +19,4 @@ config.action_mailer.raise_delivery_errors = false
 $KCODE = 'u' 
 RCC_PUB = $RCC_PUB
 RCC_PRIV = $RCC_PRIV
- 
+

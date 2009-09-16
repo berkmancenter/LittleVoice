@@ -24,7 +24,7 @@ class CreateSubscriptions < ActiveRecord::Migration
     end
     
   end
-
+  
   def self.down
     drop_table :subscriptions_users
     drop_table :subscriptions

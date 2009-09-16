@@ -27,10 +27,10 @@ class SettingsController < ApplicationController
         js_value.symbolize_keys! if js_value.class == Hash
         setting.value = js_value
       end
-      (setting.save && setting.load) if setting.changed?
+       (setting.save && setting.load) if setting.changed?
     end
     redirect_to :action => :index
   end
   
-
+  
 end

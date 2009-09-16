@@ -17,7 +17,7 @@ class CreateContents < ActiveRecord::Migration
       t.timestamps
     end
   end
-
+  
   def self.down
     drop_table :contents
     drop_table :content_versions

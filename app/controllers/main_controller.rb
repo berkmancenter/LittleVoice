@@ -15,9 +15,9 @@ class MainController < ApplicationController
   def auto_complete_for_tag_name(options = {})
     tag = params[:item][:tag_list].split(',').last.strip
     find_options = { 
-            :conditions => [ "LOWER(#{:name}) LIKE ?", '%' + tag.downcase + '%' ], 
-            :order => "#{:name} ASC",
-            :limit => 10 }.merge!(options)
+      :conditions => [ "LOWER(#{:name}) LIKE ?", '%' + tag.downcase + '%' ], 
+      :order => "#{:name} ASC",
+      :limit => 10 }.merge!(options)
     @items = :tag.to_s.camelize.constantize.find(:all, find_options)
     render :inline => "<%= auto_complete_result @items, '#{:name}' %>"
   end
@@ -104,7 +104,7 @@ class MainController < ApplicationController
       end    
       itemtext = ""
     end
-
+    
     if !itemtext.empty?
       
       @additemempty = false  
@@ -239,7 +239,7 @@ class MainController < ApplicationController
           end
         end
         
-
+        
         
       end
     end
@@ -500,7 +500,7 @@ class MainController < ApplicationController
     else
       rating_total = 0
     end
-
+    
     maxrating = Ratingitemtotal.maximum(:rating_total, :conditions => ["parent_id = ?", item.parent_id])
     
     if (rating_total == maxrating) && (rating_total > 0)
@@ -516,25 +516,25 @@ class MainController < ApplicationController
         outputclass = 2
       end
     end
-
+    
     return outputclass
   end
   
   # def rate(item_id, ratingtype_id)  Moved to ApplicationController  
   
   #def get_score_range(min, max, score)
-    
+  
   #  scorevalue = 0
-    
+  
   #  rangearray = (min.to_i..max.to_i).to_a  
   #  rangelength = rangearray.length
   #  multiplier =  5/rangelength.to_f
   #  scorevalue = (rangearray.index(score) + 1) unless rangearray.index(score).nil?
   #  outputclass = 0
-    
-    
-    
-    
+  
+  
+  
+  
   #  if score != 0 
   #    if (0..1).include?(scorevalue * multiplier) then outputclass = 1
   #    elsif (1..2).include?(scorevalue * multiplier) then outputclass = 2
@@ -545,13 +545,13 @@ class MainController < ApplicationController
   #  else
   #     outputclass = 4
   #  end
-   
-    
+  
+  
   #  outputclass
-    
+  
   #end
   
-
+  
   
   def conversations
     tags
@@ -560,31 +560,31 @@ class MainController < ApplicationController
     #    @top_answers = Item.paginate :page => params[:page], :per_page => 20, :include => :ratingitemtotal, :conditions => "parent_id IS NOT NULL and item_active = true", :order => "ratingitemtotals.rating_total DESC, items.created_at DESC" 
     case params[:view]
       when "popular"
-        @conversation_title = "Top rated by the community"
-        @conversations = Item.paginate :page => params[:page], :per_page => 20, :include => :ratingitemtotal, :conditions => {:parent_id => nil, :item_active => true}, :order => "ratingitemtotals.rating_total DESC, items.created_at DESC"
+      @conversation_title = "Top rated by the community"
+      @conversations = Item.paginate :page => params[:page], :per_page => 20, :include => :ratingitemtotal, :conditions => {:parent_id => nil, :item_active => true}, :order => "ratingitemtotals.rating_total DESC, items.created_at DESC"
       when "all_conversations"
-        @conversation_title = "Most recent topics"
-        @conversations = Item.paginate :page => params[:page], :per_page => 20, :conditions => {:parent_id => nil, :item_active => true}, :order => "created_at DESC"
+      @conversation_title = "Most recent topics"
+      @conversations = Item.paginate :page => params[:page], :per_page => 20, :conditions => {:parent_id => nil, :item_active => true}, :order => "created_at DESC"
       when "all_items"
-        @conversation_title = "All posts"
-        @conversations = Item.paginate :page => params[:page], :per_page => 20, :conditions => {:item_active => true}, :order => "created_at DESC"
+      @conversation_title = "All posts"
+      @conversations = Item.paginate :page => params[:page], :per_page => 20, :conditions => {:item_active => true}, :order => "created_at DESC"
       when "active"
-        @conversations = Item.paginate :page => params[:page], :per_page => 20, :select => "*, count(id)", :group => "item_root_id", :order => "count(id) DESC, created_at DESC", :conditions => {:item_active => true}
+      @conversations = Item.paginate :page => params[:page], :per_page => 20, :select => "*, count(id)", :group => "item_root_id", :order => "count(id) DESC, created_at DESC", :conditions => {:item_active => true}
       when "no_replies"
-        @conversation_title = "Topics awaiting a response"
+      @conversation_title = "Topics awaiting a response"
       @conversations = Item.paginate_by_sql("select *, count(id) from items where item_active = true group by item_root_id having count(id) = 1 order by created_at DESC", :page => params[:page], :per_page => 20)
       when "tag"
-        @conversation_title = "Messages tagged with: #{h(params[:tag])}"
-        case params[:kind]
-          when "topics"
-            @conversations = Item.conversations.tagged_with(params[:tag], :on => :tags).paginate :page => params[:page], :per_page => 20, :order => "created_at DESC"
-          when "responses"
-            @conversations = Item.responses.tagged_with(params[:tag], :on => :tags).paginate(:page => params[:page], :per_page => 20, :order => "created_at DESC")
-          else
-            @conversations = Item.tagged_with(params[:tag], :on => :tags).paginate :page => params[:page], :per_page => 20, :conditions => {:item_active => true}, :order => "created_at DESC"
-        end
+      @conversation_title = "Messages tagged with: #{h(params[:tag])}"
+      case params[:kind]
+        when "topics"
+        @conversations = Item.conversations.tagged_with(params[:tag], :on => :tags).paginate :page => params[:page], :per_page => 20, :order => "created_at DESC"
+        when "responses"
+        @conversations = Item.responses.tagged_with(params[:tag], :on => :tags).paginate(:page => params[:page], :per_page => 20, :order => "created_at DESC")
+      else
+        @conversations = Item.tagged_with(params[:tag], :on => :tags).paginate :page => params[:page], :per_page => 20, :conditions => {:item_active => true}, :order => "created_at DESC"
+      end
       when "faq"
-        @conversation_title = "Selected by the moderators"
+      @conversation_title = "Selected by the moderators"
       @conversations = Item.tagged_with("faq", :on => :special).paginate :page => params[:page], :per_page => 20, :conditions => {:item_active => true}, :order => "created_at DESC"
     end
     if @conversations.empty?
@@ -599,7 +599,7 @@ class MainController < ApplicationController
   end
   
   def survey
-      redirect_to "/"
+    redirect_to "/"
   end
   
   def search

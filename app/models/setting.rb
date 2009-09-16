@@ -25,7 +25,7 @@ class Setting < ActiveRecord::Base
   def load
     eval("$#{self.name} = self.value || nil")
   end
-    
+  
   def name
     "#{self.namespace}_#{self.key}".upcase
   end

@@ -9,7 +9,7 @@ class CreateSettings < ActiveRecord::Migration
     add_index :settings, [:namespace, :key], :unique => true
     add_index :settings, [:key, :namespace], :unique => true
   end
-
+  
   def self.down
     drop_table :settings
   end

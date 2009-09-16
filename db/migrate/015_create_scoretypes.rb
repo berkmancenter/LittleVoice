@@ -14,9 +14,9 @@ class CreateScoretypes < ActiveRecord::Migration
     Scoretype.create :name => "nuke_score", :award => -500, :description => "every message that was actively nuked by a moderator (passive nukage is a metaphysical impossibility)", :version => 1
     Scoretype.create :name => "unnuke_score", :award => 500, :description => "every message that was actively de-nukified by a moderator", :version => 1
     Scoretype.create :name => "adjust_score", :award => 0, :description => "adjustments made by the administrator", :version => 1
-  
+    
   end
-
+  
   def self.down
     drop_table :scoretypes
   end

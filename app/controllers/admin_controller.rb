@@ -6,21 +6,21 @@ class AdminController < ApplicationController
   layout "application"
   def index
     redirect_to :action => "messages"
-#    @lowrateditems = Ratingitemtotal.find(:all, :group => "item_id", :order => 'rating_total DESC', :limit => 10 ).collect{|x| x.item}
-#    @spamitems = Ratingaction.find_all_by_ratingtype_id(3, :include => :ratingtype, :group => "item_id", :order => 'ratingactions.created_at DESC').collect{|x| x.item}
-#    respond_to do |format|
-#      format.html # index.html.erb
-#      format.xml  { render :xml => @items }
-#    end
+    #    @lowrateditems = Ratingitemtotal.find(:all, :group => "item_id", :order => 'rating_total DESC', :limit => 10 ).collect{|x| x.item}
+    #    @spamitems = Ratingaction.find_all_by_ratingtype_id(3, :include => :ratingtype, :group => "item_id", :order => 'ratingactions.created_at DESC').collect{|x| x.item}
+    #    respond_to do |format|
+    #      format.html # index.html.erb
+    #      format.xml  { render :xml => @items }
+    #    end
   end
-
+  
   def show
     redirect_to :action => 'index'
   end
   
   def users
     if params[:sort] == "search"
-        @users = User.find_with_ferret(params[:search] + '~', {:page => params[:page], :per_page => 25}, {:conditions => params[:conditions]}) 
+      @users = User.find_with_ferret(params[:search] + '~', {:page => params[:page], :per_page => 25}, {:conditions => params[:conditions]}) 
     elsif (params[:conditions][:enabled] == "false" rescue false)
       if params[:sort] == "reputation"
         @users = User.banned.sort_by{|u| (params[:desc] ? (-1) : 1) * u.rawscore}.paginate :page => params[:page], :per_page => 25
@@ -28,8 +28,8 @@ class AdminController < ApplicationController
         @users = User.banned.paginate(:order => (params[:sort] ? params[:sort] : "updated_at #{params[:desc] ? 'DESC' : ''}"), :page => params[:page], :per_page => 25)
       end
     elsif params[:sort] == "reputation"
-        @scores = Reputation.paginate :order => "rawscore #{ params[:desc] ? 'DESC' : ''}", :per_page => 25, :page => params[:page]
-        @users = @scores.collect{|s| s.user }
+      @scores = Reputation.paginate :order => "rawscore #{ params[:desc] ? 'DESC' : ''}", :per_page => 25, :page => params[:page]
+      @users = @scores.collect{|s| s.user }
     elsif params[:sort] == "messages"
       @scores = Item.paginate(:group => :user_id, :order => "count(id) #{params[:desc] ? 'DESC' : ''}", :per_page => 25, :page => params[:page])
       @users = @scores.collect{|s| s.user }
@@ -40,7 +40,7 @@ class AdminController < ApplicationController
       @users = User.paginate :page => params[:page], :per_page => 25, :order => "#{params[:sort] ? params[:sort] : 'login'} #{params[:desc] ? 'DESC' : ''}", :conditions => params[:conditions]
     end    
   end
-
+  
   def messages
     check_for_any_of_roles(['administrator','moderator'])
     if params[:view] == "spam"
@@ -61,13 +61,13 @@ class AdminController < ApplicationController
       @messages = Item.paginate :page => params[:page], :per_page => 25, :conditions => params[:conditions], :order => "#{params[:sort] ? params[:sort] : 'created_at'} #{params[:asc] ? '' : 'DESC'}"
     end
   end
-
+  
   ###
   # DEPRECATED
   def invites
     @invites = Invitation.paginate :per_page => 20, :page => params[:page]
   end
-
+  
   ###
   # DEPRECATED
   def send_invitation
@@ -81,7 +81,7 @@ class AdminController < ApplicationController
     flash[:notice] = "Invitation sent to #{@invite.email}"
     redirect_to :action => "invites"
   end
-
+  
   def nuke
     @item = Item.find(params[:id])
     @item.nuke(current_user)
@@ -112,29 +112,29 @@ class AdminController < ApplicationController
       page.replace_html "message_#{params[:id]}", :partial => "vote"
     end
   end
-
-protected
-
+  
+  protected
+  
   ###
   #Grabs all the responses to a particular survey
   #eg: survey_responses("signup_survey") => [#<SurveyResponse id=1...>, #<SurveyResponse id=2...>]
   def survey_responses(name)
     @responses ||= SurveyResponse.find(:all, :conditions => {:survey_name => name})
   end
-
+  
   ###
   #Groups survey responses by the response to a particular question
   #eg: response_group("signup_survey", "1") => [["yes", [#<SurveyResponse id=1...>]], ["no", [#<SurveyResponse id=2...>]]]
   def response_group(survey_name, question_key)
     survey_responses(survey_name).group_by{|r| r.responses[question_key]}
   end
-
+  
   ###
   #Calculates the number of each response for a particular response group
   #eg: stats_for(response_group("signup_survey", "1")) => [["yes", 20], ["no", 4]]
   def stats_for(response_group)
     response_group.sort_by{|i| i[0] || "nil" }.collect{|group| [group[0], group[1].length]}
   end
-
-
+  
+  
 end

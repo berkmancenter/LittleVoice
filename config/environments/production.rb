@@ -17,12 +17,12 @@ config.action_controller.perform_caching             = true
 # Disable delivery errors, bad email addresses will be ignored
 # config.action_mailer.raise_delivery_errors = false
 
-  # Include your app's configuration here:
-  ActionMailer::Base.smtp_settings = {
-    :address  => $MAIL_SERVER_ADDR,
-    :port  => $MAIL_SERVER_PORT,
-    :domain => $MAIL_SERVER_DOMAIN
-  } 
+# Include your app's configuration here:
+ActionMailer::Base.smtp_settings = {
+  :address  => $MAIL_SERVER_ADDR,
+  :port  => $MAIL_SERVER_PORT,
+  :domain => $MAIL_SERVER_DOMAIN
+} 
 
 $KCODE = 'u' 
 RCC_PUB = $RCC_PUB

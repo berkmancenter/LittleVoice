@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
   def permit(roles)
     
   end
-
+  
   def fix_current_user_problem
     @current_user ||= current_user
   end
@@ -54,32 +54,32 @@ class ApplicationController < ActionController::Base
     ratingactionrecord = Ratingaction.find(:first, :conditions => ["item_id = ? and user_id = ?", itemid, current_user.id])
     
     if ratingactionrecord.nil? || (ratingactionrecord.ratingtype_id != ratingtype_id)
- 
-        if !ratingactionrecord.nil?
-          old_rating_value = Ratingtype.find(ratingactionrecord.ratingtype_id).rating_value * (ratingactionrecord.user_level || 1)
-        end
- 
-        ratingactionrecord = Ratingaction.new() unless !ratingactionrecord.nil?
+      
+      if !ratingactionrecord.nil?
+        old_rating_value = Ratingtype.find(ratingactionrecord.ratingtype_id).rating_value * (ratingactionrecord.user_level || 1)
+      end
+      
+      ratingactionrecord = Ratingaction.new() unless !ratingactionrecord.nil?
+      
+      ratingactionrecord.item_id = itemid
+      ratingactionrecord.rating = ratingboolean
+      ratingactionrecord.ratingtype_id = ratingtype_id
+      ratingactionrecord.user_id = current_user.id
+      ratingactionrecord.user_level = current_user.reputation_level
+      ratingstatus = ratingactionrecord.save
+      
+      if ratingstatus
+        ratingitemtotalrecord = Ratingitemtotal.find(:first, :conditions => ["item_id = ?", itemid])
         
-        ratingactionrecord.item_id = itemid
-        ratingactionrecord.rating = ratingboolean
-        ratingactionrecord.ratingtype_id = ratingtype_id
-        ratingactionrecord.user_id = current_user.id
-        ratingactionrecord.user_level = current_user.reputation_level
-        ratingstatus = ratingactionrecord.save
+        ratingitemtotalrecord = Ratingitemtotal.new() unless !ratingitemtotalrecord.nil?
         
-        if ratingstatus
-          ratingitemtotalrecord = Ratingitemtotal.find(:first, :conditions => ["item_id = ?", itemid])
-          
-          ratingitemtotalrecord = Ratingitemtotal.new() unless !ratingitemtotalrecord.nil?
-
-          old_total = ratingitemtotalrecord.rating_total
-          new_total = (old_total - old_rating_value) + (rating_value * current_user.reputation_level)
-          ratingitemtotalrecord.item_id = itemid
-          ratingitemtotalrecord.parent_id = Item.find(itemid).parent_id
-          ratingitemtotalrecord.rating_total = new_total
-          ratingitemtotalrecord.save
-        end
+        old_total = ratingitemtotalrecord.rating_total
+        new_total = (old_total - old_rating_value) + (rating_value * current_user.reputation_level)
+        ratingitemtotalrecord.item_id = itemid
+        ratingitemtotalrecord.parent_id = Item.find(itemid).parent_id
+        ratingitemtotalrecord.rating_total = new_total
+        ratingitemtotalrecord.save
+      end
     end
     
   end
@@ -87,7 +87,7 @@ class ApplicationController < ActionController::Base
   def allow_moderators_and_admins
     check_for_any_of_roles(['administrator','moderator'])
   end
-
+  
   def allow_admins
     check_for_any_of_roles(['administrator'])
   end
@@ -104,7 +104,7 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-
+  
   def set_page_description
     @page_description ||= "BadwareBusters.org is a community of people working together to fight back against viruses, spyware, and other bad software."
   end

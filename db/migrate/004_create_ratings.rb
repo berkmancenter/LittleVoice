@@ -29,7 +29,7 @@ class CreateRatings < ActiveRecord::Migration
     Ratingtype.create :rating_type => "down", :rating_value => -1
     Ratingtype.create :rating_type => "bad (spam/abuse)", :rating_value => -1
     Ratingtype.create :rating_type => "nuke", :rating_value => -1
-  
+    
   end
   
   def self.down
@@ -37,5 +37,5 @@ class CreateRatings < ActiveRecord::Migration
     drop_table :ratingitemtotals
     drop_table :ratingtypes
   end
-
+  
 end

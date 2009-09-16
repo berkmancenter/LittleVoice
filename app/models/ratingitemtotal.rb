@@ -11,5 +11,5 @@ class Ratingitemtotal < ActiveRecord::Base
   belongs_to :item, :dependent => :destroy
   #callback for scoring the Ratingitemtotal
   before_save Proc.new { |ratingitemtotal| Score.score_item(ratingitemtotal) }
- 
+  
 end
