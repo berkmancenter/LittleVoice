@@ -10,7 +10,7 @@
 				<% settings.each_pair do |key, value| %>
 					<tr><% id = h('setting_' + namespace + '_' + key) %>
 					<td><label for="<%= id %>"><%= key %>: </label></td>
-					<td><input type="text" name="<%= id %>" id="<%= id %>" value="<%= (value == nil || value.is_a?(String)) ? h(value) : value.to_json %>" /></td>
+					<td><input type="text" name="<%= id %>" id="<%= id %>" value="<%= (value == nil || value.is_a?(String)) ? h(value) : h(value.to_json) %>" /></td>
 					</tr>
 				<% end %>
 				</tbody></table>

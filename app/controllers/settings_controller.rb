@@ -21,6 +21,12 @@ class SettingsController < ApplicationController
       key = key.gsub(/^setting\_/, '')
       setting = Setting.find(:first, :conditions => {:namespace => key.match(/^[a-zA-Z0-9]+\_/).to_s.gsub(/\_$/, ''), :key => key.gsub(/^[a-zA-Z0-9]+\_/, '')})
       setting.value = new_value == '' ? nil : new_value
+      setting.value = eval(setting.value) if setting.value and setting.value.match /^\d+$/
+      js_value = (JSON.parse(setting.value) rescue nil)
+      if js_value and not js_value.class == String
+        js_value.symbolize_keys! if js_value.class == Hash
+        setting.value = js_value
+      end
       (setting.save && setting.load) if setting.changed?
     end
     redirect_to :action => :index

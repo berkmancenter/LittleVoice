@@ -31,10 +31,10 @@
 		
 		<div id="header">
 			<div id="small_search" style="display:none;" >
-				<% form_tag({:controller => "main", :action => "search"}, :method => 'get') do |f| -%>
+				<% form_tag({:controller => "main", :action => "search"}, :method => 'get') -%>
 					<%= text_field :search, :q, :size => 30, :id => "search_field", :onblur => "setTimeout(\"$('small_search').fade({duration:0.3});\", 1000);" -%> 
 					<%= submit_tag "Search", :style => "padding:1px;" -%>
-				<% end -%>
+				</form>
 			</div>
 			<div id="login_text">
 				<% if current_user != false %>
