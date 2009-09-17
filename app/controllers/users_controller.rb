@@ -22,7 +22,7 @@ class UsersController < ApplicationController
     params[:id].nil? ? @user : @user = User.find_by_login(params[:id])
     
     #set view parameters
-    return if @user.nil? || current_user.anonymous?
+    return if @user.nil? #|| current_user.anonymous?
     @admin = true if current_user.has_role?("administrator")
     @account = true if  @admin || (current_user.id == @user.id)
     
