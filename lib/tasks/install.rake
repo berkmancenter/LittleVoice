@@ -73,13 +73,13 @@ namespace :lv do
     Subscription.create(:sub_type => "item", :sub_name => "all")
 
     # Create initial content
-    Content.create(:controller => "main", :action => "index", :name => "welcome", :pseudonym => "Welcome", :location => "/main/index#welcome", :body => "Welcome to LittleVoice!").save_new_version
-    Content.create(:controller => "main", :action => "about", :name => "about", :pseudonym => "About", :location => "/main/about#about")
-    Content.create(:controller => "main", :action => "howto", :name => "howto", :pseudonym => "How To Use", :location => "/main/howto#howto")
-    Content.create(:controller => "main", :action => "contact", :name => "contact", :pseudonym => "Contact Us", :location => "/main/contact#contact")
-    Content.create(:controller => "main", :action => "terms", :name => "terms", :pseudonym => "Terms and Conditions", :location => "/main/terms#terms")
-    Content.create(:controller => "main", :action => "privacy", :name => "privacy", :pseudonym => "Privacy Policy", :location => "/main/privacy#privacy")
-    Content.create(:controller => "main", :action => "copyright", :name => "copyright", :pseudonym => "Copyright", :location => "/main/copyright#copyright")
+    Content.create(:controller => "main", :action => "index", :name => "welcome", :pseudonym => "Welcome", :location => "/main/index#welcome", :textile => true, :body => "Welcome to LittleVoice!").save_new_version
+    Content.create(:controller => "main", :action => "about", :name => "about", :pseudonym => "About", :textile => true, :location => "/main/about#about")
+    Content.create(:controller => "main", :action => "howto", :name => "howto", :pseudonym => "How To Use", :textile => true, :location => "/main/howto#howto")
+    Content.create(:controller => "main", :action => "contact", :name => "contact", :pseudonym => "Contact Us", :textile => true, :location => "/main/contact#contact")
+    Content.create(:controller => "main", :action => "terms", :name => "terms", :pseudonym => "Terms and Conditions", :textile => true, :location => "/main/terms#terms")
+    Content.create(:controller => "main", :action => "privacy", :name => "privacy", :pseudonym => "Privacy Policy", :textile => true, :location => "/main/privacy#privacy")
+    Content.create(:controller => "main", :action => "copyright", :name => "copyright", :pseudonym => "Copyright", :textile => true, :location => "/main/copyright#copyright")
 
     puts "\n-- Installation Complete \n-- Try running the application with 'ruby script/server'\n-- Visit /settings to modify site settings, or /content to edit or publish site content.\n"
   end
