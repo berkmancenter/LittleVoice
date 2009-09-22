@@ -35,6 +35,7 @@ class UserMailer < ActionMailer::Base
   #email the user about an Item   
   def item_email_me(user, item)
     setup_email(user)
+    @content_type = "multipart/alternative"
     @from = "no-reply@#{$LV_SITE_URL}"
     @subject += (item.id == item.item_root_id ? item.item_title('...') : Item.find(item.item_root_id).item_title('...'))
     @subject = "Re: #{@subject}" if item.id != item.item_root_id

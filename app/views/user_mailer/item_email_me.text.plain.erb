@@ -1,0 +1,12 @@
+A new message has been posted in a topic you were following on <%= $LV_SITE_NAME %>:
+-----------------------------------------------------------------
+In <%= @item.id == @item.item_root_id ? '' : "response to " %>the topic "<%=h Item.find(@item.item_root_id).item_title('...') %>," <%= @user.login %> writes:
+
+<%= white_list(@item.item_text) %>
+
+-----------------------------------------------------------------
+DO NOT REPLY BY E-MAIL
+To view or respond to this message, please visit <%= @url %>.
+
+If you no longer wish to receive e-mails about this topic, please modify the subscription settings in your user dashboard at http://<%= $LV_SITE_URL %>/dashboard?view=subscriptions.
+You will have to be logged in to the site to make this change.

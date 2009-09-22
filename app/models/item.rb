@@ -88,7 +88,7 @@ class Item < ActiveRecord::Base
   def item_title(elipsis = '', max_length = 55)
     title = super 
     title = self.itemtext.split('\n').first if (title.nil? or title == "")
-    if title.length <= max_length
+    if title and title.length <= max_length
       return title
     else
       return (truncate(title, :length => max_length, :omission => elipsis) rescue nil)

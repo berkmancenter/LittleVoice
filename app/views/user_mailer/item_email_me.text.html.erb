@@ -1,0 +1,17 @@
+<div style="font-family:'Segoe UI', 'Lucida Sans Unicode', sans-serif;font-size:12px;">
+	<span style="font-size:0.9em;color:#666;">A new message has been posted in a topic you were following on <%= $LV_SITE_NAME %>:</span><br />
+	
+	<div style="margin:10px 0px;padding:15px;border:1px solid #ccc;background:#f3f3f3;color:#000;font-size:1em;">
+		<span style="font-style:italic;font-size:.9em;color:#666;">In <%= @item.id == @item.item_root_id ? '' : "response to " %>the topic "<%=h Item.find(@item.item_root_id).item_title('...') %>," <%= @user.login %> writes:</span>
+		<div><%= white_list(RedCloth.new(@item.item_text).to_html) %></div>
+	</div>
+
+<span style="font-size:0.9em;color:#666;">
+DO NOT REPLY BY E-MAIL<br />
+To view or respond to this message, please visit <%= link_to @url, @url %>.<br /><br />
+
+If you no longer wish to receive e-mails about this topic, please modify the subscription settings in your user dashboard at <a href="http://#{$LV_SITE_URL}/dashboard?view=subscriptions">http://<%= $LV_SITE_URL %>/dashboard?view=subscriptions</a>.<br />
+You will have to be logged in to the site to make this change.
+</span>
+
+</div>
