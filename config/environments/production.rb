@@ -27,5 +27,4 @@ ActionMailer::Base.smtp_settings = {
 $KCODE = 'u' 
 RCC_PUB = $RCC_PUB
 RCC_PRIV = $RCC_PRIV
-#RCC_PUB = "6LcIAgQAAAAAAD0l4Eko0IhkLROZSyk8oDxzXKEh" 
-#RCC_PRIV = "6LcIAgQAAAAAAIP4GQlxURC8B4dcpmI461hEw4UM" 
+
