@@ -1,0 +1,4 @@
+log/*
+index/*
+config/database.yml
+config/initializers/session_initializer.rb
