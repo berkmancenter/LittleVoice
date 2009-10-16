@@ -23,8 +23,8 @@ class UsersController < ApplicationController
     
     #set view parameters
     return if @user.nil? #|| current_user.anonymous?
-    @admin = true if current_user.has_role?("administrator")
-    @account = true if  @admin || (current_user.id == @user.id)
+    @admin = true if current_user and current_user.has_role?("administrator")
+    @account = true if  @admin || (current_user and current_user.id == @user.id)
     
     if params[:view] == "" or params[:view].nil?
       @tabview = "recent"
