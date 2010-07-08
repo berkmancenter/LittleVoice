@@ -1,7 +1,7 @@
 <div class="conversation_item">
 	<div class="conversation_title">
-		<span class="posted_by">posted by <%= link_to h(item.user.login), dashboard_url(item.user.login) %>, <%= distance_of_time_in_words_to_now(item.created_at) %> ago</span>
-		<%= link_to h(item.item_title('...')), "/main/itemview/#{item.id == item.item_root_id ? item.id : (item.item_root_id.to_s + '#itemblock-' + item.id.to_s) }" %>
+		<span class="posted_by">posted by <%= link_to h(item.user.login), dashboard_url(item.user.login) %>, <span title="<%= item.created_at.iso8601 %>"><%= distance_of_time_in_words_to_now(item.created_at) %> ago</span></span>
+		<%= link_to h(item.item_title('...')), show_item_path(item) %>
 	</div>
 	<div class="conversation_links">
 		<% if item.tags.any? %>
@@ -14,14 +14,15 @@
 		<% end %>
 		<span class="reply_count">
 			<% responses = item.all_children.reject{|i| i.item_active == false } %>
-			<%= image_tag 'comments.png', :style => "float:left;padding:0px 4px 0px 5px;" %><%= link_to pluralize(responses.length, 'reply', 'replies'), :controller => "main", :action => "itemview", :id => item.id %> 
+			<%= image_tag 'comments.png', :style => "float:left;padding:0px 4px 0px 5px;" %><%= link_to pluralize(responses.length, 'reply', 'replies'), show_item_path(item) %> 
 			<% if item.id == item.item_root_id %>	
-				<%= responses.length > 0 ? "<span class=\"most_recent\"> - most recent: #{distance_of_time_in_words_to_now(responses.sort_by(&:created_at).last.created_at)} ago</span>"  : ""  %>
+				<% last_response = responses.sort_by(&:created_at).last %>
+				<%= responses.length > 0 ? "<span class=\"most_recent\"> - most recent: <span title=\"#{last_response.created_at.iso8601}\">#{distance_of_time_in_words_to_now(last_response.created_at)} ago</span></span>"  : ""  %>
 			<% end %>
 		</span>
 		<% unless item.id == item.item_root_id %>
 			<% root = Item.find(item.item_root_id)%>
-			<span class="most_recent" style="font-size:.9em;">&nbsp;- response to: <%= link_to h(root.item_title('...')), :controller => "main", :action => "itemview", :id => root.id %></span>
+			<span class="most_recent" style="font-size:.9em;">&nbsp;- response to: <%= link_to h(root.item_title('...')), show_item_path(root) %></span>
 		<% end %>			
 		<br />
 	</div>

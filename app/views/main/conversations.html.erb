@@ -2,6 +2,11 @@
 <% content_for :sidebar do %>
 	<div id="sidebar">
 
+		<a href="/main/ask"><div id="new_post_link" class="section_title rootcontent" style="background:#DC5E1B;-moz-border-radius:5px;-webkit-border-radius:5px;border-radius:5px;cursor:pointer;">
+			Start a New Discussion
+		</div></a>
+
+
 		<div id="browse_more" class="lightblue" style="border:none;margin-bottom:10px;">
 			<div class="section_title rootcontent" style="margin-bottom:0px;">More ways to browse</div>
 			<div class="responseitem box grad" style="padding-top:0px;">
@@ -19,29 +24,14 @@
 			<div class="responseitem box grad" style="text-align:center;">
 				<img src="/images/backgrounds/grad_white_bottom.png" class="gradimage" alt="gradient box" style=""/>	
 				<% for tag in @all_tags[0..49].sort_by(&:name) %>
-					<span class="<%= "active" if params[:tag] == tag.name %>" style="font-size:<%= (2.25 * (tag.count/@max_count)**0.5).round_to(2).to_s + 'em' %>;"><%= link_to h(tag.name), {:action => "conversations", :view => "tag", :tag => h(tag.name)}, :class => "tag_cloud_link" -%></span>
+					<span class="<%= "active" if params[:tag] == tag.name %>" style="font-size:<%= (2.25 * (tag.count/@max_count)**0.35).round_to(2).to_s + 'em' %>;"><%= link_to h(tag.name), {:action => "conversations", :view => "tag", :tag => h(tag.name)}, :class => "tag_cloud_link" -%></span>
 				<% end %>
 			</div>
 		</div>
 
 	</div>
 <% end %>
-<!--
-<% session[:hide_get_started] = nil if RAILS_ENV == "development" %>
-<% if params[:get_started] == "true" and not (@current_user || session[:hide_get_started])%>
-	<div id="get_started_div" class="itemblock lightorange">
-		<div class="itemtitle">
-			<div class="item_right_top"><%= link_to_remote "Close [x]", {:url => {:controller => "main", :action => "hide_get_started"}, :before => "Effect.BlindUp('get_started_div', {duration:0.5});"}, :style => "color:#fff;position:relative;top:-2px;" %></div>
-			<div class="item_left_top">Getting Started</div>
-		</div>
-		<div class="responseitem box grad" style="padding:10px 0px;">
-			<div style="position: relative;" class="itemcontent">
-				<%= yield :get_started %>
-			</div>
-		</div>
-	</div>
-<% end %>
--->
+
 <% if action_name == "search" %>
 	<style type="text/css">
 		.pagination {
@@ -63,7 +53,7 @@
 			<% for item in @conversations %>
 				<%= render :partial => "conversation_item", :locals => {:item => item} %>
 			<% end %>
-			<div style="text-align:center"><%= will_paginate @conversations, :params => {:search => {:q => params[:search][:q]}} %></div>
+			<div style="text-align:center;"><%= will_paginate @conversations, :params => {:search => {:q => params[:search][:q]}} %></div>
 		</div>
 		<%= yield :sidebar %>
 	</div>
@@ -85,14 +75,9 @@
 			<% for item in @conversations %>
 				<%= render :partial => "conversation_item", :locals => {:item => item} %>
 			<% end %>
-			<div style="text-align:center"><%= will_paginate @conversations %></div>
+			<div style="text-align:center;"><%= will_paginate @conversations %></div>
 		</div>
 		<%= yield :sidebar %>
 	</div>
 	
 <% end %><br />
-<!--
-<div style="width:100%;float:left;height:10px;"></div>
-	<div class="section_title rootcontent "><%= submit_tag "Start a new conversation", :class => "formbutton", :onclick => "document.location = '/main/ask';" %>  </div>
-</div>
--->

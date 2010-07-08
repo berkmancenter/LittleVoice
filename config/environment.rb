@@ -7,7 +7,9 @@
 #ENV["FERRET_USE_LOCAL_INDEX"] = 'true'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.3.4' unless defined? RAILS_GEM_VERSION
+
+RAILS_GEM_VERSION = '2.3.8' unless defined? RAILS_GEM_VERSION
+
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -18,7 +20,8 @@ Rails::Initializer.run do |config|
   config.gem "json"
   config.gem "addressable", :lib => "addressable/uri"
   config.gem "ruby-recaptcha"
-  config.gem "mislav-will_paginate", :lib => "will_paginate", :source => "http://gems.github.com"
+  config.gem "will_paginate"
+  config.gem "rmagick"
   
   config.active_record.observers = :user_observer
   
@@ -61,7 +64,8 @@ Rails::Initializer.run do |config|
   #   inflect.uncountable %w( fish sheep )
   # end
   
-  # See Rails::Configuration for more options
+  # See Rails::Configuration for more
+
 end
 
 
@@ -79,10 +83,9 @@ end
 require 'acts_as_ferret'
 require 'acts_as_ferret_fix'
 require 'monkey_patches'
-
-
+require 'acts-as-taggable-on'
 ActiveSupport::CoreExtensions::Time::Conversions::DATE_FORMATS.merge!(
-                                                                      :date => "%Y-%m-%d",
+:date => "%Y-%m-%d",
 :long_datetime => "%b %d, %Y %H:%M",
 :format_datetime => "%m-%d-%Y %H:%M",
 :format_date => "%b %d, %Y" 

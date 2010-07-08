@@ -8,5 +8,6 @@
 
 # This class specifies Itemtype
 class Itemtype < ActiveRecord::Base
-  has_one :item
+  has_many :items
+  validates_uniqueness_of :item_type
 end

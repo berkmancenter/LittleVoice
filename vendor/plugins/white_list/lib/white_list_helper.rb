@@ -59,7 +59,7 @@ module WhiteListHelper
     return html if html.blank? || !html.include?('<')
     attrs   = Set.new(options[:attributes]).merge(white_listed_attributes)
     tags    = Set.new(options[:tags]      ).merge(white_listed_tags)
-    block ||= lambda { |node, bad| white_listed_bad_tags.include?(bad) ? insert_spaces(node.to_s) : node.to_s.gsub(/</, '&lt;').gsub(/>/, '&gt;') }
+    block ||= lambda { |node, bad| white_listed_bad_tags.include?(bad) ? convert_to_image(node.to_s) : node.to_s.gsub(/</, '&lt;').gsub(/>/, '&gt;') }
     returning [] do |new_text|
       tokenizer = HTML::Tokenizer.new(html)
       bad       = nil
@@ -96,7 +96,7 @@ module WhiteListHelper
   
   protected
     def insert_interstitial(value)
-      value = "/interstitial?uri=" + CGI::escape(value)
+      value = "http://#{$LV_SITE_URL}/interstitial?uri=" + CGI::escape(value)
     end
     
     def convert_to_image(value)

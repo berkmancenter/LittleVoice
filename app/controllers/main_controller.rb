@@ -13,19 +13,26 @@ class MainController < ApplicationController
   
   #auto_complete_for :tag, :name
   def auto_complete_for_tag_name(options = {})
-    tag = params[:item][:tag_list].split(',').last.strip
-    find_options = { 
-      :conditions => [ "LOWER(#{:name}) LIKE ?", '%' + tag.downcase + '%' ], 
-      :order => "#{:name} ASC",
-      :limit => 10 }.merge!(options)
-    @items = :tag.to_s.camelize.constantize.find(:all, find_options)
-    render :inline => "<%= auto_complete_result @items, '#{:name}' %>"
+    tag = params[:item][:tag_list].split(',').last.strip rescue nil
+    if tag
+      find_options = { 
+        :conditions => [ "LOWER(#{:name}) LIKE ?", '%' + tag.downcase + '%' ], 
+        :order => "#{:name} ASC",
+        :limit => 10 }.merge!(options)
+      @items = ActsAsTaggableOn::Tag.find(:all, find_options)
+      render :inline => "<%= auto_complete_result @items, '#{:name}' %>"
+    else
+      render :nothing => true
+    end
   end
   
   def index
     @current_user ||= (User.find(session[:user_id]) rescue nil)
     @testvalue = "bobothemonkey"
-    @conversations = Item.paginate :page => 1, :per_page => 10, :conditions => {:parent_id => nil, :item_active => true}, :order => "created_at DESC"
+    @conversations = Item.with_type('conversation').paginate :page => 1, :per_page => 10, :conditions => {:parent_id => nil, :item_active => true}, :order => "created_at DESC"
+    respond_to do |format|
+      format.html
+    end
   end
   
   def ask
@@ -60,7 +67,7 @@ class MainController < ApplicationController
     @item = Item.find(h(params[:id]).to_i)
     @item_place_id = 0
     @pageitems = 5
-    @page_title = @item.item_title.capitalize
+    @page_title = @item.item_title.capitalize rescue nil
     session[:expandhash] ||= Hash.new()
     session[:expandhash][@item.id] ||= Hash.new()
     
@@ -96,22 +103,17 @@ class MainController < ApplicationController
     @additemstatus = nil
     @additemdupe = false
     @additemempty = true
-    itemtext = params[:item][:itemtext].strip
-    
-    if itemtext.downcase == "needs moar ponies"
-      render :update do |page|
-        page.redirect_to "http://images.google.com/images?q=ponies&oe=utf-8&rls=org.mozilla:en-US:official&client=firefox-a&um=1&ie=UTF-8&sa=N&tab=wi"
-      end    
-      itemtext = ""
+    if params[:item] and params[:item][:itemtext]
+      itemtext = params[:item][:itemtext].strip
     end
     
-    if !itemtext.empty?
+    unless itemtext.nil? or itemtext.empty?
       
       @additemempty = false  
       
       @additemdupe = Item.exists?(:itemtext => itemtext, :parent_id => nil)
       
-      if !@additemdupe
+      unless @additemdupe
         login_as_anonymous if params[:anonymous]
         #if using_open_id?
         #  authenticate_with_open_id(params[:openid_url], :required => [:nickname, :email]) do |result, identity_url, registration|
@@ -121,7 +123,7 @@ class MainController < ApplicationController
         #    end
         #  end
         #end
-        unless @current_user 
+        unless @current_user and @current_user.enabled
           flash[:item] = params[:item]
           flash[:email_me] = params[:itememailcheckbox]
           @current_user = User.authenticate(params[:login], params[:password])
@@ -132,7 +134,7 @@ class MainController < ApplicationController
             @current_user = false
           end
         end
-        unless @current_user
+        unless @current_user and @current_user.enabled
           if params[:accept].to_i == 1 
             user = User.new(params[:user])
             @current_user = user if (validate_recap(params, user.errors) && user.save rescue false)
@@ -141,22 +143,19 @@ class MainController < ApplicationController
           end
         end
         if @current_user and @current_user.enabled
-          itemrecord = Item.create()
+          itemrecord = Item.new
           itemrecord.tag_list = params[:item][:tag_list]
           itemrecord.user_id = @current_user.id
-          itemrecord.itemtype_id =  1
-          itemrecord.item_root_id =  itemrecord.id
+          itemrecord.itemtype_id =  Itemtype.find_or_create_by_item_type("conversation").id
           itemrecord.item_active = true
           itemrecord.itemtext =  itemtext
           itemrecord.item_title = h(params[:item][:item_title].strip)
           @additemstatus = itemrecord.save
-          itemrecord.update_subscriptions
+          (itemrecord.item_root_id = itemrecord.id) and itemrecord.save if @additemstatus          
+          itemrecord.update_subscriptions          
           @item = itemrecord          
           
-          #Add or delete this user from following this conversation
-          if params[:itememailcheckbox]
-            Subscription.items.by_id(@item.id).users << @current_user
-          end
+
           
           mailed = []
           
@@ -191,61 +190,70 @@ class MainController < ApplicationController
   end 
   
   def addresponse
-    @additemstatus = nil
-    @additemdupe = false
-    @additemempty = true
-    
-    itemtext = params[:item][:item_text].strip
-    @itemid = h(params[:item_id].strip).to_i
-    @item_root_id = h(params[:item_root_id].strip).to_i
-    
-    if !itemtext.empty?
+    if @current_user and @current_user.enabled
+      @additemstatus = nil
+      @additemdupe = false
+      @additemempty = true
       
-      @additemempty = false  
+      itemtext = params[:item][:item_text].strip
+      @itemid = h(params[:item_id].strip).to_i
+      @item_root_id = h(params[:item_root_id].strip).to_i
       
-      @additemdupe = Item.exists?(:itemtext => itemtext, :item_root_id => @item_root_id)
-      
-      if !@additemdupe
-        itemrecord = Item.new()
+      if !itemtext.empty?
         
-        itemrecord.user_id = current_user.id
-        itemrecord.itemtype_id =  1
-        itemrecord.item_root_id = @item_root_id
-        #itemrecord.parent_id = @itemid
-        itemrecord.item_active = true
-        itemrecord.itemtext =  itemtext
-        itemrecord.tag_list = params[:item][:tag_list]
-        @additemstatus = itemrecord.save
+        @additemempty = false  
         
-        @newitem = itemrecord
+        @additemdupe = Item.exists?(:itemtext => itemtext, :item_root_id => @item_root_id)
         
-        itemrecord.move_to_child_of @itemid
-        
-        #Email all users following this conversation
-        item_email_all(@newitem)
-        mailed = []
-        
-        #Send emails to everyone who subscribes to all messages
-        Subscription.all_items.users.reject{|u| mailed.include? u}.each do |user|
-          UserMailer.deliver_item_email_me(user, @newitem) if user.enabled
-          mailed << user
-        end
-        
-        #Send emails to everyone who is following this item's tags.
-        @newitem.tag_list.each do |tag|
-          Subscription.tags.by_name(tag).users.reject{|u| mailed.include? u }.each do |user|
-            UserMailer.deliver_tag_email_me(user,@newitem, tag) if user.enabled
+        if !@additemdupe
+          itemrecord = Item.new()
+          
+          itemrecord.user_id = current_user.id
+          itemrecord.itemtype_id =  Itemtype.find_or_create_by_item_type("conversation").id
+          itemrecord.item_root_id = @item_root_id
+          #itemrecord.parent_id = @itemid
+          itemrecord.item_active = true
+          itemrecord.itemtext =  itemtext
+          itemrecord.tag_list = params[:item][:tag_list]
+          @additemstatus = itemrecord.save
+          
+          @newitem = itemrecord
+          
+          itemrecord.move_to_child_of @itemid
+          debugger
+          #Add or delete this user from following this conversation
+          if params[:item][:itememailcheck] == "1"
+            itemrecord.root.subscription.add_subscriber(@current_user)
+          end
+          
+          #Email all users following this conversation
+          item_email_all(@newitem)
+          mailed = []
+          
+          #Send emails to everyone who subscribes to all messages
+          Subscription.all_items.users.reject{|u| mailed.include? u}.each do |user|
+            UserMailer.deliver_item_email_me(user, @newitem) if user.enabled
             mailed << user
           end
+          
+          #Send emails to everyone who is following this item's tags.
+          @newitem.tag_list.each do |tag|
+            Subscription.tags.by_name(tag).users.reject{|u| mailed.include? u }.each do |user|
+              UserMailer.deliver_tag_email_me(user,@newitem, tag) if user.enabled
+              mailed << user
+            end
+          end
+          
         end
-        
         
         
       end
-    end
-    
+
     #@itemset = Item.find_by_sql(["select * from items where item_root_id = ?", @item_root_id])
     @itemset = Item.find(@item_root_id).children
+    else 
+      render :nothing => true 
+    end
   end
   
   #Make this item a FAQ, or not (Gives a :special tag of "faq")
@@ -454,8 +462,9 @@ class MainController < ApplicationController
     if (current_user.id == @item.user.id && @item.created_at > 60.minutes.ago) || @current_user.has_role?('administrator')
       @item.itemtext = params[:item][:itemtext]
       @item.save if @item.changed?
-      @item.itemtext = @item.itemtext.to_xs
-      @item.item_title = @item.item_title.to_xs
+      @item.itemtext = @item.itemtext.to_xs if @item.itemtext
+      @item.item_title = @item.item_title.to_xs if @item.item_title
+
       render :update do |page|
         page.redirect_to "/main/itemview/#{@item.item_root_id}?t=#{rand(10000)}#itemblock-#{@item.id}"
       end
@@ -560,34 +569,34 @@ class MainController < ApplicationController
     #    @top_answers = Item.paginate :page => params[:page], :per_page => 20, :include => :ratingitemtotal, :conditions => "parent_id IS NOT NULL and item_active = true", :order => "ratingitemtotals.rating_total DESC, items.created_at DESC" 
     case params[:view]
       when "popular"
-      @conversation_title = "Top rated by the community"
-      @conversations = Item.paginate :page => params[:page], :per_page => 20, :include => :ratingitemtotal, :conditions => {:parent_id => nil, :item_active => true}, :order => "ratingitemtotals.rating_total DESC, items.created_at DESC"
+        @conversation_title = "Top rated by the community"
+        @conversations = Item.with_type('conversation').paginate :page => params[:page], :per_page => 20, :include => :ratingitemtotal, :conditions => {:parent_id => nil, :item_active => true}, :order => "ratingitemtotals.rating_total DESC, items.created_at DESC"
       when "all_conversations"
       @conversation_title = "Most recent topics"
-      @conversations = Item.paginate :page => params[:page], :per_page => 20, :conditions => {:parent_id => nil, :item_active => true}, :order => "created_at DESC"
+        @conversations = Item.with_type('conversation').paginate :page => params[:page], :per_page => 20, :conditions => {:parent_id => nil, :item_active => true}, :order => "created_at DESC"
       when "all_items"
       @conversation_title = "All posts"
-      @conversations = Item.paginate :page => params[:page], :per_page => 20, :conditions => {:item_active => true}, :order => "created_at DESC"
+        @conversations = Item.with_type('conversation').paginate :page => params[:page], :per_page => 20, :conditions => {:item_active => true}, :order => "created_at DESC"
       when "active"
-      @conversations = Item.paginate :page => params[:page], :per_page => 20, :select => "*, count(id)", :group => "item_root_id", :order => "count(id) DESC, created_at DESC", :conditions => {:item_active => true}
+        @conversations = Item.with_type('conversation').paginate :page => params[:page], :per_page => 20, :select => "*, count(id)", :group => "item_root_id", :order => "count(id) DESC, created_at DESC", :conditions => {:item_active => true}
       when "no_replies"
-      @conversation_title = "Topics awaiting a response"
-      @conversations = Item.paginate_by_sql("select *, count(id) from items where item_active = true group by item_root_id having count(id) = 1 order by created_at DESC", :page => params[:page], :per_page => 20)
+        @conversation_title = "Topics awaiting a response"
+        @conversations = Item.paginate_by_sql("select *, count(id) from items where item_active = true and itemtype_id = #{Itemtype.find_or_create_by_item_type('conversation').id} group by item_root_id having count(id) = 1 order by created_at DESC", :page => params[:page], :per_page => 20)
       when "tag"
-      @conversation_title = "Messages tagged with: #{h(params[:tag])}"
-      case params[:kind]
-        when "topics"
-        @conversations = Item.conversations.tagged_with(params[:tag], :on => :tags).paginate :page => params[:page], :per_page => 20, :order => "created_at DESC"
-        when "responses"
-        @conversations = Item.responses.tagged_with(params[:tag], :on => :tags).paginate(:page => params[:page], :per_page => 20, :order => "created_at DESC")
-      else
-        @conversations = Item.tagged_with(params[:tag], :on => :tags).paginate :page => params[:page], :per_page => 20, :conditions => {:item_active => true}, :order => "created_at DESC"
-      end
+        @conversation_title = "Messages tagged with: #{h(params[:tag])}"
+        case params[:kind]
+          when "topics"
+          @conversations = Item.with_type('conversation').conversations.tagged_with(params[:tag], :on => :tags).paginate :page => params[:page], :per_page => 20, :order => "created_at DESC"
+          when "responses"
+          @conversations = Item.with_type('conversation').responses.tagged_with(params[:tag], :on => :tags).paginate(:page => params[:page], :per_page => 20, :order => "created_at DESC")
+          else
+          @conversations = Item.with_type('conversation').tagged_with(params[:tag], :on => :tags).paginate :page => params[:page], :per_page => 20, :conditions => {:item_active => true}, :order => "created_at DESC"
+        end
       when "faq"
-      @conversation_title = "Selected by the moderators"
-      @conversations = Item.tagged_with("faq", :on => :special).paginate :page => params[:page], :per_page => 20, :conditions => {:item_active => true}, :order => "created_at DESC"
+        @conversation_title = "Selected by the moderators"
+        @conversations = Item.with_type('conversation').tagged_with("faq", :on => :special).paginate :page => params[:page], :per_page => 20, :conditions => {:item_active => true}, :order => "created_at DESC"
     end
-    if @conversations.empty?
+    if @conversations.nil? or @conversations.empty?
       redirect_to :controller => "main", :action => "ask", :title => params[:tag], :tag =>params[:tag]
     end
   end

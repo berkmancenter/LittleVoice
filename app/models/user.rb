@@ -34,7 +34,7 @@ class User < ActiveRecord::Base
   
   has_many :items, :dependent => :nullify  # updates the associated records foreign key value to NULL rather than destroying it
   has_many :ratingactions, :dependent => :destroy  # destroys the associated ratingactions
-  has_many :itememails, :dependent => :destroy  # destroys the associated itememails
+# has_many :itememails, :dependent => :destroy  # destroys the associated itememails
   has_and_belongs_to_many :subscriptions, :join_table => "#{Subscription.connection.instance_eval{@config[:database]}}.subscriptions_users"
   has_many :scores do
     def current
@@ -159,6 +159,14 @@ class User < ActiveRecord::Base
     self.roles.find_by_rolename(rolename) ? true : false
   end
   
+  def subscribed_to?(subscription)
+    self.subscriptions.include?(subscription)
+  end
+
+  def unsubscribe_from(subscription)
+    self.subscriptions.delete(subscription)
+  end
+
   def subscribe_to(subscription)
     self.subscriptions << subscription
   end
@@ -242,7 +250,7 @@ class User < ActiveRecord::Base
   end
   
   def not_openid?
-    identity_url.blank?
+    identity_url.blank? rescue true
   end
   
   def make_activation_code

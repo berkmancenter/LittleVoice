@@ -29,7 +29,7 @@ class UsersController < ApplicationController
     if params[:view] == "" or params[:view].nil?
       @tabview = "recent"
     end
-    @items = @user.items.paginate(:page => params[:page], :per_page => 15, :order => "created_at DESC") if @tabview == "recent"
+    @items = @user.items.paginate(:page => params[:page], :per_page => 15, :order => "created_at DESC") if @user and @tabview == "recent"
   end
   
   # render new.rhtml
@@ -103,7 +103,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:user])
     if @current_user.id == @user.id or @current_user.has_role?("administrator")
       @subscription = Subscription.find(params[:id])
-      @user.subscriptions.include?(@subscription) ? @subscription.users.delete(@user) : @subscription.users << @user
+      @user.subscriptions.include?(@subscription) ? @subscription.users.delete(@user) : @subscription.add_subscriber(@user)
     end
     render :update do |page|
       page.replace_html "subscriptions", :partial => "subscriptions", :locals => {:user => @user}

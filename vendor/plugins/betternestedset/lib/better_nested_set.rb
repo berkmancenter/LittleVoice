@@ -50,8 +50,8 @@ module SymetrieCom
           
           # no bulk assignment
           attr_protected  acts_as_nested_set_options[:left_column].intern,
-                          acts_as_nested_set_options[:right_column].intern,
-                          acts_as_nested_set_options[:parent_column].intern
+                          acts_as_nested_set_options[:right_column].intern#,
+                          #acts_as_nested_set_options[:parent_column].intern
           # no assignment to structure fields
           module_eval <<-"end_eval", __FILE__, __LINE__
             def #{acts_as_nested_set_options[:left_column]}=(x)
@@ -60,9 +60,9 @@ module SymetrieCom
             def #{acts_as_nested_set_options[:right_column]}=(x)
               raise ActiveRecord::ActiveRecordError, "Unauthorized assignment to #{acts_as_nested_set_options[:right_column]}: it's an internal field handled by acts_as_nested_set code, use move_to_* methods instead."
             end
-            def #{acts_as_nested_set_options[:parent_column]}=(x)
-              raise ActiveRecord::ActiveRecordError, "Unauthorized assignment to #{acts_as_nested_set_options[:parent_column]}: it's an internal field handled by acts_as_nested_set code, use move_to_* methods instead."
-            end
+            #def #{acts_as_nested_set_options[:parent_column]}=(x)
+            #  raise ActiveRecord::ActiveRecordError, "Unauthorized assignment to #{acts_as_nested_set_options[:parent_column]}: it's an internal field handled by acts_as_nested_set code, use move_to_* methods instead."
+            #end
             #{scope_condition_method}
           end_eval
           
@@ -82,12 +82,12 @@ module SymetrieCom
         # Deprecation note: the original acts_as_nested_set allowed roots to have parent_id = 0,
         # so we currently do the same. This silliness will not be tolerated in future versions, however.
         def root
-          acts_as_nested_set_options[:class].find(:first, :conditions => "(#{acts_as_nested_set_options[:parent_column]} IS NULL OR #{acts_as_nested_set_options[:parent_column]} = 0)")
+          acts_as_nested_set_options[:class].scoped(:conditions => "(#{acts_as_nested_set_options[:parent_column]} IS NULL OR #{acts_as_nested_set_options[:parent_column]} = 0)").first
         end
         
         # Returns the roots and/or virtual roots of all trees. See the explanation of virtual roots in the README.
         def roots
-          acts_as_nested_set_options[:class].find(:all, :conditions => "(#{acts_as_nested_set_options[:parent_column]} IS NULL OR #{acts_as_nested_set_options[:parent_column]} = 0)", :order => "#{acts_as_nested_set_options[:left_column]}")
+          acts_as_nested_set_options[:class].scoped(:conditions => "(#{acts_as_nested_set_options[:parent_column]} IS NULL OR #{acts_as_nested_set_options[:parent_column]} = 0)")
         end
         
         # Checks the left/right indexes of all records, 
@@ -195,13 +195,13 @@ module SymetrieCom
         # Returns this record's root ancestor.
         def root
           # the BETWEEN clause is needed to ensure we get the right virtual root, if using those
-          base_set_class.find(:first, :conditions => "#{scope_condition} \
-            AND (#{parent_col_name} IS NULL OR #{parent_col_name} = 0) AND (#{self[left_col_name]} BETWEEN #{left_col_name} AND #{right_col_name})")
+          base_set_class.scoped(:conditions => "#{scope_condition} \
+            AND (#{parent_col_name} IS NULL OR #{parent_col_name} = 0) AND (#{self[left_col_name]} BETWEEN #{left_col_name} AND #{right_col_name})").first
         end
         
         # Returns the root or virtual roots of this record's tree (a tree cannot have more than one real root). See the explanation of virtual roots in the README.
         def roots
-          base_set_class.find(:all, :conditions => "#{scope_condition} AND (#{parent_col_name} IS NULL OR #{parent_col_name} = 0)", :order => "#{left_col_name}")
+          base_set_class.scoped(:conditions => "#{scope_condition} AND (#{parent_col_name} IS NULL OR #{parent_col_name} = 0)", :order => "#{left_col_name}")
         end
         
         # Returns this record's parent.
@@ -211,25 +211,25 @@ module SymetrieCom
         
         # Returns an array of all parents, starting with the root.
         def ancestors
-          self_and_ancestors - [self]
+          self_and_ancestors.scoped(:conditions => "#{base_set_class.table_name}.id != #{self.id}")
         end
         
         # Returns an array of all parents plus self, starting with the root.
         def self_and_ancestors
-          base_set_class.find(:all, :conditions => "#{scope_condition} AND (#{self[left_col_name]} BETWEEN #{left_col_name} AND #{right_col_name})", :order => left_col_name )
+          base_set_class.scoped(:conditions => "#{scope_condition} AND (#{self[left_col_name]} BETWEEN #{left_col_name} AND #{right_col_name})", :order => left_col_name )
         end
         
         # Returns all the children of this node's parent, except self.
         def siblings
-          self_and_siblings - [self]
+          self_and_siblings.scoped(:conditions => "#{base_set_class.table_name}.id != #{self.id}")
         end
         
         # Returns all the children of this node's parent, including self.
         def self_and_siblings
           if self[parent_col_name].nil? || self[parent_col_name].zero?
-            [self]
+            base_set_class.scoped(:conditions => "#{base_set_class.table_name}.id = #{self.id}")
           else
-            base_set_class.find(:all, :conditions => "#{scope_condition} AND #{parent_col_name} = #{self[parent_col_name]}", :order => left_col_name)
+            base_set_class.scoped(:conditions => "#{scope_condition} AND #{parent_col_name} = #{self[parent_col_name]}", :order => left_col_name)
           end
         end
         
@@ -250,20 +250,20 @@ module SymetrieCom
           if special && special[:exclude]
             exclude_str = " AND NOT (#{base_set_class.sql_for(special[:exclude])}) "
           elsif new_record? || self[right_col_name] - self[left_col_name] == 1
-            return [self]
+            return base_set_class.scoped(:conditions => "#{base_set_class.table_name}.id = #{self.id}")
           end
-          base_set_class.find(:all, :conditions => "#{scope_condition} #{exclude_str} AND (#{left_col_name} BETWEEN #{self[left_col_name]} AND #{self[right_col_name]})", :order => left_col_name)
+          base_set_class.scoped(:conditions => "#{scope_condition} #{exclude_str} AND (#{left_col_name} BETWEEN #{self[left_col_name]} AND #{self[right_col_name]})", :order => left_col_name)
         end
         
         # Returns all children and nested children.
         # Pass :exclude => item, or id, or [items or id] to exclude one or more items *and* all of their descendants.
         def all_children(special=nil)
-          full_set(special) - [self]
+          full_set(special).scoped(:conditions => "#{base_set_class.table_name}.id != #{self.id}")
         end
         
         # Returns this record's immediate children.
         def children
-          base_set_class.find(:all, :conditions => "#{scope_condition} AND #{parent_col_name} = #{self.id}", :order => left_col_name)
+          base_set_class.scoped(:conditions => "#{scope_condition} AND #{parent_col_name} = #{self.id}", :order => left_col_name)
         end
         
         # Deprecated
@@ -271,7 +271,7 @@ module SymetrieCom
         
         # Returns this record's terminal children (nodes without children).
         def leaves
-          base_set_class.find(:all, :conditions => "#{scope_condition} AND (#{left_col_name} BETWEEN #{self[left_col_name]} AND #{self[right_col_name]}) AND #{left_col_name} + 1 = #{right_col_name}", :order => left_col_name)
+          base_set_class.scoped(:conditions => "#{scope_condition} AND (#{left_col_name} BETWEEN #{self[left_col_name]} AND #{self[right_col_name]}) AND #{left_col_name} + 1 = #{right_col_name}", :order => left_col_name)
         end
         
         # Returns the count of this record's terminal children (nodes without children).
@@ -492,7 +492,7 @@ module SymetrieCom
         def check #:nodoc:
           # performance improvements (3X or more for tables with lots of columns) by using :select to load just id, lft and rgt
           ## i don't use the scope condition here, because it shouldn't be needed
-          my_children = base_set_class.find(:all, :conditions => "#{parent_col_name} = #{self.id}",
+          my_children = base_set_class.scoped(:conditions => "#{parent_col_name} = #{self.id}",
             :order => left_col_name, :select => "#{self.class.primary_key}, #{left_col_name}, #{right_col_name}")
           
           if my_children.empty?
@@ -525,7 +525,7 @@ module SymetrieCom
           my_lft = n
           # performance improvements (3X or more for tables with lots of columns) by using :select to load just id, lft and rgt
           ## i don't use the scope condition here, because it shouldn't be needed
-          my_children = base_set_class.find(:all, :conditions => "#{parent_col_name} = #{self.id}",
+          my_children = base_set_class.scoped(:conditions => "#{parent_col_name} = #{self.id}",
             :order => left_col_name, :select => "#{self.class.primary_key}, #{left_col_name}, #{right_col_name}")
           if my_children.empty?
             my_rgt = (n += 1)

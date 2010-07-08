@@ -7,7 +7,7 @@ xml.rss(:version=>"2.0"){
     xml.language('en-us')
       for conversation in @conversations
         xml.item do
-          xml.title(h(conversation.item_title('...').capitalize))
+          xml.title(h((conversation.item_title('...') || "").capitalize))
           xml.description(white_list(RedCloth.new(conversation.itemtext).to_html))      
           xml.author("contact@#{$SITE_URL} (#{conversation.user.login})")               
           xml.pubDate(valid_timestamp(conversation.created_at))

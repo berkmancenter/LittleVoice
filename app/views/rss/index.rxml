@@ -1,7 +1,7 @@
 xml.instruct! :xml, :version=>"1.0" 
 xml.rss(:version=>"2.0"){
   xml.channel{
-    xml.title("#{$SITE_NAME} - Most recent topics")
+    xml.title("#{$SITE_NAME} - Discussion Topics")
     xml.link("http://#{$SITE_URL}/")
     xml.description("#{$SITE_NAME} is a community of people working together to fight back against viruses, spyware, and other bad software.")
     xml.language('en-us')

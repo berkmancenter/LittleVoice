@@ -41,7 +41,7 @@
 <% end %>
 
 <div id="preview">
-	<%= @content.parse_body %>
+	<%= @content.parse_body rescue nil %>
 </div>	
 
 <script>

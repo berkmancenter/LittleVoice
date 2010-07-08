@@ -13,16 +13,18 @@ module MainHelper
       } }.to_json
   end
   
+  def show_item_path(i)
+    i.show_path
+  end
+  
   #Same as escape_javascript except that it doesn't escape newline chars.
   def custom_escape_javascript(javascript)
    (javascript || '').gsub('\\','\0\0').gsub('</','<\/').gsub(/["']/){ |m| "\\#{m}" }.gsub(/\\n/, ' ')
   end
   
   def getitemsummary(userid)
-    
     outputstring = ""
     itemset = Item.find_by_sql(["select * from items where user_id = ? and ISNULL(parent_id)", userid])
-    
     if !itemset.empty?
       itemset.each do |itemrecord|
         linkstring = ""
@@ -30,59 +32,41 @@ module MainHelper
         outputstring += "<div class='summaryitem'>#{linkstring}</div>\n"
       end
     end
-    
     outputstring
-    
   end
   
   def get_response_summary(itemid)
-    
     outputstring = ""
     itemset = Item.find_by_sql(["select * from items where parent_id = ?", itemid])
-    
     if !itemset.empty?
       itemset.each do |itemrecord|
         linkstring = ""
         linkstring = "#{itemrecord.id}. #{h(itemrecord.itemtext)}"
-        
         outputstring += "<div class='responseitem'>#{linkstring}</div>\n"
         outputstring += "<div id='itemresponse-#{itemrecord.id}' class='replybox'>"
         outputstring +=  link_to_remote('Reply', :update => "itemresponse-#{itemrecord.id}", :url => {:action => "get_reply_box", :item_id => itemrecord.id, :item_root_id => itemid})
         outputstring += "</div>\n"
       end
     end
-    
     outputstring
-    
   end  
   
   def get_responserecords(parent_id, responseset)
-    
-    response_array = responseset.select {|responseitem| responseitem.parent_id == parent_id}   
-    
-    response_array
-    
+    responseset.select {|responseitem| responseitem.parent_id == parent_id}   
   end
   
   def display_responses(parent_id, responseset, marginstart, minscore, maxscore)
-    
-    outputstring = ""
-    
     response_array = get_responserecords(parent_id, responseset)
-    
     if response_array.length > 0
       response_array.each do |responserecord|
-        if !(responserecord.id).nil?
-          
+        unless (responserecord.id).nil?
           score =  responserecord.rating_total
-          if !score.nil?
+          unless score.nil?
             scorerating = get_score_range(minscore, maxscore, score)
           else
             scorerating = get_score_range(minscore, maxscore, 0)
           end
-          
           scoreclass = "responseitem-state-#{scorerating.to_s}"
-          
           renderhash = {
             :item_id => responserecord.id,
             :minscore => minscore,
@@ -98,50 +82,35 @@ module MainHelper
             :allchildrencount => responserecord.all_children_count ||= 0,
             :level => responserecord.level ||= 0
           }
-          
-          outputstring += render(:partial => "itemblock", :locals => renderhash)
-          
+          outputstring = render(:partial => "itemblock", :locals => renderhash)
         end
       end
     end
-    
     outputstring 
-    
   end
   
   def get_message(message_id)
-    
-    message_array = Array.new()
-    
+    message_array = []
     outputstring = ""
     message_array[0] = "<img id='spinner' alt='' src='/images/elements/ajax-loader.gif'/>"
     message_array[1] = "<div class='messageerror'>Something went wrong</div>"
     message_array[2] = "<div class='messagesuccess'>Something went right</div>"
     message_array[3] = "<div class='messageerror'>This item has already been posted.</div>"
     message_array[4] = "<div class='messageerror'>You tried to post an empty item.</div>"
-    
-    if !message_id.nil?
+    unless message_id.nil?
       outputstring = message_array[message_id]
     end
-    
     outputstring
   end  
   
   def get_item_error(additemstatus, additemdupe, additemempty, item_id = nil)
-    ### Clean up previous messages
-    ###  page.visual_effect(:fade, "statusmessage-#{item_id.to_s}", :duration => 0.25)
-    ### END Clean up previous messages
-    
     statusmessagestring = ""
-    
     if item_id.nil?
       statusmessagestring = "statusmessage"
     else
       statusmessagestring = "statusmessage-#{item_id.to_s}"
     end    
-    
     page.delay 0.5 do
-      
       if additemstatus
         #page[statusmessagestring].replace_html(get_message(2)) 
       elsif additemstatus == false
@@ -151,9 +120,7 @@ module MainHelper
       elsif additemempty
         page[statusmessagestring].replace_html(get_message(4))
       end
-      
       page.visual_effect(:appear, statusmessagestring,  :duration => 0.25)
-      
     end
   end
   
@@ -241,11 +208,11 @@ module MainHelper
   def display_badges(user)
     output = ""
     user.roles.each do |role|
-      output +=  "<img alt='' src='/images/badges/badge_#{role.rolename.downcase.gsub(/ /, '_')}.png' />\n"
+      output += "<img alt='' src='/images/badges/badge_#{role.rolename.downcase.gsub(/ /, '_')}.png' />\n"
     end  
     return output
   end
-  
+
   def item_email_exists?(item_id)
     if item_id == "all_conversations" or item_id == "all_items"
       checked = (Subscription.send(item_id).users.include?(current_user) rescue false)

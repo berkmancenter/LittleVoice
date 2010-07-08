@@ -10,6 +10,15 @@
 
 
 class Item < ActiveRecord::Base
+  attr_accessor :license
+  attr_accessor :terms
+  validates_presence_of :itemtext
+  validates_uniqueness_of :itemtext, :scope => [:item_root_id]
+  validates_acceptance_of :terms, :if => Proc.new{|item| ["badware_story"].include?(item.itemtype.item_type) rescue false}
+  validates_acceptance_of :license, :if => Proc.new{|item| ["badware_story"].include?(item.itemtype.item_type) rescue false}
+  validates_presence_of :itemtype_id
+  after_create Proc.new{|item| Ratingitemtotal.create(:item => item) unless item.ratingitemtotal}
+  after_save Proc.new{|item| (@current_controller || ApplicationController.new).expire_fragment(:fragment_id => "item_#{item.id}_contents")}
   named_scope :nuked, :conditions => {:item_active => false }
   named_scope :active, :conditions => {:item_active => true }
   
@@ -35,25 +44,39 @@ class Item < ActiveRecord::Base
   named_scope :conversations, :conditions => "items.id = items.item_root_id"
   named_scope :responses, :conditions => "items.id != items.item_root_id"
   
+  named_scope :with_type, lambda {|*args|
+    conditions = case args[0]
+      when Itemtype
+        ["items.itemtype_id = ?", args[0].id]
+      when Fixnum
+        ["items.itemtype_id = ?", args[0]]
+      when String
+        ["items.itemtype_id = ?", Itemtype.find_by_item_type(args[0])]
+      when NilClass
+        ["items.itemtype_id = ?", Itemtype.find_by_item_type("conversation")]
+      end
+    {:conditions => conditions}
+  } 
+  
   #tagging
   acts_as_taggable_on :tags, :categories, :keywords, :special
-  Tag.acts_as_ferret({:fields => [:name], :remote => true})
+  #Tag.acts_as_ferret({:fields => [:name], :remote => true})
   
   #associations and nestings relating to Items
   belongs_to :user
-  has_one :itemtype
+  belongs_to :itemtype
   has_many :scores
   has_one :ratingitemtotal, :dependent => :destroy
-  has_many :itememails, :dependent => :destroy  # destroys the associated itememails
+  #has_many :itememails  # destroys the associated itememails
   
   has_many :ratingactions do
     #criteria for an Item to be spam, currently the logic is if RatingtypeId is >= 3
     def spam
-      find :all, :conditions => {:ratingtype_id => 3 } # 3 seems arbitrary - will break if db changes
+      scoped(:conditions => {:ratingtype_id => 3 }) #TODO 3 seems arbitrary - will break if db changes
     end
   end
   
-  acts_as_nested_set :scope => :item_root_id
+  acts_as_nested_set :scope => :item_root_id, :parent_column => "items.parent_id"
   #ferret specification for the fields to be indexed and 
   acts_as_ferret({:fields => {:item_text => {:boost => 2}, :item_title => {:boost => 5}, :tag_string => {:boost => 10}, :user_name => {:boost => 1}}, :remote => true })
   #for users subscribing to the Item root
@@ -62,20 +85,18 @@ class Item < ActiveRecord::Base
   #ranking the conversation (Itemroot)
   def rank
     if is_root?
-      conversations = self.class.conversations.find(:all, :select => "id", :include => :ratingitemtotal)
-      conversations.select{|i| i.rating_total > self.rating_total}.length + 1
+      self.class.with_type(self.itemtype_id).conversations.count(:include => :ratingitemtotal, :conditions => ["ratingitemtotals.rating_total > ?", rating_total]) + 1
     else
-      conversations = self.class.responses.find(:all, :select => "id", :include => :ratingitemtotal, :conditions => {:item_root_id => self.item_root_id})
-      conversations.select{|i| i.rating_total > self.rating_total}.length + 1
+      self.root.all_children.count(:include => :ratingitemtotal, :conditions => ["ratingitemtotals.rating_total > ?", rating_total]) + 1
     end
   end
   
   #resolution in case of tied ranks - 
   def rank_tied?
-    unless is_root? # this function doesn't really work for roots, although it wouldn't fail.
-      children = self.root.all_children
-      ranks = children.collect{|i| i.rank if i.id != self.id } if children
-      ranks.include?(self.rank)
+    if is_root? 
+      self.class.with_type(self.itemtype_id).roots.count(:include => :ratingitemtotal, :conditions => ["ratingitemtotals.rating_total = ? #{"OR ratingitemtotals.rating_total IS NULL" if rating_total == 0}", rating_total]) > 1
+    else
+      self.root.all_children.count(:include => :ratingitemtotal, :conditions => ["ratingitemtotals.rating_total = ? #{"OR ratingitemtotals.rating_total IS NULL" if rating_total == 0}", rating_total]) > 1
     end
   end
   
@@ -84,20 +105,41 @@ class Item < ActiveRecord::Base
     self.id == self.item_root_id
   end
   
+  def is_faq?
+    self.special_list.include?("faq")
+  end
+
+  # Set the item as a FAQ or not.
+  def is_faq=(bool)
+    dirty = if self.is_faq?
+      bool ? false : self.special_list.delete("faq")
+    else
+      bool ? self.special_list << "faq" : false
+    end
+    save if dirty
+    return bool
+  end
+
+  def show_path
+    "/main/itemview/#{self.id == self.item_root_id ? self.id : (self.item_root_id.to_s + '#itemblock-' + self.id.to_s) }"
+  end
+
+  
   #adding elipsis for longer ItemTitles
   def item_title(elipsis = '', max_length = 55)
     title = super 
     title = self.itemtext.split('\n').first if (title.nil? or title == "")
     if title and title.length <= max_length
-      return title
+      return title || ""
     else
-      return (truncate(title, :length => max_length, :omission => elipsis) rescue nil)
+      return title ? (truncate(title, :length => max_length, :omission => elipsis) rescue "") : ""
     end
   end 
   
   def item_text
     self.itemtext
   end
+  
   #finding the user who nuked the item
   def nuked_by
     if self.item_active == false
@@ -143,28 +185,9 @@ class Item < ActiveRecord::Base
   def rating_total
     ratingtotal = 0
     ratingitemtotalrecord = Ratingitemtotal.find(:first, :conditions => ["item_id = ?", self.id])
-    
     ratingtotal = ratingitemtotalrecord.rating_total unless ratingitemtotalrecord.nil?
-    
     return ratingtotal
   end  
-  
-  ###Deprecated in favor of :rank
-  #  def rating_place
-  #    ratingplaceset = Ratingitemtotal.find_by_sql(["SELECT ratingitemtotals.item_id, items.item_root_id, ratingitemtotals.rating_total FROM ratingitemtotals LEFT JOIN (items) ON (items.id=ratingitemtotals.item_id) where items.item_root_id = ? order by ratingitemtotals.rating_total DESC", self.item_root_id])
-  #    iterator = 0 
-  #    matchtest = false
-  #    ratingplaceset.each do |ratingrecord|
-  #      iterator += 1
-  #      
-  #      if ratingrecord.item_id == self.id
-  #        matchtest = true
-  #      end
-  #      
-  #      break unless ratingrecord.item_id != self.id
-  #    end
-  #    if matchtest then return iterator else return 0 end
-  #  end  
   
   def rating_id(current_user)
     
@@ -230,9 +253,32 @@ class Item < ActiveRecord::Base
     end
   end
   
-  
-  def update_subscriptions
-    Subscription.find_or_create_by_sub_type_and_sub_type_id(:sub_type => "item", :sub_type_id => self.id) if self.id
+  def add_subscriber(user)
+    self.subscription.add_subscriber(user)
+  end
+
+  def remove_subscriber(users)
+    self.subscription.remove_subscriber(user)
+  end
+
+  def subscribers
+   self.subscription.users
+  end
+
+  def subscription
+    itemtype = self.itemtype
+    if itemtype
+      case self.itemtype.item_type
+        when 'badware_story'
+          Subscription.badware_stories.by_id(self.id)
+        else
+          Subscription.items.by_id(self.id)
+      end
+    end
+  end
+
+  def update_subscriptions(sub_type = self.itemtype.item_type)
+    Subscription.find_or_create_by_sub_type_and_sub_type_id(:sub_type => sub_type, :sub_type_id => self.id) if self.id
     if self.tag_list.any?
       self.tag_list.each do |tag|
         Subscription.find_or_create_by_sub_type_and_sub_name(:sub_type => "tag", :sub_name => tag)
@@ -240,16 +286,21 @@ class Item < ActiveRecord::Base
     end
   end
   
+  ###
+  # Sends notification emails to (unique) users of the provided subscriptions, returning those users
+  def send_to_subscriptions(subscriptions = self.subscription)
+    subscriptions = [subscriptions] if subscriptions.is_a?(Subscription)
+    subscriptions.inject([]) do |sent_to_users, subscription|
+      sent_to_users + subscription.send_item!(self)
+    end
+  end
+  
   def children_count
-    return Item.count(:conditions => ["parent_id = ?", self.id])
+    Item.count(:conditions => ["parent_id = ?", self.id])
   end
   
   def place_count
-    return Item.count(:conditions => ["item_root_id = ? and lft <= ?", self.item_root_id, self.lft], :order => "lft")
+    Item.count(:conditions => ["item_root_id = ? and lft <= ?", self.item_root_id, self.lft], :order => "lft")
   end
-  
-  
-  protected
-  
   
 end

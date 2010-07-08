@@ -1,14 +1,14 @@
 <%
 childhash = Hash.new()
 childhash = {
-	:action => "display_children",
-	:item_id => item_id,
-	:item_root_id => item_root_id,
-	:minscore => minscore,
-	:maxscore => maxscore,
-	:level => level,
-	:childrencount => childrencount,
-	:allchildrencount => allchildrencount
+  :action => "display_children",
+  :item_id => item_id,
+  :item_root_id => item_root_id,
+  :minscore => minscore,
+  :maxscore => maxscore,
+  :level => level,
+  :childrencount => childrencount,
+  :allchildrencount => allchildrencount
 }
 
 itemrecord = Item.find(item_id)
@@ -24,39 +24,39 @@ opacityvalue = get_score_range(itemrecord)
 stylehash = Hash.new()
 
 if !parent_id.nil?
-	stylehash = {
+  stylehash = {
 
-		:mainclass => "itemblock",
-		:containerclass => "",
-		:contentclass => "",
-		:titleclass => "itemtitle",
-		:itemcolor => "lightorange",
-		:color => "orange",
-		:itemcontentclass => "itemcontent",
-		:itemmetaclass => "item_meta_info"
-	}
-	
-	if opacityvalue < 5
-		stylehash[:opacityclass] = "opacity-state-#{opacityvalue}"
-		mousescript = "onmouseover=\"this.className='#{stylehash[:containerclass]} #{stylehash[:mainclass]} opacityfull #{stylehash[:itemcolor]}';\" onmouseout=\"this.className='#{stylehash[:containerclass]} #{stylehash[:mainclass]} #{stylehash[:opacityclass]} #{stylehash[:itemcolor]}';\""
-	else
-		mousescript = ""
-	end
+    :mainclass => "itemblock",
+    :containerclass => "",
+    :contentclass => "",
+    :titleclass => "itemtitle",
+    :itemcolor => "lightorange",
+    :color => "orange",
+    :itemcontentclass => "itemcontent",
+    :itemmetaclass => "item_meta_info"
+  }
+
+  if opacityvalue < 5
+    stylehash[:opacityclass] = "opacity-state-#{opacityvalue}"
+    mousescript = "onmouseover=\"this.className='#{stylehash[:containerclass]} #{stylehash[:mainclass]} opacityfull #{stylehash[:itemcolor]}';\" onmouseout=\"this.className='#{stylehash[:containerclass]} #{stylehash[:mainclass]} #{stylehash[:opacityclass]} #{stylehash[:itemcolor]}';\""
+  else
+    mousescript = ""
+  end
 
 else
-	stylehash = {
-		:opacityclass =>  "",
-		:mainclass => "",
-		:containerclass => "rootbox",
-		:contentclass => "",
-		:titleclass => "roottitle",
-		:itemcolor => "lightblue",
-		:color => "blue",
-		:itemcontentclass => "itemcontent",
-		:itemmetaclass => "root_meta_info"
-	}
+  stylehash = {
+    :opacityclass =>  "",
+    :mainclass => "",
+    :containerclass => "rootbox",
+    :contentclass => "",
+    :titleclass => "roottitle",
+    :itemcolor => "lightblue",
+    :color => "blue",
+    :itemcontentclass => "itemcontent",
+    :itemmetaclass => "root_meta_info"
+  }
 
-	mousescript = ""
+  mousescript = ""
 end
 
 ### inresponsetorecord = Item.find(parent_id)
@@ -65,170 +65,189 @@ childrencount ||= 0
 -%>
 
 
-	<div id='itemblock-<%= item_id%>'>
-	<div class="<%= stylehash[:containerclass] %> <%= stylehash[:mainclass] %> <%= stylehash[:opacityclass] %> <%= stylehash[:itemcolor] %>" <%= mousescript %> style='margin-left: <%= level %>px;'>
-	<a name='itemblock-<%= item_id%>' ></a>
-	
-		<div class="<%= stylehash[:titleclass] %>" >
-		<% if stylehash[:titleclass] == "roottitle" %>
-			<div class="subject_div">
-				<%= h(truncate(itemrecord.item_title, :length => 95, :omission => "...")) %>
-			</div>
-		<% end %>
+<head>
+  <style type ="text/css">
+    p.url {text-align:right;}
+  </style>
+</head>
 
-			<div class="item_left_top">
+<div id='itemblock-<%= item_id%>'>
+  <div class="<%= stylehash[:containerclass] %> <%= stylehash[:mainclass] %> <%= stylehash[:opacityclass] %> <%= stylehash[:itemcolor] %>" <%= mousescript %> style='margin-left: <%= level %>px;'>
+    <a name='itemblock-<%= item_id%>' ></a>
+
+    <div class="<%= stylehash[:titleclass] %>" >
+      <% if stylehash[:titleclass] == "roottitle" %>
+        <div class="subject_div">
+          <%= h(truncate(itemrecord.item_title, :length => 95, :omission => "...")) %>
+        </div>
+      <% end %>
+
+      <div class="item_left_top">
 				by <%= link_to h(itemrecord.user.login), {:controller => "users", :action => "show", :id => itemrecord.user.login } %>
-				<%= display_stars(itemrecord.user.stars, :include_empty => false )%>
-				<%= time_ago_in_words(itemrecord.created_at) %> ago
-				<% if check_role(['administrator']) %>
-				<span style="font-size: .75em;"><%= "rt:#{rating_total} - rp: #{itemrecord.rank}" %></span>
-				<% end %>	
-			</div>
-			
-			<div class="item_right_top">
-				<%= display_badges(itemrecord.user) %>
-			</div>
-		</div>
-		<div class="responseitem box grad">
-		<!-- <img src="/images/backgrounds/grad_white_bottom.png" class="gradimage" alt="gradient box" style=""/> -->
+        <%= display_stars(itemrecord.user.stars, :include_empty => false )%>
+        <span title="<%= itemrecord.created_at.iso8601 %>"><%= time_ago_in_words(itemrecord.created_at) %> ago</span>
+        <% if check_role(['administrator']) %>
+          <span style="font-size: .75em;"><%= "rt:#{rating_total} - rp: #{itemrecord.rank}" %></span>
+        <% end %>
+      </div>
 
-		<div class="<%= stylehash[:itemcontentclass] %>"><% if itemrecord.item_active or check_role(['administrator','moderator']) or (itemrecord.user_id == @current_user.id rescue false) -%><%= white_list(RedCloth.new(itemtext).to_html) -%><% else -%><%="Message removed due to a violation of the #{$ORG_NAME} terms of use."%><% end -%></div>
-		
-	
-		<div class="itemfooter">
-		<table class="itemfooter_table">
-		<tr class="itemfooter_row">
-				
-			
-			<td class="<%= stylehash[:itemmetaclass] %> footercell">
-			<div id="tags_<%= itemrecord.id %>">	
-				<% if itemrecord.tags.any? %>
-					<span>
-						<%= image_tag 'tag_blue.png', :style => "padding:2px 4px 0px 0px;" %>
-						<% itemrecord.tags.each_with_index do |tag,index| %>
-							<%= link_to( h(tag.name), {:controller => "main", :action => "conversations", :view => "tag", :tag => h(tag.name)}) + (index + 1 < itemrecord.tags.length  ? ', ' : '')  -%>
-						<% end %>
-					</span>
-					<br />
-				<% end %>
-				</div>
-			</td>
-		</tr>
+      <div class="item_right_top">
+        <%= display_badges(itemrecord.user) %>
+      </div>
+    </div>
+    <div class="responseitem box grad">
+      <!-- <img src="/images/backgrounds/grad_white_bottom.png" class="gradimage" alt="gradient box" style=""/> -->
+	  <div class="<%= stylehash[:itemcontentclass] %>"><% if itemrecord.item_active or check_role(['administrator','moderator']) or (itemrecord.user_id == @current_user.id rescue false) -%><% cache(:fragment_id => "item_#{itemrecord.id}_contents") do %><%= white_list(RedCloth.new(itemtext).to_html) -%><% end %><% else -%><%="Message removed due to a violation of the #{$ORG_NAME} terms of use."%><% end -%></div>
 
-		</table>
-		
-	
-		</div>		
+      <div class="itemfooter">
+        <table class="itemfooter_table">
+          <tr class="itemfooter_row">
 
-		</div>	
 
-	</div>
-	
-<% if current_user != false %>
-	<table><tr>
-	<td><%= link_to_remote("<span class=\"button_reply\">Reply</span>", {:update => "itemresponse-#{item_id}", :url => {:action => 'get_reply_box', :item_id => item_id, :item_root_id => item_root_id}}, {:class => "button button_#{stylehash[:color]}_75", :style => "margin-left: #{level}px;"} ) %></td>
-			
-	<% if (@current_user.id == itemrecord.user.id && itemrecord.created_at > 30.minutes.ago) || check_role(['administrator'])%>
-		<td><%= link_to_remote "<span class=\"button_edit\">Edit</span>", {:url => {:action => "get_edit_box", :id => item_id }}, {:class => "button button_#{stylehash[:color]}_75"} %></td>
-	<% end %>
-						
-	<% if itemrecord.parent_id.nil? %>
-		<td id="emailme">
-			<%= render :partial => "email_me", :locals => {:item_id => item_id, :user_id => current_user.id, :stylehash => stylehash }%>
-		</td>
-	<% end %>	
-	
- <% if check_role(['administrator','moderator']) %>
-			
-		  <td>	
-          <div id='admin_<%= itemrecord.id%>'>
-          <%= render :partial => "inline_admin", :locals => {:item => itemrecord, :stylehash => stylehash} %>
-		  </div>
-		  </td>
+            <td class="<%= stylehash[:itemmetaclass] %> footercell">
+              <div id="tags_<%= itemrecord.id %>">
+                <% if itemrecord.tags.any? %>
+                  <span>
+                    <%= image_tag 'tag_blue.png', :style => "padding:2px 4px 0px 0px;" %>
+                    <% itemrecord.tags.each_with_index do |tag,index| %>
+                      <%= link_to( h(tag.name), {:controller => "main", :action => "conversations", :view => "tag", :tag => h(tag.name)}) + (index + 1 < itemrecord.tags.length  ? ', ' : '')  -%>
+                    <% end %>
+                  </span>
+                  <br />
+                <% end %>
+              </div>
+            </td>
+          </tr>
 
-		<td>
-		  <div id="edit_tags_<%= itemrecord.id %>" style="display:inline;position:relative;">
-		  	<%= link_to_remote "<span class=\"button_reply\">Edit Tags</span>", {:url => {:controller => "main", :action => "edit_tags", :id => itemrecord.id }}, {:class => "button button_#{stylehash[:color]}_75"} %>
-		  </div>
-		</td>
-		  
-		  <% if parent_id.nil? %>
-		  <td>
-		  <div id="make_faq">
-			<%= render :partial => "make_faq", :locals => {:item => itemrecord, :stylehash => stylehash} %>
-		  </div>
-		  </td>
-		  <% end %> 
-		  
-<% end %>
-			
-			<% if parent_id.nil? && current_user != false %>
-			<td class=" rsslink">
-				<%= link_to image_tag('feed.png'), {:controller => "rss", :action => "item", :id => item_id }%>
-			</td>	
-			<% end %>	
-			
-			<% if !parent_id.nil? and itemrecord.rating_total > 0 and itemrecord.rank == 1 and itemrecord.rank_tied? == false %>
-				<td class="rank">
-					<span style="color:#2382A1;font-weight:bold;">Top Rated Response</span>
-				</td>	
-			<% end %>	
+        </table>
+
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+
+
+  <% if current_user != false %>
+    <table><tr>
+        <td><%= link_to_remote("<span class=\"button_reply\">Reply</span>", {:update => "itemresponse-#{item_id}", :url => {:action => 'get_reply_box', :item_id => item_id, :item_root_id => item_root_id}}, {:class => "button button_#{stylehash[:color]}_75", :style => "margin-left: #{level}px;"} ) %></td>
+
+        <% if (@current_user.id == itemrecord.user.id && itemrecord.created_at > 30.minutes.ago) || check_role(['administrator'])%>
+          <td><%= link_to_remote "<span class=\"button_edit\">Edit</span>", {:url => {:action => "get_edit_box", :id => item_id }}, {:class => "button button_#{stylehash[:color]}_75"} %></td>
+        <% end %>
+
+        <% if itemrecord.parent_id.nil? %>
+          <td id="emailme">
+            <%= render :partial => "email_me", :locals => {:item_id => item_id, :user_id => current_user.id, :stylehash => stylehash }%>
+          </td>
+        <% end %>
+
+        <% if check_role(['administrator','moderator']) %>
+
+          <td>
+            <div id='admin_<%= itemrecord.id%>'>
+              <%= render :partial => "inline_admin", :locals => {:item => itemrecord, :stylehash => stylehash} %>
+            </div>
+          </td>
+
+          <td>
+            <div id="edit_tags_<%= itemrecord.id %>" style="display:inline;position:relative;">
+              <%= link_to_remote "<span class=\"button_reply\">Edit Tags</span>", {:url => {:controller => "main", :action => "edit_tags", :id => itemrecord.id }}, {:class => "button button_#{stylehash[:color]}_75"} %>
+            </div>
+          </td>
+
+          <%if !parent_id.nil?%>
+            <td>
+              <div>
+                  <a style="margin-top:-14px;float:left;" href="<%= "/main/itemview/#{itemrecord.root.id}#itemblock-#{itemrecord.id}"%>">¶</a>
+              </div>
+            </td>
+          <%end%>
+
+
+
+
+          <% if parent_id.nil? %>
+            <td>
+              <div id="make_faq">
+                <%= render :partial => "make_faq", :locals => {:item => itemrecord, :stylehash => stylehash} %>
+              </div>
+            </td>
+          <% end %>
+
+        <% end %>
+
+        <% if parent_id.nil? && current_user != false %>
+          <td class=" rsslink">
+            <%= link_to image_tag('feed.png'), {:controller => "rss", :action => "item", :id => item_id }%>
+          </td>
+        <% end %>
+
+        <% if !parent_id.nil? and itemrecord.rating_total > 0 and itemrecord.rank == 1 and itemrecord.rank_tied? == false %>
+          <td class="rank">
+            <span style="color:#2382A1;font-weight:bold;">Top Rated Response</span>
+          </td>
+        <% end %>
 
         <% if itemrecord.user.id != current_user.id  %>
-	<td style="width:100%;text-align:right;vertical-align:top;padding:5px;"><span style="color:#666;width:100%;"> <%= itemrecord.is_root? ? "Rate this topic: " : "Rate this response: " %></span></td>
-	<td id="up_<%= itemrecord.id %>">
-		<div class="vote_image">
-		<%= link_to_remote(get_rating_display(itemrecord.id, 1, current_user.current_rating_type_for_item(itemrecord)), { :url => {:action => :processrating, :item_id => itemrecord.id, :ratingtype_id => 1, :minscore => minscore, :maxscore => maxscore}} ) %>	
-		</div>
-	</td>
+          <td style="width:100%;text-align:right;vertical-align:top;padding:5px;"><span style="color:#666;width:100%;"> <%= itemrecord.is_root? ? "Rate this topic: " : "Rate this response: " %></span></td>
+          <td id="up_<%= itemrecord.id %>">
+            <div class="vote_image">
+              <%= link_to_remote(get_rating_display(itemrecord.id, 1, current_user.current_rating_type_for_item(itemrecord)), { :url => {:action => :processrating, :item_id => itemrecord.id, :ratingtype_id => 1, :minscore => minscore, :maxscore => maxscore}} ) %>
+            </div>
+          </td>
 
-	<td id="down_<%= itemrecord.id %>">
-		<div class="vote_image">
-   		<%= link_to_remote(get_rating_display(itemrecord.id, 2, current_user.current_rating_type_for_item(itemrecord)), { :url => {:action => :processrating, :item_id => itemrecord.id, :ratingtype_id => 2, :minscore => minscore, :maxscore => maxscore}} ) %>	
-		</div>
-	</td>
-	
-	<td id="spam_<%= itemrecord.id %>">
-		<div class="vote_image" >
-		<%= link_to_remote(get_rating_display(itemrecord.id, 3, current_user.current_rating_type_for_item(itemrecord)), { :url => {:action => :processrating, :item_id => itemrecord.id, :ratingtype_id => 3, :minscore => minscore, :maxscore => maxscore}} ) %>
-		</div>
-	</td>
+          <td id="down_<%= itemrecord.id %>">
+            <div class="vote_image">
+              <%= link_to_remote(get_rating_display(itemrecord.id, 2, current_user.current_rating_type_for_item(itemrecord)), { :url => {:action => :processrating, :item_id => itemrecord.id, :ratingtype_id => 2, :minscore => minscore, :maxscore => maxscore}} ) %>
+            </div>
+          </td>
+
+          <td id="spam_<%= itemrecord.id %>">
+            <div class="vote_image" >
+              <%= link_to_remote(get_rating_display(itemrecord.id, 3, current_user.current_rating_type_for_item(itemrecord)), { :url => {:action => :processrating, :item_id => itemrecord.id, :ratingtype_id => 3, :minscore => minscore, :maxscore => maxscore}} ) %>
+            </div>
+          </td>
         <% end %>
+
+      </tr></table>
+
+    <script type="text/javascript">
+      //<![CDATA[
+      /*
+                    new Tip('up_<%= itemrecord.id %>', 'Vote up', {
+                            hook: {
+                                    target: 'topRight',
+                                    tip: 'bottomRight'
+                            }
+                    });
 				
-	</tr></table> 
+                    new Tip('down_<%= itemrecord.id %>', 'Vote down', {
+                            hook: {
+                                    target: 'topRight',
+                                    tip: 'bottomRight'
+                            }
+                    });
+       */
+      new Tip('spam_<%= itemrecord.id %>', 'Flag spam/abuse', {
+        hook: {
+          target: 'topRight',
+          tip: 'bottomRight'
+        }
+      });
+      //]]>
+    </script>
 
-		<script type="text/javascript">
-				//<![CDATA[
-				/*
-				new Tip('up_<%= itemrecord.id %>', 'Vote up', {
-					hook: {
-						target: 'topRight',
-						tip: 'bottomRight'
-					}
-				});
-				
-				new Tip('down_<%= itemrecord.id %>', 'Vote down', {
-					hook: {
-						target: 'topRight',
-						tip: 'bottomRight'
-					}
-				});	
-				*/
-				new Tip('spam_<%= itemrecord.id %>', 'Flag spam/abuse', {
-					hook: {
-						target: 'topRight',
-						tip: 'bottomRight'
-					}
-				});
-				//]]>
-		</script>
-
-	<div id='itemresponse-<%= item_id%>' class='replybox'></div>  
+    <div id='itemresponse-<%= item_id%>' class='replybox'></div>
 
 
 
-<% end %>
+
+  <% end %>
 
 </div>
-	
-	
+

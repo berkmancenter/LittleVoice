@@ -8,8 +8,7 @@ namespace :lv do
       require 'securerandom'
       session_secret = SecureRandom.base64(128)
     else
-      alphanumerics = [('0'..'9'),('A'..'Z'),('a'..'z')].map {|range| range.to_a}.flatten
-      session_secret = (1..128).map { alphanumerics[Kernel.rand(alphanumerics.size)] }.join
+      session_secret = ActiveSupport::SecureRandom.base64(128)
     end
     session_initializer << "ActionController::Base.session = {:session_key => '_lv_session', :secret => '#{session_secret}'}"
     session_initializer.close
@@ -30,7 +29,9 @@ namespace :lv do
     Setting.create(:namespace => "SMTP", :key => "MAIL_SERVER_DOMAIN", :value => nil)
     Setting.create(:namespace => "RECAPTCHA", :key => "RCC_PUB", :value => "")
     Setting.create(:namespace => "RECAPTCHA", :key => "RCC_PRIV", :value => "")
-
+    Setting.create(:key => "FACEBOOK_PAGE_URL", :value => nil)
+    Setting.create(:key => "TWITTER_URL", :value => nil)
+    
     # Create initial role types
     Role.create :rolename => "administrator", :functionality => "Administrator with all permissions "
     Role.create :rolename => "moderator", :functionality => "A user with selected permissions involved in maintaining the tone of the community"
@@ -46,6 +47,12 @@ namespace :lv do
     Scoretype.create :name => "nuke_score", :award => -500, :description => "every message that was actively nuked by a moderator (passive nukage is a metaphysical impossibility)", :version => 1
     Scoretype.create :name => "unnuke_score", :award => 500, :description => "every message that was actively de-nukified by a moderator", :version => 1
     Scoretype.create :name => "adjust_score", :award => 0, :description => "adjustments made by the administrator", :version => 1
+    
+    # Create initial rating types
+    Ratingtype.create(:rating_type => "up", :rating_value => 1)
+    Ratingtype.create(:rating_type => "down", :rating_value => -1)
+    Ratingtype.create(:rating_type => "bad (spam/abuse)", :rating_value => -1)
+    Ratingtype.create(:rating_type => "nuke", :rating_value => -1)
 
     # Create initial administrator account
     while not (User.find(1) rescue false)

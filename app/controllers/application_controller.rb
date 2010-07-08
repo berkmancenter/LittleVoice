@@ -16,7 +16,8 @@ class ApplicationController < ActionController::Base
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
   protect_from_forgery # :secret => '9d8292eb4d39c6b77b125b55193cd131'
-  
+  public :render_to_string
+
   # See ActionController::Base for details 
   # Uncomment this to filter the contents of submitted sensitive data parameters
   # from your application log (in this case, all fields with names like "password"). 
@@ -84,6 +85,8 @@ class ApplicationController < ActionController::Base
     
   end
   
+  alias_method :rate_item, :rate
+  
   def allow_moderators_and_admins
     check_for_any_of_roles(['administrator','moderator'])
   end
@@ -92,10 +95,10 @@ class ApplicationController < ActionController::Base
     check_for_any_of_roles(['administrator'])
   end
   
-  private
+  protected
   
   def check_for_any_of_roles(roles)
-    unless logged_in? && roles.collect{|x| true if @current_user.has_role?(x)}.include?(true)
+    unless logged_in? && check_role(roles)
       if logged_in?
         permission_denied
       else
@@ -105,6 +108,11 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  def check_role(roles)
+    roles.each{|x| return true if @current_user.has_role?(x)} rescue false
+    return false
+  end
+
   def set_page_description
     @page_description ||= "BadwareBusters.org is a community of people working together to fight back against viruses, spyware, and other bad software."
   end

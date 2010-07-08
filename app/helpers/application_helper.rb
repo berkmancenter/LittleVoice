@@ -16,6 +16,10 @@ module ApplicationHelper
     end
   end
   
+  def render_to_string(*args)
+    controller.render_to_string(args)
+  end
+  
   def content_by_name(name, options = {:controller => @current_controller, :action => @current_action})
     content = Content.find_by_controller_and_action_and_name(options[:controller], options[:action], name)
     content ||= Content.find_by_pseudonym(name)
@@ -37,6 +41,16 @@ module ApplicationHelper
     " of #{total}"
     end
   end
+  
+  def resize_embedded_media(text, size = nil)
+    text.gsub!(/(\[(youtube|vimeo|flickr))\s+(.*?)(\|(.*?))*\]/) do
+      match_data = $~
+      media_params = match_data[3].split('|')
+      media_params[1] = size if size
+     match_data[1] + ' ' + media_params.join('|') + "]"
+    end
+  end
+
   
   def tab_for(name, options = {}, html_options = {})
     url = url_for(options)

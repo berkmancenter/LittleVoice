@@ -3,13 +3,13 @@
 		<span class="subscription_link">
 			<%= link_to_remote(((@user.subscriptions.include? Subscription.all_conversations) ? "Unsubscribe" : "Subscribe" ), :url => {:action => "toggle_subscription", :id => Subscription.all_conversations.id, :user => @user.id })%>
 		</span> 
-		<%= link_to "New topics", :controller => "main", :action => "conversations", :view => "all_conversations" %> 
+		<%= link_to "Discussion Topics", :controller => "main", :action => "conversations", :view => "all_conversations" %> 
 	</div>
 	<div class="subscription_description">
 		<span class="subscription_link">
 			<%= link_to_remote(((@user.subscriptions.include? Subscription.all_items) ? "Unsubscribe" : "Subscribe" ), :url => {:action => "toggle_subscription", :id => Subscription.all_items.id, :user => @user.id } )%>
 		</span> 
-		<%= link_to "All new posts", :controller => "main", :action => "conversations", :view => "all_items" %> 
+		<%= link_to "All Discussion Posts (Topics & Responses)", :controller => "main", :action => "conversations", :view => "all_items" %> 
 	</div>
 
 <% if @user.subscriptions.tags.any? %>
@@ -25,7 +25,7 @@
 <% end %>
 
 <% if @user.subscriptions.items.any? %>
-	<h4 class="less_margin_bottom">Individual topic subscriptions: </h4>
+	<h4 class="less_margin_bottom">Individual discussion subscriptions: </h4>
 	<% for subscription in @user.subscriptions.items %>
 		<div class="subscription_description">
 			<span class="subscription_link">

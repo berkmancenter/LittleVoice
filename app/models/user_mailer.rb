@@ -30,13 +30,19 @@ class UserMailer < ActionMailer::Base
   
   def reset_password(user)
     setup_email(user)
-    @subject    += 'Your password has been reset.'
+    @subject    += 'Your password has been reset'
   end
+  
+  def auto_banned(user)
+    setup_email(user)
+    @subject += 'Your account has been automatically banned'
+  end
+  
   #email the user about an Item   
   def item_email_me(user, item)
     setup_email(user)
     @content_type = "multipart/alternative"
-    @from = "no-reply@#{$LV_SITE_URL}"
+    @from = "#{h(item.user.login)} <no-reply@#{$LV_SITE_URL}>"
     @subject += (item.id == item.item_root_id ? item.item_title('...') : Item.find(item.item_root_id).item_title('...'))
     @subject = "Re: #{@subject}" if item.id != item.item_root_id
     @body[:user] = item.user
@@ -44,10 +50,11 @@ class UserMailer < ActionMailer::Base
     @body[:url]  = "http://#{$LV_SITE_URL}/main/itemview/#{item.item_root_id}#itemblock-#{item.id}"
     @body[:root_url] = "http://#{$LV_SITE_URL}/main/itemview/#{item.item_root_id}"
   end  
+  
   # email the user about tag 
   def tag_email_me(user, item, tag_name)
     setup_email(user)
-    @from = "no-reply@#{$LV_SITE_URL}"
+    @from = "#{h(item.user.login)} <no-reply@#{$LV_SITE_URL}>"
     @subject += "Tag: #{tag_name} - #{item.item_title('...')}"
     @body[:url]  = "http://#{$LV_SITE_URL}/main/itemview/#{item.item_root_id}#itemblock-#{item.id}"
     @body[:tag_url] = "http://#{$LV_SITE_URL}/conversations?view=tag&tag=#{tag_name}"

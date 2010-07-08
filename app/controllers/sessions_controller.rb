@@ -29,11 +29,12 @@ class SessionsController < ApplicationController
   end
   
   def destroy
+    return_to = (params[:return_to] ? CGI::unescape(params[:return_to]) : {:controller => "main", :action => "index"})
     current_user.forget_me if logged_in?
     cookies.delete :auth_token
     reset_session
     flash[:notice] = "You have been logged out."
-    redirect_to '/'    
+    redirect_to return_to   
   end
   
   protected
@@ -117,7 +118,7 @@ class SessionsController < ApplicationController
     return_to = session[:return_to]  
     if return_to.nil?
       redirect_to :controller => :users, :action => :show, :id => self.current_user.login
-    else
+    elsif ! return_to.eql? "do not return"
       redirect_to CGI::unescape(return_to)
     end
   end

@@ -1,5 +1,6 @@
 class SettingsController < ApplicationController
   before_filter :login_required
+  before_filter :fix_current_user_problem
   before_filter :check_administrator_role
   layout "application"
   

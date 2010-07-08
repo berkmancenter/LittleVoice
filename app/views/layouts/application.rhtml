@@ -6,7 +6,8 @@
 <meta name="keywords" content="" />
 <meta name="description" content="<%= @page_description %>" />
 <title><%= @page_title ? @page_title + ' - ' + $LV_SITE_NAME : $LV_SITE_NAME %></title>
-<%= auto_discovery_link_tag(:rss, :controller => "rss", :action => "index") %>
+<%= auto_discovery_link_tag(:rss, {:controller => "rss", :action => "index"}, :title => "Discussion Topics") %>
+<%= auto_discovery_link_tag(:rss, {:controller => "rss", :action => "full"}, :title => "All Posts") %>
 <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.6.0/build/fonts/fonts-min.css" />
 
 <%= stylesheet_link_tag "style" %>
@@ -27,64 +28,91 @@
 </head>
 
 <body>
-	<div id="bodywrapper">
-		
-		<div id="header">
-			<div id="small_search" style="display:none;" >
-				<% form_tag({:controller => "main", :action => "search"}, :method => 'get') -%>
-					<%= text_field :search, :q, :size => 30, :id => "search_field", :onblur => "setTimeout(\"$('small_search').fade({duration:0.3});\", 1000);" -%> 
-					<%= submit_tag "Search", :style => "padding:1px;" -%>
-				</form>
-			</div>
-			<div id="login_text">
-				<% if current_user != false %>
-					<% if check_role(['administrator','moderator']) %><span style="float:right;"><%= link_to "Admin Dashboard", '/admin/messages' %></span><br /><% end %>
-					<span style="float:right;">Welcome, <%=h @current_user.login.upcase %>  ( <%= link_to "Log out", logout_url -%> )</span>
-				<% else %>
-					<span style="float:right;"><%= link_to "Log in", login_url(:return_to => CGI::escape(request.request_uri)) -%> or <%= link_to "Sign up", signup_url -%></span>
-				<% end %>
-			</div>
-			<div id="header_links">
-				<span class="header_link"><%= link_to "Browse", :controller => "main", :action => "conversations", :view => "all_conversations" %></span>
-				<span class="header_link"><%= link_to "Search", :controller => "main", :action => "search" %></span>
-				<span class="header_link"><%= link_to "Post", '/main/ask' %></span>
-				<span class="header_link"><%= link_to "FAQ", :controller => "main", :action => "howto" %></span>
-				<% if @current_user && @current_user != false %>
-					<span class="header_link">
-						<% login = @current_user && @current_user != false ? @current_user.login : @current_user %>
-						<%= link_to "My Dashboard", dashboard_url(login) %>
-					</span>
-				<% end %>		
-			</div>
-			<div style="position:relative;top:-8px;left:3px;">
-				<a href="/"><%= image_tag $LV_SITE_LOGO_URL, :alt => "http://#{$LV_SITE_URL}" %></a>
-				<span id="by_line"><% if $LV_ORG_NAME %> by <%= link_to $LV_ORG_NAME, "http://#{$LV_ORG_URL}" %><% end %></span>
-			</div>
-			
-		</div>	
-			
-		<div id="content">
-			<% if flash[:notice] %>
-				<div id="notice" style="display:none;"><%= flash[:notice] %></div>
-				<script type="text/javascript">
-					//<![CDATA[
-						$('notice').blindDown({duration: 0.5});
-					//]]>
-				</script>
-			<% end %>
-			<%= yield :layout -%>	
-		</div>
-		<div id="footer">
-			<div id="footer_links">
-				<span class="footer_link"><%= link_to "About" , :controller => "main", :action => "about" %></span>
-				<span class="footer_link"><%= link_to "How to Use", :controller => "main", :action => "howto" %></span>
-				<span class="footer_link"><%= link_to "Contact Us", :controller => "main", :action => "contact" %></span>
-				<span class="footer_link"><%= link_to "Terms &amp; Conditions", :controller => "main", :action => "terms" %></span>
-				<span class="footer_link"><%= link_to "Privacy Policy", :controller => "main", :action => "privacy" %></span>
-				<span class="footer_link"><%= link_to "Copyright", :controller => "main", :action => "copyright" %></span>
-			</div>
-		</div>
-		
+<div id="bodywrapper" style="position:relative;">
+    <!--[if lte IE 6]>
+        <div class="ie6">You appear to be using an outdated version of Internet Explorer. This version of Internet Explorer may not be as secure as current web browsers. Certain sites, including BadwareBusters.org, may also fail to display correctly. We recommend that you upgrade to the <a href="http://www.microsoft.com/windows/downloads/ie/getitnow.mspx">most recent version of Internet Explorer</a> and/or install the current version of another web browser.</div>
+    <![endif]-->
+    <div id="header">
+        <div id="logo">
+            <a href="/"><%= image_tag $LV_SITE_LOGO_URL, :alt => "http://#{$LV_SITE_URL}" %></a>
+        </div>
+        <div id="search">
+            <form action="/main/search" method="get">
+                <%= text_field :search, :q, :size => 26, :id => "search_field" -%>
+                <%= submit_tag "Search" -%>
+            </form>
+        </div>
+    </div>
+    <div id="menu">
+        <div class="menu_item">
+            <%= link_to "Discussions", :controller => "main", :action => "conversations", :view => "all_conversations" %>
+        </div>
+        <div class="menu_item">
+            <%= link_to "Resources", '/main/resources' %>
+        </div>
+        <% if current_user != false %>
+        <% login = @current_user && @current_user != false ? @current_user.login : @current_user %>
+        <div class="menu_item">
+            <%= link_to "Dashboard", dashboard_url(login) %>
+        </div>
+        <% end %>
+        <div class="menu_item menu_orange">
+            <a href="/main/ask">Ask Question</a>
+        </div>
+        <div style="float:right;">
+            <% if current_user != false %>
+            <div class="menu_item">
+                <span>Hi, <%=h @current_user.login.upcase %></span>
+            </div>
+            <div class="menu_item right">
+                <%= link_to "Sign Out", logout_url -%>
+            </div>
+            <% else %>
+            <div class="menu_item">
+                <%= link_to "Login", login_url(:return_to => CGI::escape(request.request_uri)) -%>
+            </div>
+            <div class="menu_item right">
+                <%= link_to "Sign up", signup_url -%>
+            </div>
+            <% end %>
+        </div>
+    </div>
+    <div id="content">
+        <% if flash[:notice] %>
+        <div id="notice" style="display:none;">
+            <%= flash[:notice] %>
+        </div>
+        <script type="text/javascript">
+            //<![CDATA[
+            $('notice').blindDown({
+                duration: 0.5
+            });
+            //]]>
+        </script>
+        <% end %>
+        <%= yield -%>
+    </div>
+    <div style="width:100%;margin-bottom:10px;background:#ffffff;overflow:auto;">
+        <span class="footer_item"><a href="/main/about">About</a></span>
+        <span class="footer_item"><%= link_to "Contact Us", :controller => "main", :action => "contact" %></span>
+        <span class="footer_item"><%= link_to "Terms &amp; Conditions", :controller => "main", :action => "terms" %></span>
+        <span class="footer_item"><%= link_to "Privacy Policy", :controller => "main", :action => "privacy" %></span>
+        <span class="footer_item right"><%= link_to "Copyright", :controller => "main", :action => "copyright" %></span>
+    </div>
+    <div id="footer">
+        <div id="footer_logos">
+            <div class="footer_item right">
+                Follow us:
+                <div style="padding-top:16px;padding-left:0px;" id="follow_us">
+                    <% if $LV_FACEBOOK_PAGE_URL %><a href="<%= $LV_FACEBOOK_PAGE_URL %>"><%= image_tag "facebook_chicklet.png", :style => "position:relative;left:5px;" %></a><% end %>
+                    <% if $LV_TWITTER_URL %><a href="<%= $LV_TWITTER_URL %>"><%= image_tag "twitter_chicklet.png", :style => "position:relative;left:5px;" %></a><% end %>
+                    <a href="/rss/list"><%= image_tag "rss_chicklet.png", :style => "position:relative;left:5px;" %></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Popup container, revealed/filled by JS -->
+    <div id="popup" style="display:none;"></div>
 </div>
 <% if $GOOGLE_ANALYTICS_ID %>
 	<script type="text/javascript">

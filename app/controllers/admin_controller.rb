@@ -1,5 +1,6 @@
 class AdminController < ApplicationController
   before_filter :login_required
+  before_filter :fix_current_user_problem
   before_filter :check_administrator_role, :only => ["invites","send_invitation"]
   before_filter :allow_moderators_and_admins, :except => ["invites","send_invitation"]
   
