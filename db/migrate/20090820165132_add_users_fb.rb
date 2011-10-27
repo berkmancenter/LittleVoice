@@ -5,7 +5,7 @@ class AddUsersFb < ActiveRecord::Migration
     #if mysql
     execute("alter table #{Security.connection.instance_eval{@config[:database]}}.users modify fb_user_id bigint")
   end
-  
+
   def self.down
     remove_column "#{Security.connection.instance_eval{@config[:database]}}.users", :fb_user_id
     remove_column "#{Security.connection.instance_eval{@config[:database]}}.users", :email_hash

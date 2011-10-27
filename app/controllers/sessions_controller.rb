@@ -1,15 +1,15 @@
-# This controller handles the login/logout function of the site.  
+# This controller handles the login/logout function of the site.
 class SessionsController < ApplicationController
   require "openid"
   layout 'application'
   before_filter :login_required, :only => :destroy
   before_filter :not_logged_in_required, :only => [:new, :create]
-  
+
   # render new.rhtml
   def new
     session[:return_to] ||= params[:return_to]
   end
-  
+
   def create
 #    if params[:anonymous]
 #      login_as_anonymous
@@ -27,18 +27,18 @@ class SessionsController < ApplicationController
       end
     end
   end
-  
+
   def destroy
     return_to = (params[:return_to] ? CGI::unescape(params[:return_to]) : {:controller => "main", :action => "index"})
     current_user.forget_me if logged_in?
     cookies.delete :auth_token
     reset_session
     flash[:notice] = "You have been logged out."
-    redirect_to return_to   
+    redirect_to return_to
   end
-  
+
   protected
-  
+
   def open_id_authentication(openid_url)
     authenticate_with_open_id(openid_url, :required => [:nickname, :email]) do |result, identity_url, registration|
       if result.successful?
@@ -68,7 +68,7 @@ class SessionsController < ApplicationController
       end
     end
   end
-  
+
   def create_open_id_user(user)
     user.save!
     flash[:notice] = "Thanks for signing up! Please check your email to activate your account before logging in."
@@ -78,13 +78,13 @@ class SessionsController < ApplicationController
                              another persona for this site."
     render :action => 'new'
   end
-  
+
   # Updated 2/20/08
   def password_authentication(login, password)
     user = User.authenticate(login, password)
     if user == nil
       failed_login("Your username or password is incorrect.")
-    elsif user.activated_at.blank?  
+    elsif user.activated_at.blank?
       failed_login("Your account is not active, please check your email for the activation code.")
     elsif user.enabled == false
       failed_login("Your account has been disabled.")
@@ -93,9 +93,9 @@ class SessionsController < ApplicationController
       successful_login
     end
   end
-  
+
   private
-  
+
   def failed_login(message)
     flash.now[:notice] = message
     if request.xhr?
@@ -106,21 +106,21 @@ class SessionsController < ApplicationController
       render :action => 'new'
     end
   end
-  
+
   def successful_login
     #Added by LRL to calculate login scores
-    Score.score_login(self.current_user)     
+    Score.score_login(self.current_user)
     if params[:remember_me] == "1"
       self.current_user.remember_me
       cookies[:auth_token] = { :value => self.current_user.remember_token , :expires => self.current_user.remember_token_expires_at }
     end
     #flash[:notice] = "Logged in successfully"
-    return_to = session[:return_to]  
+    return_to = session[:return_to]
     if return_to.nil?
       redirect_to :controller => :users, :action => :show, :id => self.current_user.login
     elsif ! return_to.eql? "do not return"
       redirect_to CGI::unescape(return_to)
     end
   end
-  
+
 end

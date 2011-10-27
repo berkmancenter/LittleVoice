@@ -1,27 +1,27 @@
 module MainHelper
-  
+
   def conversation_faders(conversations)
-    conversations.collect{|c| 
+    conversations.collect{|c|
       root = Item.find(c.item_root_id)
-      {:id => c.id, 
+      {:id => c.id,
         :ago => distance_of_time_in_words_to_now(c.created_at) + ' ago',
-        :user => escape_javascript(c.user.login), 
-        :user_id => c.user.id, 
+        :user => escape_javascript(c.user.login),
+        :user_id => c.user.id,
         :item_text => h(truncate(c.item_text, :length => 250, :omission => '...')).to_xs,
         :root_title => h(root.item_title('...', 35)).to_xs,
         :root_id => root.id
       } }.to_json
   end
-  
+
   def show_item_path(i)
     i.show_path
   end
-  
+
   #Same as escape_javascript except that it doesn't escape newline chars.
   def custom_escape_javascript(javascript)
    (javascript || '').gsub('\\','\0\0').gsub('</','<\/').gsub(/["']/){ |m| "\\#{m}" }.gsub(/\\n/, ' ')
   end
-  
+
   def getitemsummary(userid)
     outputstring = ""
     itemset = Item.find_by_sql(["select * from items where user_id = ? and ISNULL(parent_id)", userid])
@@ -34,7 +34,7 @@ module MainHelper
     end
     outputstring
   end
-  
+
   def get_response_summary(itemid)
     outputstring = ""
     itemset = Item.find_by_sql(["select * from items where parent_id = ?", itemid])
@@ -49,12 +49,12 @@ module MainHelper
       end
     end
     outputstring
-  end  
-  
-  def get_responserecords(parent_id, responseset)
-    responseset.select {|responseitem| responseitem.parent_id == parent_id}   
   end
-  
+
+  def get_responserecords(parent_id, responseset)
+    responseset.select {|responseitem| responseitem.parent_id == parent_id}
+  end
+
   def display_responses(parent_id, responseset, marginstart, minscore, maxscore)
     response_array = get_responserecords(parent_id, responseset)
     if response_array.length > 0
@@ -86,9 +86,9 @@ module MainHelper
         end
       end
     end
-    outputstring 
+    outputstring
   end
-  
+
   def get_message(message_id)
     message_array = []
     outputstring = ""
@@ -101,18 +101,18 @@ module MainHelper
       outputstring = message_array[message_id]
     end
     outputstring
-  end  
-  
+  end
+
   def get_item_error(additemstatus, additemdupe, additemempty, item_id = nil)
     statusmessagestring = ""
     if item_id.nil?
       statusmessagestring = "statusmessage"
     else
       statusmessagestring = "statusmessage-#{item_id.to_s}"
-    end    
+    end
     page.delay 0.5 do
       if additemstatus
-        #page[statusmessagestring].replace_html(get_message(2)) 
+        #page[statusmessagestring].replace_html(get_message(2))
       elsif additemstatus == false
         page[statusmessagestring].replace_html(get_message(1))
       elsif additemdupe
@@ -123,8 +123,8 @@ module MainHelper
       page.visual_effect(:appear, statusmessagestring,  :duration => 0.25)
     end
   end
-  
-  def get_rating_display(itemid, rating_initial_id, rating_test_id)  
+
+  def get_rating_display(itemid, rating_initial_id, rating_test_id)
     off_up = "up_dim.png"
     off_down = "down_dim.png"
     off_bad = "caution_dim.gif"
@@ -135,7 +135,7 @@ module MainHelper
     on_image = ""
     if rating_initial_id == 1
       off_image = off_up
-      on_image = on_up 
+      on_image = on_up
     elsif rating_initial_id == 2
       off_image = off_down
       on_image = on_down
@@ -149,7 +149,7 @@ module MainHelper
     end
     output
   end
-  
+
   def get_rating_box(itemid, minscore, maxscore)
     outputstring = ""
     if current_user
@@ -163,7 +163,7 @@ module MainHelper
       end
       linkup = link_to_remote(get_rating_display(itemid, 1, rating_current), :url => {:action => :processrating, :item_id => itemid, :ratingtype_id => 1, :minscore => minscore, :maxscore => maxscore})
       linkdown = link_to_remote(get_rating_display(itemid, 2, rating_current), :url => {:action => :processrating, :item_id => itemid, :ratingtype_id => 2, :minscore => minscore, :maxscore => maxscore})
-      linkbad = link_to_remote(get_rating_display(itemid, 3, rating_current), :url => {:action => :processrating, :item_id => itemid, :ratingtype_id => 3, :minscore => minscore, :maxscore => maxscore})    
+      linkbad = link_to_remote(get_rating_display(itemid, 3, rating_current), :url => {:action => :processrating, :item_id => itemid, :ratingtype_id => 3, :minscore => minscore, :maxscore => maxscore})
       #linkbad =  submit_to_remote 'link_up', 'Irrelevant', :url => {:action => :processrating, :item_id => itemid, :ratingtype_id => 3, :minscore => minscore, :maxscore => maxscore}
       if (current_user != false) and (itemrecord.user.id != current_user.id)
         outputstring += "<table>\n"
@@ -171,18 +171,18 @@ module MainHelper
         outputstring += "  <td class='#{textclass}'>#{rate_text} </td> \n"
         outputstring += "  <td id='up-#{itemid}'>#{linkup}</td> \n"
         outputstring += "  <td id='down-#{itemid}'>#{linkdown}</td> \n"
-        outputstring += "  <td id='bad-#{itemid}'>#{linkbad}</td>\n" 
+        outputstring += "  <td id='bad-#{itemid}'>#{linkbad}</td>\n"
         outputstring += "</tr>\n"
-        outputstring += "</table>\n"  
+        outputstring += "</table>\n"
       end
     end
     outputstring
   end
-  
+
   def item_from_place(item_root_id, place_count)
     return Item.find(:first, :conditions => ["item_root_id = ?", item_root_id], :order => "lft", :offset => place_count - 1,:limit => 1)
   end
-  
+
   def display_stars(score_rating, options = {:include_empty => true})
     star_up_image = "star_50.png"
     star_down_image = "star_50_dim.png"
@@ -192,8 +192,8 @@ module MainHelper
     star_array.fill(true, 0..(score_rating.to_i - 1))
     output += "<div class='starblock'>"
     star_array.each do |star_item|
-      if star_item 
-        star_image = star_up_image 
+      if star_item
+        star_image = star_up_image
       elsif options[:include_empty]
         star_image = star_down_image
       else
@@ -204,12 +204,12 @@ module MainHelper
     output += "</div>"
     return output
   end
-  
+
   def display_badges(user)
     output = ""
     user.roles.each do |role|
       output += "<img alt='' src='/images/badges/badge_#{role.rolename.downcase.gsub(/ /, '_')}.png' />\n"
-    end  
+    end
     return output
   end
 
@@ -223,7 +223,7 @@ module MainHelper
       checked = (Subscription.items.by_id(item.item_root_id).users.include?(current_user) rescue false)
     end
   end
-  
+
   def display_emailme(item_id)
     if Subscription.items.by_id(item.item_root_id).users.include?(current_user)
       checked = true
@@ -231,5 +231,5 @@ module MainHelper
       checked = Item.exists?(:item_root_id => item.item_root_id, :user_id => current_user.id) ? false : true
     end
   end
-  
+
 end

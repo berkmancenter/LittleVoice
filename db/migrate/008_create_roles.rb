@@ -3,7 +3,7 @@ class CreateRoles < ActiveRecord::Migration
     create_table :roles do |t|
       t.string :rolename
       t.string :functionality
-      
+
       t.timestamps
     end
     Role.create :rolename => "administrator", :functionality => "Handful of SBW staffers with all permissions "
@@ -15,7 +15,7 @@ class CreateRoles < ActiveRecord::Migration
     Role.create :rolename => "StopBadware staff", :functionality => "StopBadware staff members"
     Role.create :rolename => "Consumer Reports staff", :functionality => "Consumer Reports staff members"
   end
-  
+
   def self.down
     drop_table :roles
   end

@@ -5,7 +5,7 @@ class CreateSurveyReponses < ActiveRecord::Migration
       t.column :responses, :blob
     end
   end
-  
+
   def self.down
     drop_table :survey_responses
   end

@@ -1,7 +1,7 @@
 # The file specifies the Content Class and Versioning of Content
 #
 #
-# Author::    
+# Author::
 # Copyright:: Copyright (c) 2008 BadwareBusters.org
 # License::   Distributes under the same terms as Ruby
 
@@ -14,29 +14,29 @@ class Content < ActiveRecord::Base
   attr_accessor :live
   validates_uniqueness_of :location
   validates_uniqueness_of :pseudonym
-  
+
   class Version < ActiveRecord::Base
     def parse_body
       self.textile ? RedCloth.new(self.body).to_html : self.body
     end
   end
-  
+
   def versions
     Content::Version.find_all_by_content_id(self.id).sort_by(&:version).reverse
   end
-  
+
   def get_version(version_number)
-    Content::Version.find_by_content_id_and_version(self.id,version_number)    
+    Content::Version.find_by_content_id_and_version(self.id,version_number)
   end
-  
+
   def live_version
     self.versions.first
   end
-  
+
   def parse_body
     self.textile ? RedCloth.new(self.body).to_html : self.body
   end
-  
+
   def save_new_version
     most_recent = self.versions.first.version || 0 rescue most_recent = 0
     v = Content::Version.new(self.attributes)
@@ -49,7 +49,7 @@ class Content < ActiveRecord::Base
     end
     return true
   end
-  
+
   def revert_to_version(version_number)
     if self.versions.collect{|v| v.version }.include? version_number
       self.update_attributes(self.get_version(version_number).attributes)
@@ -59,7 +59,7 @@ class Content < ActiveRecord::Base
       return false
     end
   end
-  
+
   def before_destroy
     begin
       self.versions.each do |v|
@@ -67,5 +67,5 @@ class Content < ActiveRecord::Base
       end
     end
   end
-  
+
 end

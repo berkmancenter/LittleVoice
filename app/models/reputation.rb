@@ -2,7 +2,7 @@
 # The file specifies the Reputation Class
 #
 #
-# Author::    
+# Author::
 # Copyright:: Copyright (c) 2008 BadwareBusters.org
 # License::   Distributes under the same terms as Ruby
 
@@ -18,7 +18,7 @@ class Reputation < ActiveRecord::Base
     reputation.rawscore = score.rawscore
     return reputation.save
   end
-  
+
   def ban_user_if_necessary
     if self.rawscore and self.rawscore < -25000
       self.user.ban

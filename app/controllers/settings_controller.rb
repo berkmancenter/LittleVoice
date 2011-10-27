@@ -3,7 +3,7 @@ class SettingsController < ApplicationController
   before_filter :fix_current_user_problem
   before_filter :check_administrator_role
   layout "application"
-  
+
   def index
     @settings = {}
     Setting.all.group_by(&:namespace).each_pair do |namespace, settings|
@@ -14,7 +14,7 @@ class SettingsController < ApplicationController
       @settings.merge!({namespace => ns_hash})
     end
   end
-  
+
   def update
     setting_keys = params.keys.select{|key| key.match /^setting\_/}
     for key in setting_keys
@@ -32,6 +32,6 @@ class SettingsController < ApplicationController
     end
     redirect_to :action => :index
   end
-  
-  
+
+
 end

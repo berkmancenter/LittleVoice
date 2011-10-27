@@ -2,7 +2,7 @@
 # The file specifies the Permissions Class
 #
 #
-# Author::    
+# Author::
 # Copyright:: Copyright (c) 2008 BadwareBusters.org
 # License::   Distributes under the same terms as Ruby
 

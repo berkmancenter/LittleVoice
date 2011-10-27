@@ -12,11 +12,11 @@ class CreateUsers < ActiveRecord::Migration
       t.column :activation_code, :string, :limit => 40
       t.column :activated_at, :datetime
       t.column :password_reset_code, :string, :limit => 40
-      t.column :enabled, :boolean, :default => true      
+      t.column :enabled, :boolean, :default => true
     end
-    
+
   end
-  
+
   def self.down
     drop_table "users"
   end

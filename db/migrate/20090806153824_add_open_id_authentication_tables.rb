@@ -1,12 +1,12 @@
 class AddOpenIdAuthenticationTables < ActiveRecord::Migration
   def self.up
-    
+
     create_table :open_id_authentication_associations, :force => true do |t|
       t.integer :issued, :lifetime
       t.string :handle, :assoc_type
       t.binary :server_url, :secret
     end
-    
+
     create_table :open_id_authentication_nonces, :force => true do |t|
       t.integer :timestamp, :null => false
       t.string :server_url, :null => true
@@ -14,11 +14,11 @@ class AddOpenIdAuthenticationTables < ActiveRecord::Migration
     end
     add_column "#{Security.connection.instance_eval{@config[:database]}}.users", :identity_url, :string
   end
-  
+
   def self.down
     remove_column "#{Security.connection.instance_eval{@config[:database]}}.users", :identity_url
     drop_table :open_id_authentication_associations
-    drop_table :open_id_authentication_nonces    
+    drop_table :open_id_authentication_nonces
   end
-  
+
 end

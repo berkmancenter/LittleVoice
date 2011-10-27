@@ -22,9 +22,9 @@ ActionMailer::Base.smtp_settings = {
   :address  => $MAIL_SERVER_ADDR,
   :port  => $MAIL_SERVER_PORT,
   :domain => $MAIL_SERVER_DOMAIN
-} 
+}
 
-$KCODE = 'u' 
+$KCODE = 'u'
 RCC_PUB = $RCC_PUB
 RCC_PRIV = $RCC_PRIV
 
