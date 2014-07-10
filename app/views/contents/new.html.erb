@@ -26,12 +26,12 @@
 	<b>Name:</b> e.g. "Header"<br />
 	<%= f.text_field :name, {:onchange => "getLocationPreview();" }%>
   </p>
-  
+
   <p>
   	<b>Pseudonym:</b>Optional e.g. "unicorn"<br />
 	<%= f.text_field :pseudonym %>
   </p>
-  
+
   <div id="location_preview"><%= @content.location %></div>
   <div id="controls">
 	<p><b>Textile:</b> <%= f.select :textile, [["On",true],["Off",false]], {}, {:style => "float:left;clear:none;"} -%>
@@ -47,7 +47,7 @@
 
 <div id="preview">
 	<%= @content.parse_body %>
-</div>	
+</div>
 
 <script>
 
@@ -58,7 +58,7 @@
 		var name = $('content_name').value;
 		new Ajax.Updater('location_preview', '<%= url_for :action => :location_preview %>?location[controller]=' + controller + '&location[action]=' + action + '&location[name]=' + name + '&authenticity_token=' + authToken )
 	}
-	
+
 	var contentForm = $('new_content');
 	var bodyInput = contentForm['content_body'];
 	new Form.Observer(contentForm, 2, function updatePreview(el, value){

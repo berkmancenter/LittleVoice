@@ -2,48 +2,48 @@ class ReputationsController < ApplicationController
   # GET /reputations
   # GET /reputations.xml
   before_filter :check_administrator_role
-  
+
   def index
     @reputations = Reputation.find(:all)
-    
+
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @reputations }
     end
   end
-  
+
   # GET /reputations/1
   # GET /reputations/1.xml
   def show
     @reputation = Reputation.find(params[:id])
-    
+
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @reputation }
     end
   end
-  
+
   # GET /reputations/new
   # GET /reputations/new.xml
   def new
     @reputation = Reputation.new
-    
+
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @reputation }
     end
   end
-  
+
   # GET /reputations/1/edit
   def edit
     @reputation = Reputation.find(params[:id])
   end
-  
+
   # POST /reputations
   # POST /reputations.xml
   def create
     @reputation = Reputation.new(params[:reputation])
-    
+
     respond_to do |format|
       if @reputation.save
         flash[:notice] = 'Reputation was successfully created.'
@@ -55,12 +55,12 @@ class ReputationsController < ApplicationController
       end
     end
   end
-  
+
   # PUT /reputations/1
   # PUT /reputations/1.xml
   def update
     @reputation = Reputation.find(params[:id])
-    
+
     respond_to do |format|
       if @reputation.update_attributes(params[:reputation])
         flash[:notice] = 'Reputation was successfully updated.'
@@ -72,13 +72,13 @@ class ReputationsController < ApplicationController
       end
     end
   end
-  
+
   # DELETE /reputations/1
   # DELETE /reputations/1.xml
   def destroy
     @reputation = Reputation.find(params[:id])
     @reputation.destroy
-    
+
     respond_to do |format|
       format.html { redirect_to(reputations_url) }
       format.xml  { head :ok }

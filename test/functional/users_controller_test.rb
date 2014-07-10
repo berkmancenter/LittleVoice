@@ -55,7 +55,7 @@ class UsersControllerTest < Test::Unit::TestCase
       assert_response :success
     end
   end
-  
+
   def test_should_activate_user
     assert_nil User.authenticate('aaron', 'test')
     get :activate, :activation_code => users(:aaron).activation_code
@@ -63,7 +63,7 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_not_nil flash[:notice]
     assert_equal users(:aaron), User.authenticate('aaron', 'test')
   end
-  
+
   def test_should_not_activate_user_without_key
     get :activate
     assert_nil flash[:notice]

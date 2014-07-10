@@ -2,7 +2,7 @@ class AccountsController < ApplicationController
   layout 'application'
   before_filter :login_required, :except => :show
   #before_filter :not_logged_in_required, :only => :show
-  
+
   # Activate action
   def show
     # Uncomment and change paths to have user logged in after activation - not recommended
@@ -12,7 +12,7 @@ class AccountsController < ApplicationController
     redirect_to login_path
   rescue User::ArgumentError
     flash[:notice] = 'Activation code not found. Please try creating a new account.'
-    redirect_to new_user_path 
+    redirect_to new_user_path
   rescue User::ActivationCodeNotFound
     flash[:notice] = 'Activation code not found. Please try creating a new account.'
     redirect_to new_user_path
@@ -20,18 +20,18 @@ class AccountsController < ApplicationController
     flash[:notice] = 'Your account has already been activated. You can log in below.'
     redirect_to login_path
   end
-  
+
   def edit
-    
+
   end
-  
-  # Change password action  
+
+  # Change password action
   def update
     return unless request.post?
     if User.authenticate(current_user.login, params[:old_password])
       if ((params[:password] == params[:password_confirmation]) && !params[:password_confirmation].blank?)
         current_user.password_confirmation = params[:password_confirmation]
-        current_user.password = params[:password]        
+        current_user.password = params[:password]
         if current_user.save
           flash[:notice] = "Password successfully updated."
           redirect_to dashboard_url
@@ -47,6 +47,6 @@ class AccountsController < ApplicationController
     else
       flash[:error] = "Your old password is incorrect."
       redirect_to dashboard_url
-    end 
+    end
   end
 end

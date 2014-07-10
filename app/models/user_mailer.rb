@@ -2,43 +2,43 @@
 # The file specifies the UserMai Class
 #
 #
-# Author::    
+# Author::
 # Copyright:: Copyright (c) 2008 BadwareBusters.org
 # License::   Distributes under the same terms as Ruby
 
 # This class specifies UserMail and the various template mails that would be sent
 # to a user
 class UserMailer < ActionMailer::Base
-  
+
   def signup_notification(user)
     setup_email(user)
-    @subject    += 'Please activate your new account'  
-    @body[:url]  = "#{$LV_SITE_URL}/activate/#{user.activation_code}"  
+    @subject    += 'Please activate your new account'
+    @body[:url]  = "#{$LV_SITE_URL}/activate/#{user.activation_code}"
   end
-  
+
   def activation(user)
     setup_email(user)
     @subject    += 'Your account has been activated!'
     @body[:url]  ="http://#{$LV_SITE_URL}"
   end
-  
+
   def forgot_password(user)
     setup_email(user)
     @subject    += 'You have requested to change your password'
     @body[:url]  = "http://#{$LV_SITE_URL}/reset_password/#{user.password_reset_code}"
   end
-  
+
   def reset_password(user)
     setup_email(user)
     @subject    += 'Your password has been reset'
   end
-  
+
   def auto_banned(user)
     setup_email(user)
     @subject += 'Your account has been automatically banned'
   end
-  
-  #email the user about an Item   
+
+  #email the user about an Item
   def item_email_me(user, item)
     setup_email(user)
     @content_type = "multipart/alternative"
@@ -49,9 +49,9 @@ class UserMailer < ActionMailer::Base
     @body[:item] = item
     @body[:url]  = "http://#{$LV_SITE_URL}/main/itemview/#{item.item_root_id}#itemblock-#{item.id}"
     @body[:root_url] = "http://#{$LV_SITE_URL}/main/itemview/#{item.item_root_id}"
-  end  
-  
-  # email the user about tag 
+  end
+
+  # email the user about tag
   def tag_email_me(user, item, tag_name)
     setup_email(user)
     @from = "#{h(item.user.login)} <no-reply@#{$LV_SITE_URL}>"
@@ -62,7 +62,7 @@ class UserMailer < ActionMailer::Base
     @body[:tag_name] = tag_name
     @body[:user] = item.user
   end
-  
+
   protected
   def setup_email(user)
     @recipients  = "#{user.email}"

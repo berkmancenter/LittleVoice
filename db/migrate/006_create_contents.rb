@@ -7,7 +7,7 @@ class CreateContents < ActiveRecord::Migration
       t.boolean :textile
       t.timestamps
     end
-    
+
     create_table :content_versions do |t|
       t.integer :content_id
       t.text :body
@@ -17,7 +17,7 @@ class CreateContents < ActiveRecord::Migration
       t.timestamps
     end
   end
-  
+
   def self.down
     drop_table :contents
     drop_table :content_versions

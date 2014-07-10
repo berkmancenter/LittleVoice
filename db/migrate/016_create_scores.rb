@@ -4,9 +4,9 @@ class CreateScores < ActiveRecord::Migration
       t.integer :user_id, :item_id, :scoretype_id, :total
       t.timestamps
     end
-    
+
   end
-  
+
   def self.down
     drop_table :scores
   end

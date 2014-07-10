@@ -4,8 +4,8 @@ class CreatePermissions < ActiveRecord::Migration
       t.integer :role_id, :user_id, :null => false
       t.timestamps
     end
-  end 
-  
+  end
+
   def self.down
     drop_table :permissions
   end

@@ -11,7 +11,7 @@
 
   </tr>
 
-<% for content in @contents %> 
+<% for content in @contents %>
   <tr style="border-top:1px solid #eee;background:<%= cycle('#f3f3f3','#fff') %>;">
   	<td style="width:180px;"><%=h content.pseudonym %></td>
     <td><%= link_to 'View', content %></td>
@@ -21,7 +21,7 @@
 	<td style="width:140px;"><%=h content.action %></td>
     <td style="width:140px;"><%=h content.name %></td>
 	<td style="width:300px;"><%= link_to content.location, content.location %></td>
-	
+
 
   </tr>
 <% end %>

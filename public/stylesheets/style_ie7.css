@@ -1,6 +1,6 @@
 .box {
   height:2.5em;
-  
+
 }
 
 .responseitem {
@@ -49,7 +49,7 @@
 .itemcontent * {
 	color:#000;
 	z-index:20;
-	
+
 }
 
 .item_left_top a {

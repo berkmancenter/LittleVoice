@@ -6,7 +6,7 @@ module AuthenticatedSystem
       current_user != false
     end
 
-    # Accesses the current user from the session. 
+    # Accesses the current user from the session.
     # Future calls avoid the database because nil is not equal to false.
     def current_user
       @current_user ||= (login_from_session || login_from_basic_auth || login_from_cookie || false)
@@ -62,11 +62,11 @@ module AuthenticatedSystem
     def login_required
       authorized? || access_denied
     end
-    
+
      def not_logged_in_required
        !logged_in? || permission_denied
      end
-     
+
      def check_role(role)
        unless logged_in? && @current_user.has_role?(role)
          if logged_in?
@@ -77,11 +77,11 @@ module AuthenticatedSystem
          end
        end
      end
-  
+
      def check_administrator_role
        check_role('administrator')
-     end    
-  
+     end
+
     # Redirect as appropriate when an access request fails.
     #
     # The default action is to redirect to the login screen.
@@ -90,7 +90,7 @@ module AuthenticatedSystem
     # behavior in case the user is not authorized
     # to access the requested action.  For example, a popup window might
     # simply close itself.
-    
+
      def access_denied
        respond_to do |format|
          format.html do
@@ -103,8 +103,8 @@ module AuthenticatedSystem
          end
        end
      end
-     
-     def permission_denied      
+
+     def permission_denied
        respond_to do |format|
          format.html do
            #Put your domain name here ex. http://www.example.com
@@ -117,11 +117,11 @@ module AuthenticatedSystem
            flash[:error] = "You don't have permission to complete that action."
            #The [0..20] represents the 21 characters in http://localhost:3000
            #You have to set that to the number of characters in your domain name
-           if http_referer[0..(RAILS_ENV == "production" ? 24 : 28)] != domain_name  
+           if http_referer[0..(RAILS_ENV == "production" ? 24 : 28)] != domain_name
              session[:refer_to] = nil
              redirect_to RAILS_ROOT
            else
-             redirect_to_referer_or_default(RAILS_ROOT)  
+             redirect_to_referer_or_default(RAILS_ROOT)
            end
          end
          format.xml do
@@ -138,18 +138,18 @@ module AuthenticatedSystem
      def store_location
        session[:return_to] = request.request_uri
      end
-  
+
      def store_referer
        session[:refer_to] = request.env["HTTP_REFERER"]
      end
-  
+
      # Redirect to the URI stored by the most recent store_location call or
      # to the passed default.
      def redirect_back_or_default(default)
        redirect_to(session[:return_to] || default)
        session[:return_to] = nil
      end
-  
+
      def redirect_to_referer_or_default(default)
        redirect_to(session[:refer_to] || default)
        session[:refer_to] = nil

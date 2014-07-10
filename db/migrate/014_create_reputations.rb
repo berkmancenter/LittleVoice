@@ -3,11 +3,11 @@ class CreateReputations < ActiveRecord::Migration
     create_table :reputations do |t|
       t.integer :user_id
       t.integer :rawscore
-      
+
       t.timestamps
     end
   end
-  
+
   def self.down
     drop_table :reputations
   end

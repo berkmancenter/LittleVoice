@@ -2,4 +2,4 @@
             <%= link_to_remote( "<span class=\"button_standard\">De-Nukify</span>", {:url => {:controller => "main", :action => "unnuke", :id => item.id, :stylehash => stylehash}}, {:class => "button button_#{stylehash[:color]}_75"} ) %>
           <% else %>
             <%= link_to_remote( "<span class=\"button_standard\">Nuke</span>", {:url => {:controller => "main", :action => "nuke", :id => item.id, :stylehash => stylehash}}, {:class => "button button_#{stylehash[:color]}_75"}  ) %>
-          <% end %>  
+          <% end %>
